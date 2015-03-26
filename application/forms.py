@@ -1,7 +1,7 @@
 from flask.ext.wtf import Form
 from wtforms import StringField, SubmitField, PasswordField, DateTimeField
 from wtforms import SelectField, validators, widgets, SelectMultipleField
-from models import User
+from models import User, Section
 
 class SignupForm(Form):
 	firstname = StringField("First Name", validators=[validators.Required("First Name")])
@@ -44,12 +44,15 @@ class SigninForm(Form):
 		  self.email.errors.append("Invalid e-mail or password")
 		  return False
 
-
 class ScheduleForm(Form):
-	section = StringField("What section/class will you be teaching?", [validators.Required("Please enter the class/section name.")])
+	section = SelectField("What section/class will you be teaching?", 
+		[validators.Required("Please enter the class/section name.")],
+		choices = [(section.uid, section.name) for section in Section.query.order_by('name')],
+		coerce=int)
+	
 	days = SelectMultipleField("What days do you see them?", 
 		[validators.Required("Please enter the days you teach this class")], 
-		choices=[(1, "Monday"), (2, "Tuesday"), (3, "Wednesday"), (4, "Thursday"), (5, "Friday")],
+		choices=[(0, "Monday"), (1, "Tuesday"), (2, "Wednesday"), (3, "Thursday"), (4, "Friday")],
 		option_widget=widgets.CheckboxInput(),
         widget=widgets.ListWidget(prefix_label=False),
         coerce=int
@@ -80,8 +83,14 @@ class ScheduleForm(Form):
 	def validate(self):
 		if not Form.validate(self):
 			return False
+
+		# section = Section.query.filter_by(section = self.section.data).first()
+		# if section:
+		# 	self.section.errors.append("You already have this section on the schedule.")
+		# 	return False
 		else:
 			return True
+
 
 
 

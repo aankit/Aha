@@ -1,5 +1,6 @@
 from flask import request, Response, session, escape, redirect, flash
 from flask import render_template, send_from_directory, url_for
+from datetime import datetime
 from application import app
 from application import scheduler
 from application import schedules
@@ -85,8 +86,20 @@ def schedule():
       if form.validate() == False:
         return render_template('schedule.html', form=form)
       else:
-        return '%s, %s, %s - %s' % (form.section.data, form.days.data,form.start_time.data, form.end_time.data)
-      #get the day for the date
+        #for every day that is return in the list of days
+        for day in form.days.data:
+          #first let's schedule the apscheduler job
+          scheduler.add_job(start_camera_function, day_of_week=day, 
+            hour=form.start_time.data.hour, 
+            minute=form.start_time.data.minute)
+          #it needs the function it needs to execute...where does that function live? 
+          #should the scheduler even by imported here?
+          #we want to add them to the database.
+
+          section_id = form.section.data
+          
+        return "check the server console"
+        #
     if request.method == 'GET':
       return render_template('schedule.html', form=form)
 
@@ -103,3 +116,12 @@ def add(TIME, JOB_ID):
 def remove(JOB_ID):
   scheduler.remove_job(JOB_ID)
   return 'job removed: %s' %(JOB_ID)
+
+@app.route('/logo')
+def logo():
+  return send_from_directory(os.path.join(app.root_path, 'static'),
+                 'img/aha.png')
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
