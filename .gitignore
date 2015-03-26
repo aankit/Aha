@@ -1,0 +1,5 @@
+*.pyc
+/logs
+/videos
+/venv
+picam-1.2.9-binary
