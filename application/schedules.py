@@ -10,3 +10,16 @@ from application import scheduler
 def scheduler_job():
 	print "scheduler job working"
 
+def cam_start():
+	print "camera started"
+
+def cam_stop():
+	print "camera stopped"
+
+def add_cron(func, job_id, day, hour, minute): 
+	scheduler.add_job(func, "cron", 
+      id=job_id,
+      day_of_week=day, 
+      hour=hour, 
+      minute=minute
+      )

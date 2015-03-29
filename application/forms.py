@@ -1,7 +1,9 @@
 from flask.ext.wtf import Form
 from wtforms import StringField, SubmitField, PasswordField, DateTimeField
 from wtforms import SelectField, validators, widgets, SelectMultipleField
-from models import User, Section
+from application import db
+from models import User, Section, Schedule
+from datetime import timedelta
 
 class SignupForm(Form):
 	firstname = StringField("First Name", validators=[validators.Required("First Name")])
@@ -44,11 +46,10 @@ class SigninForm(Form):
 		  self.email.errors.append("Invalid e-mail or password")
 		  return False
 
+
 class ScheduleForm(Form):
-	section = SelectField("What section/class will you be teaching?", 
-		[validators.Required("Please enter the class/section name.")],
-		choices = [(section.uid, section.name) for section in Section.query.order_by('name')],
-		coerce=int)
+	section = StringField("What section/class will you be teaching?", 
+		[validators.Required("Please enter the class/section name.")])
 	
 	days = SelectMultipleField("What days do you see them?", 
 		[validators.Required("Please enter the days you teach this class")], 
@@ -83,13 +84,26 @@ class ScheduleForm(Form):
 	def validate(self):
 		if not Form.validate(self):
 			return False
-
-		# section = Section.query.filter_by(section = self.section.data).first()
-		# if section:
-		# 	self.section.errors.append("You already have this section on the schedule.")
-		# 	return False
 		else:
-			return True
+			self.start_time.data = self.start_time.data + timedelta(hours=12) if self.start_ampm.data=='PM' else self.start_time.data
+			self.end_time.data = self.end_time.data + timedelta(hours=12) if self.end_ampm.data=='PM' else self.end_time.data
+			if self.start_time.data > self.end_time.data:
+				self.start_time.errors.append("Your start time comes after your end time...")
+				return False
+			#check schedule first for if there is anything on the schedule for the days chosen
+			#then if there is start time conflict or an end time conflict
+			conflicts = db.session.query(Schedule.start_time, Section.name) \
+				.join(Schedule.section) \
+				.filter(Schedule.day.in_(self.days.data)) \
+				.filter(((Schedule.start_time<=self.start_time.data) & (Schedule.end_time>self.start_time.data)) | \
+				((Schedule.start_time<self.end_time.data) & (Schedule.end_time>=self.end_time.data))).all()
+
+			if conflicts:
+				self.days.errors.append("One or more of the times you are scheduling conflicts with this %r" %(conflicts))
+				return False
+			else:
+				return True
+
 
 
 
