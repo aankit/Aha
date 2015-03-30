@@ -1,5 +1,5 @@
 from flask import request, session, redirect, flash
-from flask import render_template, send_from_directory, url_for
+from flask import render_template, url_for, send_file
 from application.models import *
 from application import api
 from application.forms import SignupForm, SigninForm, ScheduleForm
@@ -134,7 +134,9 @@ def edit_recording(name):
     else:
       return render_template("error.html", error="Class doesn't exist :(")
 
-
+@app.route('/editor')
+def editor():
+  return render_template("mobile_editor.html")
 
 @app.route('/logo')
 def logo():
