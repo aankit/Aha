@@ -1,6 +1,5 @@
 from werkzeug import generate_password_hash, check_password_hash
-from application.core import db
-from application import app
+from application import db
 
 class User(db.Model):
 	__tablename__ = 'user'
@@ -47,7 +46,7 @@ class Schedule(db.Model):
 	start_time = db.Column(db.DateTime)
 	end_time = db.Column(db.DateTime)
 	section_id = db.Column(db.Integer, db.ForeignKey('section.id'))
-	section = db.relationship('Section', backref='schedule')
+	section = db.relationship('Section', backref='schedules')
 
 	def __init__(self, *args, **kwargs):
 		db.Model.__init__(self, *args, **kwargs)

@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+ 
+{% block content %}
+ 
+  {% for message in form.section.errors %}
+    <div class="bg-danger">{{ message }}</div>
+  {% endfor %}
+
+  {% for message in form.days.errors %}
+    <div class="bg-danger">{{ message }}</div>
+  {% endfor %}
+   
+  {% for message in form.start_time.errors %}
+    <div class="bg-danger">{{ message }}</div>
+  {% endfor %}
+
+  {% for message in form.end_time.errors %}
+    <div class="bg-danger">{{ message }}</div>
+  {% endfor %}
+  <h4>{{ title }}</h4>
+  <form action="{{ url_for(endpoint, name=name) }}" method=post>
+    {{ form.hidden_tag() }}
+     <div class="form-group">
+    {{ form.section.label }}
+    {{ form.section }}
+	</div>
+    {{ form.days.label }}
+    {{ form.days }}
+      <div class="form-group">
+    {{ form.start_time.label }}
+    {{ form.start_time(placeholder="e.g. 9:00") }} {{ form.start_ampm }}
+	</div>
+ 	<div class="form-group">
+    {{ form.end_time.label }}
+    {{ form.end_time(placeholder="e.g. 9:45") }} {{ form.end_ampm }}
+	    </div>
+    {{ form.submit(class="btn btn-success") }}
+  </form>
+     
+{% endblock %}

@@ -1,4 +1,4 @@
-from pytz import utc
+import pytz
 
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor
@@ -17,4 +17,4 @@ job_defaults = {
     'max_instances': 3
 }
 
-timezone = utc
+timezone = pytz.timezone('US/Eastern') #this should be set by user

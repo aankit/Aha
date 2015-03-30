@@ -1,20 +1,19 @@
-from flask import request, Response, session, escape, redirect, flash
+from flask import request, session, redirect, flash
 from flask import render_template, send_from_directory, url_for
-from application import scheduler
-from application.schedules import cam_start, cam_stop, add_cron
-from application.forms import SignupForm, SigninForm, ScheduleForm
 from application.models import *
-
+from application import api
+from application.forms import SignupForm, SigninForm, ScheduleForm
+from application import app
 
 @app.route('/')
 def home():
-    if 'email' not in session:
-        return redirect(url_for('signin'))
-    user = User.query.filter_by(email = session['email']).first()
-    if user is None:
-        return redirect(url_for('signup'))
-    else:
-        return render_template('home.html', user=user)
+  if 'email' not in session:
+    return redirect(url_for('signin'))
+  user = User.query.filter_by(email = session['email']).first()
+  if user is None:
+    return redirect(url_for('signup'))
+  else:
+    return render_template('home.html', user=user)
 
 # @app.route('/log', methods=['GET', 'POST'])
 # def log():
@@ -25,19 +24,19 @@ def home():
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    form = SignupForm()
-    if request.method == 'POST':
-        if form.validate() == False:
-            return render_template('signup.html', form=form)
-        else:
-            newuser = User(form.firstname.data, form.lastname.data, form.email.data, form.password.data)
-            db.session.add(newuser)
-            db.session.commit()
-            session['email'] = newuser.email
-            return redirect(url_for('schedule'))
+  form = SignupForm()
+  if request.method == 'POST':
+      if form.validate() == False:
+          return render_template('signup.html', form=form)
+      else:
+          newuser = User(form.firstname.data, form.lastname.data, form.email.data, form.password.data)
+          db.session.add(newuser)
+          db.session.commit()
+          session['email'] = newuser.email
+          return redirect(url_for('add_recording'))
 
-    elif request.method == 'GET':
-        return render_template('signup.html', form=form)
+  elif request.method == 'GET':
+      return render_template('signup.html', form=form)
 
 
 @app.route('/signin', methods=['GET', 'POST'])
@@ -65,73 +64,77 @@ def signout():
   session.pop('email', None)
   return redirect(url_for('home'))
 
-@app.route('/schedule', methods=['GET', 'POST'])
+@app.route('/schedule')
 def schedule():
-    form = ScheduleForm()
-    if 'email' not in session:
-      return redirect(url_for('home'))
+  form = ScheduleForm()
+  jobs = api.get_scheduled()
+  return render_template('schedule.html', 
+    jobs=jobs,
+    form=form)
 
-    if request.method == 'POST':
-      if form.validate() == False:
-        return render_template('schedule.html', form=form)
-      else:
-        
-        #store section
-        section_obj = Section.query.filter_by(name=form.section.data).first()
-        if not section_obj:
-          section_obj = Section(name=form.section.data, 
-            user_id=db.session.query(User.id).filter_by(email=session['email']).first()[0])
-          db.session.add(section_obj)
-          db.session.commit()
+@app.route('/profile')
+def profile():
+  if 'email' not in session:
+    return redirect(url_for('signin'))
+  user = User.query.filter_by(email = session['email']).first()
+  if user is None:
+    return redirect(url_for('signup'))
+  else:
+    return render_template('home.html', user=user)
 
-        #iterate through the days
-        for day in form.days.data:
-          try:
-            print day
-            print form.start_time.data
-            print form.end_time.data
-            #store the times
-            schedule_obj = Schedule(day=day, 
-              start_time=form.start_time.data, 
-              end_time=form.end_time.data, 
-              section_id=section_obj.id)
-            db.session.add(schedule_obj)
-            db.session.commit()
-            #create jobs
-            start_job = "%d_start" % (schedule_obj.id)
-            end_job = "%d_end" % (schedule_obj.id)
-            add_cron(cam_start, start_job, day,form.start_time.data.hour,form.start_time.data.minute)
-            add_cron(cam_start, end_job, day,form.end_time.data.hour,form.end_time.data.minute)
-            #save job ids in database
-            start_obj = Job(job_id=start_job, schedule_id=schedule_obj.id)
-            stop_obj = Job(job_id=end_job, schedule_id=schedule_obj.id)
-            db.session.add(start_obj)
-            db.session.add(stop_obj)
-            db.session.commit()
-          except Exception as e:
-            db.session.rollback()
-            return render_template("error.html", error=e)
+@app.route('/recording', methods=['GET', 'POST'])
+def add_recording():
+  form = ScheduleForm()
 
-        #redirecting back to schedule page with flash for success
-        return redirect(url_for('schedule'))
-        # return "check the server console"
-    
-    if request.method == 'GET':
-      return render_template('schedule.html', form=form)
+  #POST
+  if not section_obj and request.method == 'POST' and form.validate():
+    status, message = api.add_schedule(form, session)  
+    #respond to the client
+    if status == 200:
+      flash(message)
+      return redirect(url_for('add_recording'))
+    else:
+      render_template("error.html", error="%d: %s" % (status, message))
+  #GET
+  else:
+    return render_template('recording.html', 
+      form=form, 
+      title = "Add Recording", 
+      endpoint='add_recording', 
+      name=None)
 
-@app.route('/add/<int:TIME>/<JOB_ID>')
-def add(TIME, JOB_ID):
-  scheduler.add_job(schedules.scheduler_job, 
-    'interval', 
-    seconds=TIME, 
-    id=JOB_ID,
-    replace_existing=True)
-  return 'job scheduled: %s' %(JOB_ID)
 
-@app.route('/remove/<JOB_ID>')
-def remove(JOB_ID):
-  scheduler.remove_job(JOB_ID)
-  return 'job removed: %s' %(JOB_ID)
+@app.route('/recording/<name>', methods=['GET', 'POST'])
+def edit_recording(name):
+  form = ScheduleForm()
+
+  #POST
+  if request.method == 'POST' and form.validate():
+    status, message = api.edit_schedule(form, session)
+    #respond to the client
+    if status == 200:
+      flash(message)
+      return redirect(url_for('schedule'))
+    else:
+      return render_template("error.html", error="%d: %s" % (status, message))
+  #GET
+  else:
+    d = form.get_data(name)
+    if d:
+      return render_template('recording.html', 
+        title = "Edit Recording", 
+        endpoint = 'edit_recording', 
+        name = name,
+        form=ScheduleForm(section = d['section'], 
+          days = d['days'], 
+          start_time =  d['start_time'], 
+          start_ampm = d['start_ampm'], 
+          end_time = d['end_time'], 
+          end_ampm = d['end_ampm']))
+    else:
+      return render_template("error.html", error="Class doesn't exist :(")
+
+
 
 @app.route('/logo')
 def logo():

@@ -23,3 +23,8 @@ def add_cron(func, job_id, day, hour, minute):
       hour=hour, 
       minute=minute
       )
+	return 0
+
+def remove_cron(job_id):
+	scheduler.remove_job(job_id)
+	return 0

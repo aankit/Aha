@@ -19,3 +19,4 @@ scheduler = BackgroundScheduler(jobstores=jobstores,
 
 #our routes
 import application.controllers
+import application.api

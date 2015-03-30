@@ -1,9 +1,10 @@
 from flask.ext.wtf import Form
 from wtforms import StringField, SubmitField, PasswordField, DateTimeField
 from wtforms import SelectField, validators, widgets, SelectMultipleField
+from datetime import timedelta
 from application import db
 from models import User, Section, Schedule
-from datetime import timedelta
+
 
 class SignupForm(Form):
 	firstname = StringField("First Name", validators=[validators.Required("First Name")])
@@ -56,7 +57,7 @@ class ScheduleForm(Form):
 		choices=[(0, "Monday"), (1, "Tuesday"), (2, "Wednesday"), (3, "Thursday"), (4, "Friday")],
 		option_widget=widgets.CheckboxInput(),
         widget=widgets.ListWidget(prefix_label=False),
-        coerce=int
+        coerce=int,
         )
 	#start time, separating AM and PM because of date formatting issues with %p, good place to optimize later
 	start_time = DateTimeField("Start Time", 
@@ -76,17 +77,21 @@ class ScheduleForm(Form):
 		[validators.Required("Please select AM/PM for end time")], 
 		choices=[("AM", "AM"), ("PM", "PM")])
 	
-	submit = SubmitField("Add to Schedule")
+	submit = SubmitField("Submit")
 	
 	def __init__(self, *args, **kwargs):
 		Form.__init__(self, *args, **kwargs)
+
 
 	def validate(self):
 		if not Form.validate(self):
 			return False
 		else:
-			self.start_time.data = self.start_time.data + timedelta(hours=12) if self.start_ampm.data=='PM' else self.start_time.data
-			self.end_time.data = self.end_time.data + timedelta(hours=12) if self.end_ampm.data=='PM' else self.end_time.data
+		    #convert time to 24 hour format
+			self.start_time.data = self.toggleTime(self.start_time.data, self.start_ampm.data)
+			self.end_time.data = self.toggleTime(self.end_time.data, self.end_ampm.data)
+
+			#check to see if the start time is greater than end time
 			if self.start_time.data > self.end_time.data:
 				self.start_time.errors.append("Your start time comes after your end time...")
 				return False
@@ -103,6 +108,49 @@ class ScheduleForm(Form):
 				return False
 			else:
 				return True
+
+	def get_data(self, name):
+		schedule_objs = db.session.query(Schedule) \
+			.join(Schedule.section) \
+			.filter(Section.name==name).all()
+		d = dict()
+		if schedule_objs:
+			d['days'] = [schedule_obj.day for schedule_obj in schedule_objs]
+			d['section'] = name
+			d['start_time'] = self.toggleTime(schedule_objs[0].start_time)
+			d['start_ampm'] = self.getAMPM(schedule_objs[0].start_time)
+			d['end_time'] = self.toggleTime(schedule_objs[0].end_time)
+			d['end_ampm'] = self.getAMPM(schedule_objs[0].end_time)
+		return d
+
+
+	def toggleTime(self,time, ampm=None):
+		if time.hour > 12:
+			return time - timedelta(hours=12) 
+		elif ampm == 'PM':
+			return time + timedelta(hours=12) 
+		else:
+			return time
+
+	def getAMPM(self,time):
+		if time.hour > 12:
+			return 'PM'
+		else:
+			return 'AM'
+
+class Timezone(Form):
+	timezone = SelectField("Timezone",
+		[validators.Required("Please select your timezone")],
+		choices = ['US/Eastern', 'US/Central', 'US/Mountain', 'US/Pacific']
+		)
+
+	def __init__(self, *args, **kwargs):
+		Form.__init__(self, *args, **kwargs)
+
+	def validate(self):
+		if not Form.validate(self):
+			return False
+
 
 
 
