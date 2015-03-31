@@ -1,12 +1,11 @@
 from application.schedules import cam_start, cam_stop, add_cron, remove_cron
 from application.models import *
-from datetime import datetime
 
 def add_schedule(form, session):
 	#make section object 
 	section_obj = Section.query.filter_by(name=form.section.data.title()).first()
 	if section_obj:
-		return 400, "This section already has recordings, check out the schedule."
+		return 403, "This section already has recordings, check out the schedule."
 	else:
 		section_obj = Section(name=form.section.data, 
 			user_id=db.session.query(User.id).filter_by(email=session['email']).first()[0])

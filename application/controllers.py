@@ -87,7 +87,7 @@ def add_recording():
   form = ScheduleForm()
 
   #POST
-  if not section_obj and request.method == 'POST' and form.validate():
+  if request.method == 'POST' and form.validate():
     status, message = api.add_schedule(form, session)  
     #respond to the client
     if status == 201:

@@ -18,11 +18,11 @@ def cam_stop():
 
 def add_cron(func, job_id, day, hour, minute): 
 	scheduler.add_job(func, "cron", 
-      id=job_id,
-      day_of_week=day, 
-      hour=hour, 
-      minute=minute
-      )
+		id=job_id,
+		day_of_week=day, 
+		hour=hour, 
+		minute=minute
+	)
 	return 0
 
 def remove_cron(job_id):
