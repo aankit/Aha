@@ -90,7 +90,7 @@ def add_recording():
   if not section_obj and request.method == 'POST' and form.validate():
     status, message = api.add_schedule(form, session)  
     #respond to the client
-    if status == 200:
+    if status == 201:
       flash(message)
       return redirect(url_for('add_recording'))
     else:
@@ -112,7 +112,7 @@ def edit_recording(name):
   if request.method == 'POST' and form.validate():
     status, message = api.edit_schedule(form, session)
     #respond to the client
-    if status == 200:
+    if status == 201:
       flash(message)
       return redirect(url_for('schedule'))
     else:

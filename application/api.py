@@ -35,9 +35,9 @@ def add_schedule(form, session):
 			db.session.commit()
 		except Exception as error:
 			db.session.rollback()
-			return 501, error
+			return 500, error
 		#redirecting back to schedule page with flash for success
-		return 200, "Success! You have added a recording."
+		return 201, "Success! You have added a recording."
 
 def edit_schedule(form, session):
 	#look up session
@@ -74,9 +74,9 @@ def edit_schedule(form, session):
 
 	except Exception as error:
 		db.session.rollback()
-		return 501, error
+		return 500, error
 
-	return 200, "Success! You have editing recording for %s" %(form.section.data)
+	return 201, "Success! You have editing recording for %s" %(form.section.data)
 
 def get_scheduled():
 	return db.session.query(Schedule).join(Schedule.section).all()

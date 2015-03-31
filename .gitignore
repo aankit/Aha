@@ -2,6 +2,7 @@
 /logs
 /videos
 /venv
+application/static/lib
 picam-1.2.9-binary
 .DS_Store
 *.db

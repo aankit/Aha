@@ -5,7 +5,6 @@ function setup() {
 	canvas = createCanvas(205, 350);
 	canvas.position(windowWidth/2-125, windowHeight/7);
 	canvas.style("border", "1px solid");
-	console.log(canvas.width/2, canvas.height/2);
 	sliderBar = {
 		x1 : canvas.width-40,
 		y1 : 20,
@@ -16,44 +15,69 @@ function setup() {
 		x4 : canvas.width-40,
 		y4 : canvas.height-20
 	};
-	cursor = {
-		ox : canvas.width/2,
-		oy : canvas.height/2,
-		cx : canvas.width/2,
-		cy : canvas.height/2,
-		select: 0
-	};
+	setCursor();
 }
 
 function draw() {
 	background(0);
 	bar(sliderBar); //draw the bar
-	checkSaving();
-	//slider
 	noStroke();
 	fill(55,171,134);
-	ellipse(cursor.cx, cursor.cy, 40, 40);
+	ellipse(cursor.cx, cursor.cy, cursor.radius, cursor.radius);
+	dir = "";
+	if (cursor.duration > 0){
+		if(cursor.direction>0){
+			dir = "+";
+		}
+		else if(cursor.direction<0){
+			dir = "-";
+		} else {
+			//something else here?
+		}
+		textSize(14);
+		text(dir + " " + cursor.duration + " min", cursor.cx-75, cursor.cy);
+	}
 
 }
 
+function setCursor(){
+	cursor = {
+		ox : canvas.width/2,
+		oy : canvas.height/2,
+		cx : canvas.width/2,
+		cy : canvas.height/2,
+		radius: 30,
+		direction: 0,	//forward, back, around
+		duration: 0		//seconds selected
+	};
+}
+
 function mouseDragged(){
-	for(t=0;t<1;t+=0.016){
-		bp = bezXY(sliderBar, t);
-		if(abs(mouseX - bp.cx) < 15 && abs(mouseY - bp.cy)<15){
-			cursor.cx = bp.cx;
-			cursor.cy = bp.cy;
-			cursor.select = t;
-			dir = cursor.select - 0.5; //are we going up or down?
-			// minutes = 
+	cursor.radius = 40;
+	if(abs(mouseX-cursor.cx)<cursor.radius && abs(mouseY-cursor.cy)<cursor.radius)
+		for(t=0;t<1;t+=0.016){
+			bp = bezXY(sliderBar, t);
+			if(abs(mouseX - bp.cx) < 8 && abs(mouseY - bp.cy)<2){
+				cursor.cx = bp.cx;
+				cursor.cy = bp.cy;
+				if((t - 0.5)<0){
+					cursor.direction = 1;
+				} else if((t - 0.5)>0){
+					cursor.direction = -1;
+				}
+				cursor.duration = Math.floor(abs(t-0.5)/(0.5*0.064));
+				// console.log(cursor.duration);
+			}
 		}
+	else {
+		setCursor();
 	}
 }
 
 function mouseReleased() {
-	cursor.cx = cursor.ox;
-	cursor.cy = cursor.oy;
 	//post to the server!
-
+	var xmlhttp = new XMLHttpRequest();
+	setCursor();
 }
 
 
@@ -64,10 +88,10 @@ function bar(b){
 	strokeCap(ROUND);
 	noFill();
 	bezier(b.x1, b.y1, b.x2, b.y2, b.x3, b.y3, b.x4, b.y4);
-}
-
-function checkSaving(){
-	console.log("got to do a check to see if we need to be saving?");
+	strokeWeight(5.0);
+	line(canvas.width/2-15, canvas.height/2, canvas.width/2+15, canvas.height/2); //center line
+	//upper 10 minute line
+	//lower 10 minute line
 }
 
 function bezXY(b, t, x, y){
