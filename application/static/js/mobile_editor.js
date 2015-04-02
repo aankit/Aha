@@ -1,5 +1,7 @@
 var cursor; //cursor obj
 var sliderBar; //slider bar obj
+var scale; //scale of the slider
+var highlight, release_time, prev_millis, redo_time, countdown;
 
 function setup() {
 	canvas = createCanvas(205, 350);
@@ -16,15 +18,38 @@ function setup() {
 		y4 : canvas.height-20
 	};
 	setCursor();
+	scale = 0.016;
+	highlight = {
+		begin: 0,
+		end: 0
+	};
+	countdown = false;
 }
 
 function draw() {
 	background(0);
 	bar(sliderBar); //draw the bar
+	for(var i=highlight.begin;i<highlight.end;i+=scale){
+		hp = bezXY(sliderBar, i);
+		noStroke();
+		fill(30, 223, 184);
+		ellipse(hp.cx, hp.cy, 14, 14);
+	}
 	noStroke();
-	fill(55,171,134);
+	fill(cursor.fillColor);
 	ellipse(cursor.cx, cursor.cy, cursor.radius, cursor.radius);
-	dir = "";
+	if((prev_millis - release_time < redo_time) && countdown){
+		prev_millis = millis();
+		rectMode(CENTER);
+		fill(128);
+		rect(canvas.width/2, 4*canvas.height/5, 150, 75);
+		// textMode(CENTER);
+		// text()
+	} else if((prev_millis - release_time > redo_time) && countdown){
+		highlight.begin = 0;
+		highlight.end = 0;
+		countdown = false;
+	}
 	if (cursor.duration > 0){
 		if(cursor.direction>0){
 			dir = "+";
@@ -35,12 +60,14 @@ function draw() {
 			//something else here?
 		}
 		textSize(14);
+		// textMode()
 		text(dir + " " + cursor.duration + " min", cursor.cx-75, cursor.cy);
 	}
 
 }
 
 function setCursor(){
+	oldVals = cursor;
 	cursor = {
 		ox : canvas.width/2,
 		oy : canvas.height/2,
@@ -48,24 +75,30 @@ function setCursor(){
 		cy : canvas.height/2,
 		radius: 30,
 		direction: 0,	//forward, back, around
-		duration: 0		//seconds selected
+		duration: 0,	//seconds selected
+		fillColor: color(55, 171, 134),
 	};
+	return oldVals;
 }
 
-function mouseDragged(){
+function touchMoved(){
 	cursor.radius = 40;
-	if(abs(mouseX-cursor.cx)<cursor.radius && abs(mouseY-cursor.cy)<cursor.radius)
-		for(t=0;t<1;t+=0.016){
+	if(abs(mouseX-cursor.cx)<cursor.radius && abs(mouseY-cursor.cy)<cursor.radius && !countdown)
+		for(t=0;t<1;t+=scale){
 			bp = bezXY(sliderBar, t);
 			if(abs(mouseX - bp.cx) < 8 && abs(mouseY - bp.cy)<2){
 				cursor.cx = bp.cx;
 				cursor.cy = bp.cy;
 				if((t - 0.5)<0){
-					cursor.direction = 1;
+					cursor.direction = 1; //we are going forwards in time
+					highlight.begin = t;
+					highlight.end = 0.5;
 				} else if((t - 0.5)>0){
-					cursor.direction = -1;
+					cursor.direction = -1; //are we going backwards in time	
+					highlight.begin = 0.5;
+					highlight.end = t;
 				}
-				cursor.duration = Math.floor(abs(t-0.5)/(0.5*0.064));
+				cursor.duration = Math.floor(abs(t-0.5)/(0.5*scale*4));
 				// console.log(cursor.duration);
 			}
 		}
@@ -74,10 +107,20 @@ function mouseDragged(){
 	}
 }
 
-function mouseReleased() {
+function touchEnded() {
+	if(!countdown){
+		release_time = millis();
+		prev_millis = 0;
+		redo_time = 0;
+		if(cursor.duration>0){
+			redo_time = 3000;
+			countdown = true;
+		}
+		setCursor();
+		//start the reset countdown...
+	}
 	//post to the server!
 	var xmlhttp = new XMLHttpRequest();
-	setCursor();
 }
 
 

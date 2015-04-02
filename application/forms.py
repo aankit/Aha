@@ -9,7 +9,7 @@ from models import User, Section, Schedule
 class SignupForm(Form):
 	firstname = StringField("First Name", validators=[validators.Required("First Name")])
 	lastname = StringField("Last Name", validators=[validators.Required("Last Name")])
-	email = StringField("Email", validators=[validators.Required("Email Address")])
+	email = StringField("Email", validators=[validators.Required("Email Address"), validators.Email(message="Invalid Email")])
 	password = PasswordField("Password", validators=[validators.Required("Choose a Password")])
 	submit = SubmitField("Create account")
 
