@@ -41,7 +41,7 @@
       <ul class="nav navbar-nav">
           {% if 'email' in session %}
           <li><a href="{{ url_for('home') }}">Home</a></li>
-          <li><a href="{{ url_for('schedule') }}">Schedule</a></li>
+          <li><a href="{{ url_for('view_schedule') }}">Schedule</a></li>
           <li><a href="{{ url_for('signout') }}">Sign Out</a></li>
           {% else %}
           <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
@@ -67,8 +67,7 @@
         </ul>
       {% endif %}
     {% endwith %}
-  <div class="container page">
-    <div id="content" class="container-fluid main">    </div>
+    <div id="content" class="container-fluid main"> 
       {% block content %}
       {% endblock %}
 

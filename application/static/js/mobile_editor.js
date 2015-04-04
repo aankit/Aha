@@ -1,7 +1,8 @@
 var cursor; //cursor obj
 var sliderBar; //slider bar obj
 var scale; //scale of the slider
-var highlight, release_time, prev_millis, redo_time, countdown;
+var saver; //saves the marked time!!
+var highlight, release_time, prev_millis, redo_time, countdown; //time selection variables
 
 function setup() {
 	canvas = createCanvas(205, 350);
@@ -17,7 +18,8 @@ function setup() {
 		x4 : canvas.width-40,
 		y4 : canvas.height-20
 	};
-	setCursor();
+	resetCursor();
+	resetSaver();
 	scale = 0.016;
 	highlight = {
 		begin: 0,
@@ -29,44 +31,54 @@ function setup() {
 function draw() {
 	background(0);
 	bar(sliderBar); //draw the bar
+	//draw highlighted time segment if one exists
 	for(var i=highlight.begin;i<highlight.end;i+=scale){
 		hp = bezXY(sliderBar, i);
 		noStroke();
 		fill(30, 223, 184);
 		ellipse(hp.cx, hp.cy, 14, 14);
 	}
-	noStroke();
-	fill(cursor.fillColor);
-	ellipse(cursor.cx, cursor.cy, cursor.radius, cursor.radius);
+	//hold a highlighted time segment if one exists
 	if((prev_millis - release_time < redo_time) && countdown){
 		prev_millis = millis();
 		rectMode(CENTER);
 		fill(128);
 		rect(canvas.width/2, 4*canvas.height/5, 150, 75);
 		// textMode(CENTER);
-		// text()
+		console.log(saver.duration);
+		// stroke(255,0,0);
+		// text("Recorded");
 	} else if((prev_millis - release_time > redo_time) && countdown){
 		highlight.begin = 0;
 		highlight.end = 0;
+		//POST our data!!
+		// postMarker(saver.timestamp, saver.direction, saver.duration);
+		resetSaver();
 		countdown = false;
 	}
-	if (cursor.duration > 0){
-		if(cursor.direction>0){
+	//text is still showing because this hasn't been reset, maybe i can use that.
+	if (saver.duration > 0){
+		if(saver.direction>0){
 			dir = "+";
 		}
-		else if(cursor.direction<0){
+		else if(saver.direction<0){
 			dir = "-";
 		} else {
 			//something else here?
 		}
 		textSize(14);
 		// textMode()
-		text(dir + " " + cursor.duration + " min", cursor.cx-75, cursor.cy);
+		text(dir + " " + saver.duration + " min", cursor.cx-75, cursor.cy);
 	}
+
+	//draw the cursor
+	noStroke();
+	fill(cursor.fillColor);
+	ellipse(cursor.cx, cursor.cy, cursor.radius, cursor.radius);
 
 }
 
-function setCursor(){
+function resetCursor(){
 	oldVals = cursor;
 	cursor = {
 		ox : canvas.width/2,
@@ -74,11 +86,19 @@ function setCursor(){
 		cx : canvas.width/2,
 		cy : canvas.height/2,
 		radius: 30,
-		direction: 0,	//forward, back, around
-		duration: 0,	//seconds selected
 		fillColor: color(55, 171, 134),
 	};
 	return oldVals;
+}
+
+function resetSaver(){
+	oldVals = saver;
+	saver = {
+		day: '', //to check against database to find section
+		timestamp: '', //to check against database to find section
+		direction: 0,	//forward, back, around
+		duration: 0	//seconds selected
+	};
 }
 
 function touchMoved(){
@@ -90,37 +110,65 @@ function touchMoved(){
 				cursor.cx = bp.cx;
 				cursor.cy = bp.cy;
 				if((t - 0.5)<0){
-					cursor.direction = 1; //we are going forwards in time
+					saver.direction = 1; //we are going forwards in time
 					highlight.begin = t;
 					highlight.end = 0.5;
 				} else if((t - 0.5)>0){
-					cursor.direction = -1; //are we going backwards in time	
+					saver.direction = -1; //are we going backwards in time	
 					highlight.begin = 0.5;
 					highlight.end = t;
 				}
-				cursor.duration = Math.floor(abs(t-0.5)/(0.5*scale*4));
-				// console.log(cursor.duration);
+				saver.day = moment().format('d'); //based on recurring events, so  day is important
+				saver.timestamp = "1900-01-01T" + moment().format('HH:mm:ss'); //database doesn't contain dates, just times
+				saver.duration = Math.floor(abs(t-0.5)/(0.5*scale*4));
+				// console.log(saver.duration);
 			}
 		}
 	else {
-		setCursor();
+		resetCursor();
 	}
 }
 
 function touchEnded() {
+	release_time = millis(); //this is initial value when waiting before posting
 	if(!countdown){
-		release_time = millis();
 		prev_millis = 0;
 		redo_time = 0;
-		if(cursor.duration>0){
+		if(saver.duration>0){
 			redo_time = 3000;
 			countdown = true;
 		}
-		setCursor();
-		//start the reset countdown...
+		resetCursor();
 	}
-	//post to the server!
-	var xmlhttp = new XMLHttpRequest();
+
+}
+
+function postMarker(timestamp, direction, duration){
+    //event handler functions, currently the Failed function isn't called on error, not sure why
+	function addComplete(evt) {
+		console.log("added");
+	}
+	function addFailed(evt){
+		alert("The scenario was not added");
+	}
+	section_id = getSection();
+
+
+	var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
+	xmlhttp.addEventListener("load", addComplete, false);
+	xmlhttp.addEventListener("error", addFailed, false);
+	xmlhttp.open("POST", "/api/marker", true);
+	xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+	xmlhttp.send(JSON.stringify(data));
+}
+
+function getSection(day, timestamp){
+	//get date info first to search the schedule table
+	filters = [{"name":"start_time", "op" : "lte", "val": timestamp},{"name":"end_time", "op": "gte", "val": timestamp}];
+	schedule_data = {};
+	$.get('api/schedule', {"q": JSON.stringify({"filters": filters})}, function(data) { schedule_data = data;});
+	section_id = schedule_data.objects[0].section_id;
+	return section_id;
 }
 
 

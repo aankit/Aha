@@ -1,5 +1,6 @@
 from werkzeug import generate_password_hash, check_password_hash
 from application import db
+from application import app
 
 class User(db.Model):
 	__tablename__ = 'user'
@@ -67,6 +68,23 @@ class Job(db.Model):
 	def __repr__(self):
 		return '<Job %s>' % (self.job_id)
 
+class Marker(db.Model):
+	__tablename__ = 'marker'
+	id = db.Column(db.Integer, primary_key = True)
+	timestamp = db.Column(db.DateTime)
+	start_time = db.Column(db.DateTime)
+	end_time = db.Column(db.DateTime) 
+	schedule_id = db.Column(db.Integer, db.ForeignKey('schedule.id'))
+	schedule = db.relationship('Schedule', backref='markers')
+
+	def __repr__(self):
+		return '<Marker %r>' % (self.timestamp)
 
 
+# models for which we want to create API endpoints
+app.config['API_MODELS'] = { 
+	'section': Section,
+	'schedule': Schedule,
+	'marker': Marker
+	}
 

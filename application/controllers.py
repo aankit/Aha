@@ -1,9 +1,12 @@
 from flask import request, session, redirect, flash
-from flask import render_template, url_for, send_file
+from flask import render_template, url_for
 from application.models import *
-from application import api
+from application import app, schedule, api_manager
 from application.forms import SignupForm, SigninForm, ScheduleForm
-from application import app
+
+for model_name in app.config['API_MODELS']:
+  model_class = app.config['API_MODELS'][model_name]
+  api_manager.create_api(model_class, methods=['GET', 'POST'])
 
 @app.route('/')
 def home():
@@ -15,12 +18,6 @@ def home():
   else:
     return render_template('home.html', user=user)
 
-# @app.route('/log', methods=['GET', 'POST'])
-# def log():
-#     if request.method == 'POST':
-#         return request.get_data()
-#     elif request.method == 'GET':
-#         return 'hi there'
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -55,6 +52,7 @@ def signin():
   elif request.method == 'GET':
     return render_template('signin.html', form=form)
 
+
 @app.route('/signout')
 def signout():
  
@@ -64,13 +62,15 @@ def signout():
   session.pop('email', None)
   return redirect(url_for('home'))
 
+
 @app.route('/schedule')
-def schedule():
+def view_schedule():
   form = ScheduleForm()
-  jobs = api.get_scheduled()
+  jobs = schedule.get_scheduled()
   return render_template('schedule.html', 
     jobs=jobs,
     form=form)
+
 
 @app.route('/profile')
 def profile():
@@ -82,13 +82,14 @@ def profile():
   else:
     return render_template('home.html', user=user)
 
+
 @app.route('/recording', methods=['GET', 'POST'])
 def add_recording():
   form = ScheduleForm()
 
   #POST
   if request.method == 'POST' and form.validate():
-    status, message = api.add_schedule(form, session)  
+    status, message = schedule.add_schedule(form, session)  
     #respond to the client
     if status == 201:
       flash(message)
@@ -110,7 +111,7 @@ def edit_recording(name):
 
   #POST
   if request.method == 'POST' and form.validate():
-    status, message = api.edit_schedule(form, session)
+    status, message = schedule.edit_schedule(form, session)
     #respond to the client
     if status == 201:
       flash(message)
@@ -134,14 +135,17 @@ def edit_recording(name):
     else:
       return render_template("error.html", error="Class doesn't exist :(")
 
+
 @app.route('/editor')
 def editor():
   return render_template("mobile_editor.html")
+
 
 @app.route('/logo')
 def logo():
   return send_from_directory(os.path.join(app.root_path, 'static'),
                  'img/aha.png')
+
 
 @app.errorhandler(404)
 def page_not_found(e):

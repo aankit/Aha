@@ -1,5 +1,27 @@
-from application.schedules import cam_start, cam_stop, add_cron, remove_cron
 from application.models import *
+from application import scheduler
+
+def scheduler_job():
+	print "scheduler job working"
+
+def cam_start():
+	print "camera started"
+
+def cam_stop():
+	print "camera stopped"
+
+def add_cron(func, job_id, day, hour, minute): 
+	scheduler.add_job(func, "cron", 
+		id=job_id,
+		day_of_week=day, 
+		hour=hour, 
+		minute=minute
+	)
+	return 0
+
+def remove_cron(job_id):
+	scheduler.remove_job(job_id)
+	return 0
 
 def add_schedule(form, session):
 	#make section object 
