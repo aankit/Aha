@@ -26,6 +26,7 @@ function setup() {
 		end: 0
 	};
 	countdown = false;
+	textFont("Helvetica");
 }
 
 function draw() {
@@ -35,40 +36,52 @@ function draw() {
 	for(var i=highlight.begin;i<highlight.end;i+=scale){
 		hp = bezXY(sliderBar, i);
 		noStroke();
-		fill(30, 223, 184);
+		if (countdown){
+			fill(255);
+		} else {
+			fill(30, 223, 184);
+		}
 		ellipse(hp.cx, hp.cy, 14, 14);
 	}
 	//hold a highlighted time segment if one exists
-	if((prev_millis - release_time < redo_time) && countdown){
-		prev_millis = millis();
-		rectMode(CENTER);
-		fill(128);
-		rect(canvas.width/2, 4*canvas.height/5, 150, 75);
-		// textMode(CENTER);
-		console.log(saver.duration);
-		// stroke(255,0,0);
-		// text("Recorded");
-	} else if((prev_millis - release_time > redo_time) && countdown){
-		highlight.begin = 0;
-		highlight.end = 0;
-		//POST our data!!
-		// postMarker(saver.timestamp, saver.direction, saver.duration);
-		resetSaver();
-		countdown = false;
-	}
-	//text is still showing because this hasn't been reset, maybe i can use that.
-	if (saver.duration > 0){
-		if(saver.direction>0){
-			dir = "+";
+	if (countdown){
+		if (prev_millis - release_time < redo_time){
+			prev_millis = millis();
+			fill(86);
+			boxY  = 3 * canvas.height/4;
+			rect(0, boxY, canvas.width, boxY/3);
+			textAlign(CENTER);
+			fill(255);
+			textSize(16);
+			noStroke();
+			text("Recorded", canvas.width/2, boxY+20);
+			textSize(13);
+			save_text = '';
+			if (saver.direction === -1){
+				save_text = "From " + saver.duration + " min ago to Now.";
+			} else if (saver.direction === 1){
+				save_text = "From Now to " + saver.duration + " min from Now.";
+			}
+			text(save_text, canvas.width/2, boxY+50);
+
+		} else if (prev_millis - release_time > redo_time){
+			highlight.begin = 0;
+			highlight.end = 0;
+			//POST our data!!
+			// postMarker(saver.timestamp, saver.direction, saver.duration);
+			resetSaver();
+			countdown = false;
+		} else if (saver.duration > 0){
+
 		}
-		else if(saver.direction<0){
-			dir = "-";
-		} else {
-			//something else here?
+	} else {
+		if (saver.duration >0 ){
+			//text is still showing because saver.duration hasn't been reset, maybe i can use that.
+			fill(30, 223, 184);
+			textSize(14);
+			// textMode()
+			text(saverDirection() + " " + saver.duration + " min", cursor.cx-75, cursor.cy);
 		}
-		textSize(14);
-		// textMode()
-		text(dir + " " + saver.duration + " min", cursor.cx-75, cursor.cy);
 	}
 
 	//draw the cursor
@@ -99,6 +112,19 @@ function resetSaver(){
 		direction: 0,	//forward, back, around
 		duration: 0	//seconds selected
 	};
+}
+
+function saverDirection(){
+	dir = '';
+	if(saver.direction>0){
+		dir = "+";
+	}
+	else if(saver.direction<0){
+		dir = "-";
+	} else {
+		//both directions here!
+	}
+	return dir;
 }
 
 function touchMoved(){
