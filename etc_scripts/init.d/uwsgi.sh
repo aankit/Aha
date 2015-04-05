@@ -12,7 +12,6 @@
 set -e
  
  
-PATH=/sbin:/bin:/usr/sbin:/usr/bin
 APPENV=/var/www/Aha/venv
 DAEMON=${APPENV}/uwsgi
 RUN=/var/run/uwsgi
