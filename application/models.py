@@ -73,9 +73,7 @@ class Marker(db.Model):
 	id = db.Column(db.Integer, primary_key = True)
 	timestamp = db.Column(db.DateTime)
 	start_time = db.Column(db.DateTime)
-	end_time = db.Column(db.DateTime) 
-	schedule_id = db.Column(db.Integer, db.ForeignKey('schedule.id'))
-	schedule = db.relationship('Schedule', backref='markers')
+	end_time = db.Column(db.DateTime)
 
 	def __repr__(self):
 		return '<Marker %r>' % (self.timestamp)
