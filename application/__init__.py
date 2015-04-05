@@ -19,6 +19,9 @@ scheduler = BackgroundScheduler(jobstores=jobstores,
 	job_defaults=job_defaults, 
 	timezone=timezone)
 
+scheduler.start()
+print 'scheduler started'
+
 #our routes
 import application.controllers
 import application.schedule
