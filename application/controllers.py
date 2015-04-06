@@ -62,7 +62,7 @@ def signout():
 
 @app.route('/camera')
 def live():
-  render_template('signin.html')
+  return render_template('live.html')
 
 @app.route('/schedule')
 def view_schedule():
