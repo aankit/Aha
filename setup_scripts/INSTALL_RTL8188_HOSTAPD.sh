@@ -9,6 +9,7 @@ sudo make
 sudo make install
 
 sudo mv hostapd /usr/sbin/hostapd
+sudo ln -sf /usr/sbin/hostapd.edimax /usr/sbin/hostapd 
 sudo chown root.root /usr/sbin/hostapd
 sudo chmod 755 /usr/sbin/hostapd
 cd /home/teacher
