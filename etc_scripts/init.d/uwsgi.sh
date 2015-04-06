@@ -12,8 +12,8 @@
 set -e
  
  
-#PATH=/sbin:/bin:/usr/sbin:/usr/bin
-APPENV=/var/www/Aha/venv
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+APPENV=/var/www/Aha/venv/bin
 DAEMON=${APPENV}/uwsgi
 RUN=/var/run/uwsgi
 ENABLED_CONFIGS_DIR=/etc/uwsgi/apps-enabled
