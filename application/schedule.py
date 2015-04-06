@@ -1,14 +1,25 @@
 from application.models import *
 from application import scheduler
+import sh
 
 def scheduler_job():
 	print "scheduler job working"
 
 def cam_start():
-	print "camera started"
+	sh.sudo('service','picam', 'start')
+	command_sent = time.time()
+	current_time = time.time()
+	pid = sh.pidof('picam')
+	while not pid:
+		pid = sh.pidof('picam')
+		current_time = time.time()
+		if command_sent - current_time > 20:
+			break;
+	sh.touch('/home/pi/hooks/start_record')
 
 def cam_stop():
-	print "camera stopped"
+	sh.touch('/home/pi/hooks/stop_record')
+	sh.sudo('service', 'picam', 'stop')
 
 def add_cron(func, job_id, day, hour, minute): 
 	scheduler.add_job(func, "cron", 

@@ -55,13 +55,14 @@ def signin():
 
 @app.route('/signout')
 def signout():
- 
   if 'email' not in session:
-    return redirect(url_for('signin'))
-     
+    return redirect(url_for('signin'))   
   session.pop('email', None)
   return redirect(url_for('home'))
 
+@app.route('/live')
+def live():
+  render_template('live.html')
 
 @app.route('/schedule')
 def view_schedule():
