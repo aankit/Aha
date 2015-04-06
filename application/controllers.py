@@ -60,9 +60,9 @@ def signout():
   session.pop('email', None)
   return redirect(url_for('home'))
 
-@app.route('/live')
+@app.route('/camera')
 def live():
-  render_template('live.html')
+  render_template('signin.html')
 
 @app.route('/schedule')
 def view_schedule():
