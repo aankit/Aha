@@ -34,11 +34,12 @@ function postMarker(timestamp, direction, duration){
 	//turn timestamp into string for POSTing
 	timestamp = "1900-01-01T" + timestamp.format("HH:mm:ss");
 	data = {
+		"video_id": video_id,
 		"timestamp": timestamp,
 		"start_time": start_time,
 		"end_time": end_time
 	};
-
+	//POST the data!!!
 	var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
 	xmlhttp.addEventListener("load", addComplete, false);
 	xmlhttp.addEventListener("error", addFailed, false);
@@ -60,11 +61,11 @@ function getSection(day, timestamp){
 }
 
 function getVideo(section_id){
-	filters = [{"name": "section_id", "op": "eq", "val": section_id}]
+	filters = [{"name": "section_id", "op": "eq", "val": section_id}];
 	video_data = {};
 	$.get('api/video', {"q": JSON.stringify({"filters": filters})}, function(data) { video_data = data;});
-	video_id = video_data.objects[0].id
-	return video_id
+	video_id = video_data.objects[0].id;
+	return video_id;
 }
 
 

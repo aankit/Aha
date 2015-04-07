@@ -82,6 +82,7 @@ class Video(db.Model):
 class Marker(db.Model):
 	__tablename__ = 'marker'
 	id = db.Column(db.Integer, primary_key = True)
+	video_id = db.Column(db.Integer)
 	timestamp = db.Column(db.DateTime)
 	start_time = db.Column(db.DateTime)
 	end_time = db.Column(db.DateTime)
