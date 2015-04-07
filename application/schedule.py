@@ -106,7 +106,7 @@ def edit_schedule(form, session):
 			else:
 				jobs = schedule_obj.jobs
 				for job in jobs:
-					remove_cron(job)
+					remove_cron(job.job_id)
 				db.session.delete(schedule_obj)
 				db.session.commit()
 			

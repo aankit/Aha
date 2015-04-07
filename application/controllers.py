@@ -111,9 +111,11 @@ def add_recording():
 def edit_recording(name):
   form = ScheduleForm()
   #POST
+  print form.data
   if request.method == 'POST' and form.validate():
+    print form.data
     status, message = schedule.edit_schedule(form, session)
-    print state, message
+    print status, message
     #respond to the client
     if status == 201:
       flash(message)
@@ -124,16 +126,17 @@ def edit_recording(name):
   else:
     d = form.get_data(name)
     if d:
+      form.section.data = d['section']
+      form.days.data = d['days']
+      form.start_time.data =  d['start_time']
+      form.start_ampm.data = d['start_ampm']
+      form.end_time.data = d['end_time'] 
+      form.end_ampm.data = d['end_ampm']
       return render_template('recording.html', 
         title = "Edit Recording", 
         endpoint = 'edit_recording', 
         name = name,
-        form=ScheduleForm(section = d['section'], 
-          days = d['days'], 
-          start_time =  d['start_time'], 
-          start_ampm = d['start_ampm'], 
-          end_time = d['end_time'], 
-          end_ampm = d['end_ampm']))
+        form = form)
     else:
       return render_template("error.html", error="Class doesn't exist :(")
 
