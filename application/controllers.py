@@ -91,10 +91,11 @@ def add_recording():
   #POST
   if request.method == 'POST' and form.validate():
     status, message = schedule.add_schedule(form, session)  
+    print status, message 
     #respond to the client
     if status == 201:
       flash(message)
-      return redirect(url_for('add_recording'))
+      return redirect(url_for('view_schedule'))
     else:
       render_template("error.html", error="%d: %s" % (status, message))
   #GET
@@ -109,14 +110,14 @@ def add_recording():
 @app.route('/recording/<name>', methods=['GET', 'POST'])
 def edit_recording(name):
   form = ScheduleForm()
-
   #POST
   if request.method == 'POST' and form.validate():
     status, message = schedule.edit_schedule(form, session)
+    print state, message
     #respond to the client
     if status == 201:
       flash(message)
-      return redirect(url_for('schedule'))
+      return redirect(url_for('view_schedule'))
     else:
       return render_template("error.html", error="%d: %s" % (status, message))
   #GET

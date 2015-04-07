@@ -55,9 +55,14 @@ function getSection(day, timestamp){
 	{"name": "end_time", "op": "gte", "val": timestamp},
 	{"name": "day", "op": "eq", "val": day}];
 	schedule_data = {};
-	$.get('api/schedule', {"q": JSON.stringify({"filters": filters})}, function(data) { schedule_data = data;});
-	section_id = schedule_data.objects[0].section_id;
-	return section_id;
+	try{
+		$.get('api/schedule', {"q": JSON.stringify({"filters": filters})}, function(data) { schedule_data = data;});
+		section_id = schedule_data.objects[0].section_id;
+	}
+	catch (e){
+		console.log(e);
+	}
+
 }
 
 function getVideo(section_id){
