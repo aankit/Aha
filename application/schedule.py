@@ -1,23 +1,38 @@
 from application.models import *
 from application import scheduler
-import sh
+from application import picam
+from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
+import time
 
 def scheduler_job():
 	print "scheduler job working"
 
-def cam_start():
-	sh.sudo('service','picam', 'start')
-	command_sent = time.time()
-	current_time = time.time()
-	pid = sh.pidof('picam')
-	while not pid:
-		pid = sh.pidof('picam')
-		current_time = time.time()
-		if command_sent - current_time > 20:
-			break;
-	sh.touch('/home/pi/hooks/start_record')
+def cam_record():
+	picam_service = picam.service_on()
+	if picam_service:
+		recording_filename, command_sent = picam.record_on()
+		hms = time.strftime("%H:%M:%S", time.localtime(command_sent))
+		day = time.strftime("%w")
+		job_time = datetime.strptime("1900-01-01_"+hms, "%Y-%m%d_%H:%M:%S")
+		try:
+			schedule_obj = db.session.query(Schedule) \
+			.filter((Schedule.day==day) & \
+				(Schedule.start_time<=job_time) & \
+				(Schedule.end_time>=job_time)).one()
+		except MultipleResultsFound:
+			app.logger.warning("multiple sections found when starting recording")
+			raise
+		except NoResultFound:
+			app.logger.warning("no section found when starting recording")
+			raise
+		video_obj = Video(filename=recording_filename, start_time=schedule_obj.job_time, section_id=schedule_obj.section_id)
+		db.session.add(video_obj)
+		db.session.commit()
+	else:
+		raise Exception("the picam service could not been started")
 
-def cam_stop():
+
+def cam_off():
 	sh.touch('/home/pi/hooks/stop_record')
 	sh.sudo('service', 'picam', 'stop')
 

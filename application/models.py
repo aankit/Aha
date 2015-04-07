@@ -68,6 +68,17 @@ class Job(db.Model):
 	def __repr__(self):
 		return '<Job %s>' % (self.job_id)
 
+class Video(db.Model):
+	__tablename__ = 'video'
+	id = db.Column(db.Integer, primary_key = True)
+	filename = db.Column(db.String(25))
+	start_time = db.Column(db.DateTime)
+	section_id = db.Column(db.Integer)
+
+	def __repr(self):
+		return '<Video %s>' % (self.filename)
+
+
 class Marker(db.Model):
 	__tablename__ = 'marker'
 	id = db.Column(db.Integer, primary_key = True)
@@ -79,10 +90,13 @@ class Marker(db.Model):
 		return '<Marker %r>' % (self.timestamp)
 
 
+
+
 # models for which we want to create API endpoints
 app.config['API_MODELS'] = { 
 	'section': Section,
 	'schedule': Schedule,
+	'video': Video,
 	'marker': Marker
 	}
 

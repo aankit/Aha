@@ -97,27 +97,35 @@ function resetSaver(){
 	};
 }
 
+function updateSaver(t){
+	//we use the cursor position at this point to set the saver parameters
+	//this means that the saver is not tied to the interface
+	if((t - 0.5)<0){
+		saver.direction = 1; //we are going forwards in time
+		highlight.begin = t;
+		highlight.end = 0.5;
+	} else if((t - 0.5)>0){
+		saver.direction = -1; //are we going backwards in time	
+		highlight.begin = 0.5;
+		highlight.end = t;
+	}
+	saver.day = moment().format('d'); //based on recurring events, so  day is important
+	saver.timestamp =  moment(); //database doesn't contain dates, just times
+	saver.duration = Math.floor(abs(t-0.5)/(0.5*scale*4));
+	// console.log(saver.duration);
+}
+
 function touchMoved(){
 	cursor.radius = 40;
 	if(abs(mouseX-cursor.cx)<cursor.radius && abs(mouseY-cursor.cy)<cursor.radius && !countdown)
+		//t is the way we move along the curve of the bezier, between zero and one.
+		//the scale is used to step through the bezier and is equivalent to one minute.
 		for(t=0;t<1;t+=scale){
 			bp = bezXY(sliderBar, t);
 			if(abs(mouseX - bp.cx) < 8 && abs(mouseY - bp.cy)<2){
 				cursor.cx = bp.cx;
 				cursor.cy = bp.cy;
-				if((t - 0.5)<0){
-					saver.direction = 1; //we are going forwards in time
-					highlight.begin = t;
-					highlight.end = 0.5;
-				} else if((t - 0.5)>0){
-					saver.direction = -1; //are we going backwards in time	
-					highlight.begin = 0.5;
-					highlight.end = t;
-				}
-				saver.day = moment().format('d'); //based on recurring events, so  day is important
-				saver.timestamp =  moment(); //database doesn't contain dates, just times
-				saver.duration = Math.floor(abs(t-0.5)/(0.5*scale*4));
-				// console.log(saver.duration);
+				updateSaver(t);
 			}
 		}
 	else {

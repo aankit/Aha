@@ -21,7 +21,8 @@ function postMarker(timestamp, direction, duration){
 	}
 	//let's build our data object for POSTing
 	//get section_id for posting
-	// section_id = getSection();
+	section_id = getSection();
+	video_id = getVideo(section_id);
 	
 	if( direction > 0){
 		start_time = new Date(timestamp._d.getTime() + duration);
@@ -49,11 +50,21 @@ function postMarker(timestamp, direction, duration){
 function getSection(day, timestamp){
 	//get date info first to search the schedule table
 	//need to add day to the filters
-	filters = [{"name":"start_time", "op" : "lte", "val": timestamp},{"name":"end_time", "op": "gte", "val": timestamp}];
+	filters = [{"name": "start_time", "op" : "lte", "val": timestamp},
+	{"name": "end_time", "op": "gte", "val": timestamp},
+	{"name": "day", "op": "eq", "val": day}];
 	schedule_data = {};
 	$.get('api/schedule', {"q": JSON.stringify({"filters": filters})}, function(data) { schedule_data = data;});
 	section_id = schedule_data.objects[0].section_id;
 	return section_id;
+}
+
+function getVideo(section_id){
+	filters = [{"name": "section_id", "op": "eq", "val": section_id}]
+	video_data = {};
+	$.get('api/video', {"q": JSON.stringify({"filters": filters})}, function(data) { video_data = data;});
+	video_id = video_data.objects[0].id
+	return video_id
 }
 
 

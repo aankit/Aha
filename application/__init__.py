@@ -3,6 +3,8 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from application.sessions import ItsdangerousSessionInterface as session_interface
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.restless import APIManager
+import logging
+from logging.handlers import RotatingFileHandler
 
 app = Flask(__name__)
 app.config.from_object('application.settings')
@@ -11,6 +13,10 @@ app.session_interface = session_interface()
 
 db = SQLAlchemy(app)
 api_manager = APIManager(app, flask_sqlalchemy_db=db)
+handler = RotatingFileHandler(app['LOG_FILE'], maxBytes=10000, backupCount=1)
+handler.setLevel(logging.INFO)
+app.logger.addHandler(handler)
+
 import application.models
 
 from application.schedulerConfig import jobstores, executors, job_defaults, timezone
