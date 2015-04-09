@@ -3,6 +3,7 @@ from flask import render_template, url_for
 from application.models import *
 from application import app, schedule, api_manager
 from application.forms import SignupForm, SigninForm, ScheduleForm
+import time
 
 for model_name in app.config['API_MODELS']:
   model_class = app.config['API_MODELS'][model_name]
@@ -70,10 +71,28 @@ def profile():
     return redirect(url_for('signup'))
   else:
     return render_template('home.html', user=user)
-    
+
 @app.route('/camera')
 def live():
   return render_template('live.html')
+
+@app.route('/camera/<state>/')
+def camera_on(state):
+  print state
+  section_id = request.args.get('section_id')
+  timestamp_string = request.args.get('timestamp')
+  if state == 'on':
+    timestamp_obj = time.strptime(timestamp_string, "%Y-%m-%d %H:%M:%S")
+    recording_filename = schedule.cam_record(timestamp_obj, section_id)
+    return recording_filename
+  elif state == 'off':
+    recording_filename = schedule.camera.off()
+    return recording_filename
+  else:
+    return 'please send a state of on or off.'
+  return "thanks!"
+
+@app.route('/camera/')
 
 @app.route('/schedule')
 def view_schedule():

@@ -27,12 +27,14 @@ function setup() {
 	};
 	countdown = false;
 	textFont("Helvetica");
-	setInterval(function() {getSection();}, 10000);
+	setInterval(function() {
+		getSection();
+		// getVideo(saver.section_id);
+	}, 10000);
 }
 
 function draw() {
-	//get or make the ad hoc section, check every minute
-	console.log(saver.section_id);
+	//
 	//get or start recording of a video
 
 	background(0);

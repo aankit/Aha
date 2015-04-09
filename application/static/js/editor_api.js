@@ -65,7 +65,23 @@ function getSection(){
 }
 
 function getVideo(section_id){
-
+	if(section_id===100){
+		timestamp = "1900-01-01 " + moment().format("HH:mm:ss");
+		params = { };
+		//turn camera on, get new video filename and create and commit a video data obj
+		$.ajax({
+			url: 'camera/on/',
+			type: 'GET',
+			data: {"section_id":section_id,
+			"timestamp":timestamp},
+			success: function(data){
+				console.log(data + "is now recording");
+			},
+			error: function(xhr){
+				alert('Something went wrong with creating a new video');
+			}
+		});
+	}
 	filters = [{"name": "section_id", "op": "eq", "val": section_id}];
 	video_data = {};
 	$.ajax({

@@ -1,27 +1,37 @@
 from application.models import *
 from application import scheduler
 from application import picam
-import time
 
 def scheduler_job():
 	print "scheduler job working"
 
 def cam_record(start_time, section_id):
+	'''Turns the picam service on if not on,
+	starts recording if not already recording,
+	and saves the new video'''
 	picam_pid = picam.service_state()
-	current_file = picam.record_state()
+	recording_filename = picam.record_state()
 	if not picam_pid:
 		picam.service_on()
-	if not current_file:
-		current_file = picam.record_on()
-	video_obj = Video(filename=current_file, 
-		start_time = start_time, 
-		section_id = section_id)
-	db.session.add(video_obj)
-	db.session.commit()
+	if not recording_filename:
+		recording_filename = picam.record_on()
+		video_obj = Video(filename=recording_filename, 
+			start_time = start_time, 
+			section_id = section_id)
+		db.session.add(video_obj)
+		db.session.commit()
+	return recording_filename
 
 def cam_off():
-	picam.record_off()
-	picam.service_off()
+	'''Turns the current picam recording off if recording,
+	turns the picam service_off if on'''
+	picam_pid = picam.service_state()
+	recording_filename = picam.record_state()
+	if recording_filename:
+		picam.record_off()
+	if picam_pid:
+		picam.service_off()
+	return recording_filename
 
 def add_section(form, session):
 	section_name = Section.query.filter(Section.name==form.section.data.title()).all()
