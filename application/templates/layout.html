@@ -63,6 +63,7 @@
   </div><!-- /.container-fluid -->
 </nav> 
   <hr>
+    <div id="content" class="container"> 
     {% with messages = get_flashed_messages() %}
       {% if messages %}
         <ul>
@@ -72,7 +73,6 @@
         </ul>
       {% endif %}
     {% endwith %}
-    <div id="content" class="container"> 
       
       {% block content %}
       {% endblock %}

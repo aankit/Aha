@@ -60,6 +60,17 @@ def signout():
   session.pop('email', None)
   return redirect(url_for('home'))
 
+
+@app.route('/profile')
+def profile():
+  if 'email' not in session:
+    return redirect(url_for('signin'))
+  user = User.query.filter_by(email = session['email']).first()
+  if user is None:
+    return redirect(url_for('signup'))
+  else:
+    return render_template('home.html', user=user)
+    
 @app.route('/camera')
 def live():
   return render_template('live.html')
@@ -71,17 +82,6 @@ def view_schedule():
   return render_template('schedule.html', 
     jobs=jobs,
     form=form)
-
-
-@app.route('/profile')
-def profile():
-  if 'email' not in session:
-    return redirect(url_for('signin'))
-  user = User.query.filter_by(email = session['email']).first()
-  if user is None:
-    return redirect(url_for('signup'))
-  else:
-    return render_template('home.html', user=user)
 
 
 @app.route('/recording', methods=['GET', 'POST'])

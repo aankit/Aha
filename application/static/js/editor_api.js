@@ -33,6 +33,13 @@ function postMarker(section_id, video_id, day, timestamp, direction, duration){
 	xmlhttp.send(JSON.stringify(data));
 }
 
+function updateVideoFile(){
+	section_id = getSection();
+	video_id = getVideo(section_id);
+	console.log(video_id);
+}
+
+
 function getSection(){
 	timestamp = "1900-01-01T" + moment().format("HH:mm:ss");
 	day = moment()._d.getDay()-1;
@@ -45,20 +52,20 @@ function getSection(){
 		data: {"q": JSON.stringify({"filters": filters})},
 		success: function(data){
 			try{
-				section_id = data.objects[0].section_id;
+				saver.section_id = data.objects[0].section_id;
 			} catch (err){
 				//use the ad hoc section idea
-				section_id = 100;
+				saver.section_id = 100;
 			}
 		},
 		error: function(xhr) {
 			alert('Something went wrong getting the section this recording is related to.'); //or whatever
 		}
 	});
-	return section_id;
 }
 
 function getVideo(section_id){
+
 	filters = [{"name": "section_id", "op": "eq", "val": section_id}];
 	video_data = {};
 	$.ajax({
