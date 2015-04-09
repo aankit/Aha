@@ -90,14 +90,20 @@ def add_recording():
 
   #POST
   if request.method == 'POST' and form.validate():
-    status, message = schedule.add_schedule(form, session)  
-    print status, message 
-    #respond to the client
-    if status == 201:
-      flash(message)
+    section_id = schedule.add_section(form, session)
+    if section_id:
+      #iterate through the days
+      for day in form.days.data:
+        try:
+          schedule.add_schedule(form, day, section_id)
+        except Exception as error:
+          db.session.rollback()
+          return render_template("error.html", error="%d: %s" % (500, error))
+      flash('Success! You have added your recordings.')
       return redirect(url_for('view_schedule'))
     else:
-      render_template("error.html", error="%d: %s" % (status, message))
+      flash('Section name already taken!')
+      return redirect(url_for('view_schedule'))
   #GET
   else:
     return render_template('recording.html', 
@@ -107,15 +113,14 @@ def add_recording():
       name=None)
 
 
-@app.route('/recording/<name>', methods=['GET', 'POST'])
-def edit_recording(name):
+@app.route('/recording/<id>', methods=['GET', 'POST'])
+def edit_recording(id):
   form = ScheduleForm()
+
   #POST
-  print form.data
   if request.method == 'POST' and form.validate():
-    print form.data
-    status, message = schedule.edit_schedule(form, session)
-    print status, message
+    section_id=Section.query.filter_by(name=form.section.data).first().id
+    status, message = schedule.edit_schedule(form, section_id)
     #respond to the client
     if status == 201:
       flash(message)
@@ -124,7 +129,7 @@ def edit_recording(name):
       return render_template("error.html", error="%d: %s" % (status, message))
   #GET
   else:
-    d = form.get_data(name)
+    d = form.get_data(id)
     if d:
       form.section.data = d['section']
       form.days.data = d['days']
@@ -140,6 +145,11 @@ def edit_recording(name):
     else:
       return render_template("error.html", error="Class doesn't exist :(")
 
+@app.route('/recording/d/<id>')
+def delete_recording(id):
+  day, section_name = schedule.delete_schedule(id)
+  flash("You have successfully deleted the %d recording for %s" %(day, section_name))
+  return redirect(url_for("view_schedule"))
 
 @app.route('/editor')
 def editor():

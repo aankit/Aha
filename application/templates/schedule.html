@@ -31,7 +31,8 @@
               <td>{{job.day}}</td>
               <td>{{job.start_time}}</td>
               <td>{{job.end_time}}</td>
-              <td><a href="{{ url_for('edit_recording', name=job.section.name) }}">Edit</td>
+              <td><a href="{{ url_for('delete_recording', id=job.id) }}">Delete</td>
+              <td><a href="{{ url_for('edit_recording', id=job.id) }}">Edit</td>
             </tr>
           {% endfor %}
         </table>

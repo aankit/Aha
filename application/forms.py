@@ -109,14 +109,14 @@ class ScheduleForm(Form):
 			else:
 				return True
 
-	def get_data(self, name):
+	def get_data(self, id):
 		schedule_objs = db.session.query(Schedule) \
 			.join(Schedule.section) \
-			.filter(Section.name==name).all()
+			.filter(Section.id==id).all()
 		d = dict()
 		if schedule_objs:
 			d['days'] = [schedule_obj.day for schedule_obj in schedule_objs]
-			d['section'] = name
+			d['section'] = schedule_objs[0].name
 			d['start_time'] = self.toggleTime(schedule_objs[0].start_time)
 			d['start_ampm'] = self.getAMPM(schedule_objs[0].start_time)
 			d['end_time'] = self.toggleTime(schedule_objs[0].end_time)

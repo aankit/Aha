@@ -14,7 +14,9 @@ executors = {
 }
 job_defaults = {
     'coalesce': True,
-    'max_instances': 3
+    'max_instances': 3,
+    'misfire_grace_time': 10
+
 }
 
 timezone = pytz.timezone('US/Eastern') #this should be set by user

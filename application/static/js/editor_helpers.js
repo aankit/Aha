@@ -1,79 +1,3 @@
-function saverDirection(s){
-	dir = '';
-	if(s.direction>0){
-		dir = "+";
-	}
-	else if(s.direction<0){
-		dir = "-";
-	} else {
-		//both directions here!
-	}
-	return dir;
-}
-
-function postMarker(timestamp, direction, duration){
-    //event handler functions, currently the Failed function isn't called on error, not sure why
-	function addComplete(evt) {
-		console.log("added");
-	}
-	function addFailed(evt){
-		alert("The scenario was not added");
-	}
-	//let's build our data object for POSTing
-	//get section_id for posting
-	section_id = getSection();
-	video_id = getVideo(section_id);
-	
-	if( direction > 0){
-		start_time = new Date(timestamp._d.getTime() + duration);
-		end_time = timestamp;
-	} else if (duration <0 ){
-		start_time = timestamp;
-		end_time = new Date( timestamp._d.getTime() + duration);
-	}
-	//turn timestamp into string for POSTing
-	timestamp = "1900-01-01T" + timestamp.format("HH:mm:ss");
-	data = {
-		"video_id": video_id,
-		"timestamp": timestamp,
-		"start_time": start_time,
-		"end_time": end_time
-	};
-	//POST the data!!!
-	var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
-	xmlhttp.addEventListener("load", addComplete, false);
-	xmlhttp.addEventListener("error", addFailed, false);
-	xmlhttp.open("POST", "/api/marker", true);
-	xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-	xmlhttp.send(JSON.stringify(data));
-}
-
-function getSection(day, timestamp){
-	//get date info first to search the schedule table
-	//need to add day to the filters
-	filters = [{"name": "start_time", "op" : "lte", "val": timestamp},
-	{"name": "end_time", "op": "gte", "val": timestamp},
-	{"name": "day", "op": "eq", "val": day}];
-	schedule_data = {};
-	try{
-		$.get('api/schedule', {"q": JSON.stringify({"filters": filters})}, function(data) { schedule_data = data;});
-		section_id = schedule_data.objects[0].section_id;
-	}
-	catch (e){
-		console.log(e);
-	}
-
-}
-
-function getVideo(section_id){
-	filters = [{"name": "section_id", "op": "eq", "val": section_id}];
-	video_data = {};
-	$.get('api/video', {"q": JSON.stringify({"filters": filters})}, function(data) { video_data = data;});
-	video_id = video_data.objects[0].id;
-	return video_id;
-}
-
-
 function bar(c, b){
 	//the slide
 	stroke(107,116,114);
@@ -85,6 +9,19 @@ function bar(c, b){
 	line(c.width/2-15, c.height/2, c.width/2+15, c.height/2); //center line
 	//upper 10 minute line
 	//lower 10 minute line
+}
+
+function saverDirection(s){
+	dir = '';
+	if(s.direction>0){
+		dir = "+";
+	}
+	else if(s.direction<0){
+		dir = "-";
+	} else {
+		//both directions here!
+	}
+	return dir;
 }
 
 function bezXY(b, t, x, y){

@@ -30,6 +30,13 @@ function setup() {
 }
 
 function draw() {
+	//get or make the ad hoc section, check every minute
+	if(millis()%60000 < 50){
+		section_id = getSection();
+		console.log(section_id);
+	}
+	//get or start recording of a video
+
 	background(0);
 	bar(canvas, sliderBar); //draw the bar
 	//draw highlighted time segment if one exists
@@ -52,7 +59,8 @@ function draw() {
 			highlight.begin = 0;
 			highlight.end = 0;
 			//POST our data!!
-			postMarker(saver.timestamp, saver.direction, saver.duration);
+
+			// postMarker(saver.timestamp, saver.direction, saver.duration);
 			resetSaver();
 			countdown = false;
 		}
@@ -70,8 +78,10 @@ function draw() {
 	noStroke();
 	fill(cursor.fillColor);
 	ellipse(cursor.cx, cursor.cy, cursor.radius, cursor.radius);
+	//check if the video needs to be changed
 
 }
+
 
 function resetCursor(){
 	oldVals = cursor;
@@ -93,7 +103,9 @@ function resetSaver(){
 		timestamp: '', //to check against database to find section
 		direction: 0,	//forward, back, around
 		duration: 0,	//seconds selected
-		undo: {} //the undo box object passed back from confirm box function
+		undo: {}, //the undo box object passed back from confirm box function
+		section_id: 0,
+		video_id: 0
 	};
 }
 
