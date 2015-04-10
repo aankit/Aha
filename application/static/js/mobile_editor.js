@@ -29,7 +29,7 @@ function setup() {
 	countdown = false;
 	textFont("Helvetica");
 	// getSection(); //will be called every ten seconds
-	// getVideo();
+	getVideo();
 }
 
 function draw() {
