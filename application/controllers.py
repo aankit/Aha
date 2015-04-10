@@ -77,13 +77,16 @@ def camera_on():
   state = request.args.get('state')
   schedule_id = request.args.get('schedule_id')
   timestamp_string = request.args.get('timestamp')
+  #turn the camera on and return the DB id of the new video
   if state == 'on':
     datetime_timestamp = datetime.strptime(timestamp_string, "%Y-%m-%d %H:%M:%S")
     video_id = schedule.cam_record(schedule_id, datetime_timestamp)
     return str(video_id)
+  #turn the camera off
   elif state == 'off':
     schedule.cam_off()
     return 'off'
+  #return the DB id of the current video being recorded or -1 if no video being recorded.
   elif state == 'current':
     curr_recording = picam.record_state()
     if curr_recording:

@@ -134,6 +134,7 @@ function getVideo(){
 			} else {
 				saver.video_id = video_id;
 				console.log(saver.video_id);
+				clearTimeout(videoTimeoutID);
 				videoTimeoutID = setTimeout(getVideo, 10000);
 			}
 		},

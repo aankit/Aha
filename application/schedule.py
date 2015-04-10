@@ -6,27 +6,31 @@ import time
 
 def cam_record(schedule_id, start_time=None):
 	'''Turns the picam service on if not on,
-	starts recording if not already recording,
+	starts recording, ending existing recording,
 	and saves the new video in DB. 
 
 	Returns the video_id, if any.'''
-	video_id = 0
+	#create start timestamp if none provided
 	if start_time == None:
 		t = datetime.now()
 		start_time = datetime(t.year, t.month, t.day, t.hour, t.minute)
+	#check state of camera
 	picam_pid = picam.service_state()
 	recording_filename = picam.record_state()
+	#get to ready state based on state
 	if not picam_pid:
 		picam.service_on()
 		time.sleep(2)
-	if not recording_filename:
-		recording_filename = picam.record_on()
-		video_obj = Video(filename=recording_filename, 
-			start_time = start_time, 
-			schedule_id = schedule_id)
-		db.session.add(video_obj)
-		db.session.commit()
-		video_id = video_obj.id
+	if recording_filename:
+		cam_off()
+	#start recording
+	recording_filename = picam.record_on()
+	video_obj = Video(filename=recording_filename, 
+		start_time = start_time, 
+		schedule_id = schedule_id)
+	db.session.add(video_obj)
+	db.session.commit()
+	video_id = video_obj.id
 	return video_id
 
 def cam_off():

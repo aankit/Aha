@@ -3,6 +3,7 @@ var sliderBar; //slider bar obj
 var scale; //scale of the slider
 var saver; //saves the marked time!!
 var highlight, release_time, prev_millis, redo_time, countdown; //time selection variables
+var videoTimeoutID;
 
 function setup() {
 	canvas = createCanvas(205, 350);
@@ -27,7 +28,6 @@ function setup() {
 	};
 	countdown = false;
 	textFont("Helvetica");
-	var timeoutID = 0;
 	// getSection(); //will be called every ten seconds
 	getVideo();
 }
