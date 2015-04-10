@@ -34,6 +34,7 @@ function postMarker(section_id, video_id, day, timestamp, direction, duration){
 }
 
 function updateVideo(){
+	//first let's check the schedule and then get the appropriate video id
 	timestamp = "1900-01-01T" + moment().format("HH:mm:ss");
 	day = moment()._d.getDay()-1;
 	filters = [{"name": "start_time", "op" : "lte", "val": timestamp},
@@ -78,7 +79,7 @@ function getVideo(section_id){
 			}
 		});
 	} else {
-		// filters = [{"name": "section_id", "op": "eq", "val": section_id}];
+		//retrieve the video id of the file already being recorded
 		$.ajax({
 			url: 'camera/',
 			type: 'GET',

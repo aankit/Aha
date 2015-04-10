@@ -79,7 +79,7 @@ def camera_on():
   timestamp_string = request.args.get('timestamp')
   if state == 'on':
     datetime_timestamp = datetime.strptime(timestamp_string, "%Y-%m-%d %H:%M:%S")
-    video_id = schedule.cam_record(datetime_timestamp, section_id)
+    video_id = schedule.cam_record(section_id, datetime_timestamp)
     return video_id
   elif state == 'off':
     schedule.cam.off()

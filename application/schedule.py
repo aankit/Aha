@@ -5,10 +5,12 @@ from application import picam
 def scheduler_job():
 	print "scheduler job working"
 
-def cam_record(start_time, section_id):
+def cam_record(section_id, start_time=None):
 	'''Turns the picam service on if not on,
 	starts recording if not already recording,
 	and saves the new video'''
+	if start_time == None:
+		start_time = datetime.now()
 	picam_pid = picam.service_state()
 	recording_filename = picam.record_state()
 	if not picam_pid:
@@ -60,7 +62,7 @@ def add_schedule(form, day, section_id):
 	end_job_id = "%d_end" % (schedule_obj.id)
 	#create cron jobs
 	scheduler.add_job(cam_record, "cron", 
-		kwargs={"start_time":schedule_obj.start_time, "section_id":schedule_obj.section_id},
+		kwargs={"section_id":schedule_obj.section_id, "start_time":schedule_obj.start_time},
 		id=start_job_id,
 		day_of_week=day, 
 		hour=form.start_time.data.hour, 
