@@ -98,27 +98,25 @@ function getSchedule(){
 
 function startNewVideo(){
 	//could I have different types of new videos?
-	if(saver.schedule_id===100){
-		current_timestamp = moment().format("YYYY-MM-DD HH:mm:ss");
-		//turn camera on, get new video filename and create and commit a video data obj
-		console.log("making a new video, this should only happen once.");
-		$.ajax({
-			url: 'camera/',
-			type: 'GET',
-			data: {"state": "on",
-			"schedule_id":saver.schedule_id,
-			"timestamp":current_timestamp},
-			success: function(data){
-				console.log(data + " is now recording");
-				saver.video_id = data;
-				console.log(saver.video_id);
-				videoTimeoutID = setTimeout(getVideo, 10000); //setTimeout
-			},
-			error: function(xhr){
-				alert('Something went wrong with creating a new video');
-			}
-		});
-	}
+	current_timestamp = moment().format("YYYY-MM-DD HH:mm:ss");
+	//turn camera on, get new video filename and create and commit a video data obj
+	console.log("making a new video, this should only happen once.");
+	$.ajax({
+		url: 'camera/',
+		type: 'GET',
+		data: {"state": "on",
+		"schedule_id":saver.schedule_id,
+		"timestamp":current_timestamp},
+		success: function(data){
+			console.log(data + " is now recording");
+			saver.video_id = data;
+			console.log(saver.video_id);
+			videoTimeoutID = setTimeout(getVideo, 10000); //setTimeout
+		},
+		error: function(xhr){
+			alert('Something went wrong with creating a new video');
+		}
+	});
 }
 
 function getVideo(){
@@ -130,6 +128,7 @@ function getVideo(){
 		success: function(data) {
 			video_id = parseInt(data, 10);
 			if(video_id === -1){
+				console.log("here!");
 				console.log(video_id);
 				startNewVideo();
 			} else {
