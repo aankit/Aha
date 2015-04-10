@@ -3,7 +3,7 @@ from flask import render_template, url_for
 from application.models import *
 from application import app, schedule, api_manager
 from application.forms import SignupForm, SigninForm, ScheduleForm
-import datetime
+from datetime import datetime
 
 for model_name in app.config['API_MODELS']:
   model_class = app.config['API_MODELS'][model_name]
