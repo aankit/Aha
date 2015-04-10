@@ -128,11 +128,12 @@ function getVideo(){
 		type: 'GET',
 		data: {"state": "current"},
 		success: function(data) {
-			data = parseInt(data);
-			if(data === -1){
+			video_id = parseInt(data, 10);
+			if(video_id === -1){
+				console.log(video_id);
 				startNewVideo();
 			} else {
-				saver.video_id = data;
+				saver.video_id = video_id;
 				console.log(saver.video_id);
 				videoTimeoutID = setTimeout(getVideo, 10000);
 			}
