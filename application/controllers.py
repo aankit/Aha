@@ -86,9 +86,9 @@ def camera_on():
     return 'off'
   elif state == 'current':
     curr_recording = picam.record_state()
-    try:
+    if curr_recording:
       video_id = db.session.query(Video).filter(Video.filename==curr_recording).one()
-    except:
+    else:
       video_id = -1
     return str(video_id)
   elif state == 'live':

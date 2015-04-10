@@ -92,8 +92,6 @@ class Marker(db.Model):
 		return '<Marker %r>' % (self.timestamp)
 
 
-
-
 # models for which we want to create API endpoints
 app.config['API_MODELS'] = { 
 	'section': Section,

@@ -48,10 +48,14 @@ function updateVideo(){
 			try{
 				saver.schedule_id = data.objects[0].id;
 			} catch (err){
-				//use the ad hoc section idea
-				saver.schedule_id = 100;
+				//use the ad hoc section idea of 100, could add some other options here on user input?
+				//also I don't have to automatically start the video here, and could ask the user to do it.
+				if(saver.schedule!==100){
+					saver.schedule_id = 100;
+					startNewVideo(schedule_id);
+				}
+				getVideo();
 			}
-			getVideo(saver.section_id);
 		},
 		error: function(xhr) {
 			alert('Something went wrong getting the section this recording is related to.'); //or whatever
@@ -59,8 +63,7 @@ function updateVideo(){
 	});
 }
 
-function getVideo(schedule_id){
-	console.log(schedule_id);
+function startNewVideo(schedule_id){
 	if(schedule_id===100){
 		current_timestamp = moment().format("YYYY-MM-DD HH:mm:ss");
 		//turn camera on, get new video filename and create and commit a video data obj
@@ -78,16 +81,18 @@ function getVideo(schedule_id){
 				alert('Something went wrong with creating a new video');
 			}
 		});
-	} else {
-		//retrieve the video id of the file already being recorded
-		$.ajax({
-			url: 'camera/',
-			type: 'GET',
-			data: {"state": "current"},
-			success: function(data) { saver.video_id = data;},
-			error: function(xhr) {
-				alert("something went wrong getting the video id.");
-			}
-		});
 	}
+}
+
+function getVideo(){
+	//retrieve the video id of the file already being recorded
+	$.ajax({
+		url: 'camera/',
+		type: 'GET',
+		data: {"state": "current"},
+		success: function(data) { saver.video_id = data;},
+		error: function(xhr) {
+			alert("something went wrong getting the video id.");
+		}
+	});
 }

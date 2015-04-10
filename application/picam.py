@@ -3,11 +3,11 @@ import sh, time, os
 
 def service_on():
 	sh.sudo('service','picam', 'start')
-	pid = service_state
+	pid = service_state()
 	command_sent = time.time()
 	current_time = time.time()
 	while not pid:
-		pid = service_state
+		pid = service_state()
 		current_time = time.time()
 		if command_sent - current_time > 20:
 			app.logger.warning("picam service on timed out")
