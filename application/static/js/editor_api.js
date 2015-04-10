@@ -111,6 +111,7 @@ function startNewVideo(){
 			success: function(data){
 				console.log(data + " is now recording");
 				saver.video_id = data;
+				console.log(saver.video_id);
 				videoTimeoutID = setTimeout(getVideo, 10000); //setTimeout
 			},
 			error: function(xhr){
@@ -131,6 +132,7 @@ function getVideo(){
 				startNewVideo();
 			} else {
 				saver.video_id = data;
+				console.log(saver.video_id);
 				videoTimeoutID = setTimeout(getVideo, 10000);
 			}
 		},
