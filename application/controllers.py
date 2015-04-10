@@ -165,7 +165,7 @@ def edit_recording(id):
       return render_template('recording.html', 
         title = "Edit Recording", 
         endpoint = 'edit_recording', 
-        name = name,
+        id = id,
         form = form)
     else:
       return render_template("error.html", error="Class doesn't exist :(")

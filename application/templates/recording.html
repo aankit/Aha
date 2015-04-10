@@ -18,7 +18,7 @@
     <div class="bg-danger">{{ message }}</div>
   {% endfor %}
   <h4>{{ title }}</h4>
-  <form action="{{ url_for(endpoint, name=name) }}" method=post>
+  <form action="{{ url_for(endpoint, id=id) }}" method=post>
     {{ form.hidden_tag() }}
      <div class="form-group">
     {{ form.section.label }}

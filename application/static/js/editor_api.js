@@ -33,45 +33,6 @@ function postMarker(video_id, day, timestamp, direction, duration){
 	xmlhttp.send(JSON.stringify(data));
 }
 
-function updateVideo(){
-	//first let's check the schedule and then get the appropriate video id
-	timestamp = "1900-01-01T" + moment().format("HH:mm:ss"); //ONLY USE THE WEIRD 1900 timestamp to look up in sched
-	day = moment()._d.getDay()-1;
-	filters = [{"name": "start_time", "op" : "lte", "val": timestamp},
-	{"name": "end_time", "op": "gte", "val": timestamp},
-	{"name": "day", "op": "eq", "val": day}];
-	$.ajax({
-		url: 'api/schedule',
-		type: 'GET',
-		data: {"q": JSON.stringify({"filters": filters})},
-		success: function(data){
-			try{
-				saver.schedule_id = data.objects[0].id;
-				getVideo();
-			} catch (err){
-				//use the ad hoc section idea of 100, could add some other options here on user input?
-				//also I don't have to automatically start the video here, and could ask the user to do it.
-				if(saver.schedule_id!==100){
-					getVideo();
-					if(saver.video_id<=0){
-						console.log("starting an ad hoc recording");
-						startNewVideo();
-					}
-					saver.schedule_id = 100;
-				} else {
-					console.log("no scheduled recording, ad hoc already started");
-				}
-			}
-			console.log("schedule id:" , saver.schedule_id);
-			console.log("video id:", saver.video_id);
-			timeoutID = setTimeout(updateVideo, 10000); //setTimeout
-		},
-		error: function(xhr) {
-			alert('Something went wrong getting the section this recording is related to.');
-		}
-	});
-}
-
 function getSchedule(){
 	timestamp = "1900-01-01T" + moment().format("HH:mm:ss"); //ONLY USE THE WEIRD 1900 timestamp to look up in sched
 	day = moment()._d.getDay()-1;
