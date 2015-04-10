@@ -87,7 +87,8 @@ def camera_on():
   elif state == 'current':
     curr_recording = picam.record_state()
     if curr_recording:
-      video_id = db.session.query(Video).filter(Video.filename==curr_recording).one()
+      video_obj = db.session.query(Video).filter(Video.filename==curr_recording).one()
+      video_id = video_obj.id
     else:
       video_id = -1
     return str(video_id)
