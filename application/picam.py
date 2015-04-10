@@ -37,4 +37,4 @@ def test():
 	pid = service_on()
 	time.sleep(2)
 	current_file = record_on()
-	return pid, current_file
+	return current_file

@@ -20,7 +20,6 @@ def cam_record(schedule_id, start_time=None):
 		time.sleep(2)
 	if not recording_filename:
 		recording_filename = picam.record_on()
-		# print recording_filename
 		video_obj = Video(filename=recording_filename, 
 			start_time = start_time, 
 			schedule_id = schedule_id)
