@@ -28,7 +28,8 @@ function setup() {
 	countdown = false;
 	textFont("Helvetica");
 	var timeoutID = 0;
-	updateVideo(); //will be called every ten seconds
+	getSection(); //will be called every ten seconds
+	getVideo();
 }
 
 function draw() {

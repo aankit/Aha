@@ -45,14 +45,14 @@ function updateVideo(){
 		type: 'GET',
 		data: {"q": JSON.stringify({"filters": filters})},
 		success: function(data){
-			getVideo();
 			try{
 				saver.schedule_id = data.objects[0].id;
+				getVideo();
 			} catch (err){
 				//use the ad hoc section idea of 100, could add some other options here on user input?
 				//also I don't have to automatically start the video here, and could ask the user to do it.
 				if(saver.schedule_id!==100){
-					// to look for 
+					getVideo();
 					if(saver.video_id<=0){
 						console.log("starting an ad hoc recording");
 						startNewVideo();
@@ -67,7 +67,31 @@ function updateVideo(){
 			timeoutID = setTimeout(updateVideo, 10000); //setTimeout
 		},
 		error: function(xhr) {
-			alert('Something went wrong getting the section this recording is related to.'); //or whatever
+			alert('Something went wrong getting the section this recording is related to.');
+		}
+	});
+}
+
+function getSchedule(){
+	timestamp = "1900-01-01T" + moment().format("HH:mm:ss"); //ONLY USE THE WEIRD 1900 timestamp to look up in sched
+	day = moment()._d.getDay()-1;
+	filters = [{"name": "start_time", "op" : "lte", "val": timestamp},
+	{"name": "end_time", "op": "gte", "val": timestamp},
+	{"name": "day", "op": "eq", "val": day}];
+	$.ajax({
+		url: 'api/schedule',
+		type: 'GET',
+		data: {"q": JSON.stringify({"filters": filters})},
+		success: function(data){
+			if(data.objects.length===0){
+				saver.schedule_id=100;
+			} else{
+				saver.schedule_id=data.objects[0].id;
+			}
+			sectionTimeoutID = setTimeout(getSchedule, 10000); //setTimeout
+		},
+		error: function(error){
+			alert('Something went wrong getting the section this recording is related to.');
 		}
 	});
 }
@@ -87,6 +111,7 @@ function startNewVideo(){
 			success: function(data){
 				console.log(data + " is now recording");
 				saver.video_id = data;
+				videoTimeoutID = setTimeout(getVideo, 10000); //setTimeout
 			},
 			error: function(xhr){
 				alert('Something went wrong with creating a new video');
@@ -101,7 +126,14 @@ function getVideo(){
 		url: 'camera/',
 		type: 'GET',
 		data: {"state": "current"},
-		success: function(data) { saver.video_id = data;},
+		success: function(data) {
+			if(video===-1){
+				startNewVideo();
+			} else {
+				saver.video_id = data;
+				videoTimeoutID = setTimeout(getVideo, 10000);
+			}
+		},
 		error: function(xhr) {
 			alert("something went wrong getting the video id.");
 		}
