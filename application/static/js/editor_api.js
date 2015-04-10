@@ -62,6 +62,8 @@ function updateVideo(){
 					console.log("no scheduled recording, ad hoc already started");
 				}
 			}
+			console.log("schedule id:" , saver.schedule_id);
+			console.log("video id:", saver.video_id);
 			timeoutID = setTimeout(updateVideo, 10000); //setTimeout
 		},
 		error: function(xhr) {

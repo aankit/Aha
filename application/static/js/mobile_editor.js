@@ -33,12 +33,6 @@ function setup() {
 
 function draw() {
 	//
-	if(saver.schedule_id!==0){
-		console.log("schedule id:" , saver.schedule_id);
-	}
-	if(saver.video_id!==0){
-		console.log("video id:", saver.video_id);
-	}
 	//get or start recording of a video
 	background(0);
 	bar(canvas, sliderBar); //draw the bar
