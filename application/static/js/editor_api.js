@@ -33,14 +33,7 @@ function postMarker(section_id, video_id, day, timestamp, direction, duration){
 	xmlhttp.send(JSON.stringify(data));
 }
 
-function updateVideoFile(){
-	section_id = getSection();
-	video_id = getVideo(section_id);
-	console.log(video_id);
-}
-
-
-function getSection(){
+function updateVideo(){
 	timestamp = "1900-01-01T" + moment().format("HH:mm:ss");
 	day = moment()._d.getDay()-1;
 	filters = [{"name": "start_time", "op" : "lte", "val": timestamp},
@@ -57,6 +50,7 @@ function getSection(){
 				//use the ad hoc section idea
 				saver.section_id = 100;
 			}
+			getVideo(saver.section_id);
 		},
 		error: function(xhr) {
 			alert('Something went wrong getting the section this recording is related to.'); //or whatever
@@ -65,34 +59,34 @@ function getSection(){
 }
 
 function getVideo(section_id){
+	console.log(section_id);
 	if(section_id===100){
 		timestamp = "1900-01-01 " + moment().format("HH:mm:ss");
-		params = { };
 		//turn camera on, get new video filename and create and commit a video data obj
 		$.ajax({
-			url: 'camera/on/',
+			url: 'camera/',
 			type: 'GET',
-			data: {"section_id":section_id,
+			data: {"state": "on",
+			"section_id":section_id,
 			"timestamp":timestamp},
 			success: function(data){
 				console.log(data + "is now recording");
+				saver.video_id = data;
 			},
 			error: function(xhr){
 				alert('Something went wrong with creating a new video');
 			}
 		});
+	} else {
+		// filters = [{"name": "section_id", "op": "eq", "val": section_id}];
+		$.ajax({
+			url: 'camera/',
+			type: 'GET',
+			data: {"state": "current"},
+			success: function(data) { saver.video_id = data;},
+			error: function(xhr) {
+				alert("something went wrong getting the video id.");
+			}
+		});
 	}
-	filters = [{"name": "section_id", "op": "eq", "val": section_id}];
-	video_data = {};
-	$.ajax({
-		url: 'api/video',
-		type: 'GET',
-		data: {"q": JSON.stringify({"filters": filters})},
-		success: function(data) { video_data = data;},
-		error: function(xhr) {
-			alert("something went wrong getting the video id.");
-		}
-	});
-	video_id = video_data.objects[0].id;
-	return video_id;
 }

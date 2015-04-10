@@ -73,26 +73,28 @@ def profile():
     return render_template('home.html', user=user)
 
 @app.route('/camera')
-def live():
-  return render_template('live.html')
-
-@app.route('/camera/<state>/')
-def camera_on(state):
-  print state
+def camera_on():
+  state = request.args.get('state')
   section_id = request.args.get('section_id')
   timestamp_string = request.args.get('timestamp')
   if state == 'on':
     timestamp_obj = time.strptime(timestamp_string, "%Y-%m-%d %H:%M:%S")
-    recording_filename = schedule.cam_record(timestamp_obj, section_id)
-    return recording_filename
+    video_id = schedule.cam_record(timestamp_obj, section_id)
+    return video_id
   elif state == 'off':
-    recording_filename = schedule.camera.off()
-    return recording_filename
+    schedule.cam.off()
+    return 'off'
+  elif state == 'current':
+    curr_recording = picam.record_state()
+    try:
+      video_id = db.session.query(Video).filter(Video.filename==curr_recording).one()
+    except:
+      video_id = -1
+    return video_id
+  elif state == 'live':
+    return render_template('live.html')
   else:
-    return 'please send a state of on or off.'
-  return "thanks!"
-
-@app.route('/camera/')
+    return render_template('404.html')
 
 @app.route('/schedule')
 def view_schedule():

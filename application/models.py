@@ -47,7 +47,7 @@ class Schedule(db.Model):
 	start_time = db.Column(db.DateTime)
 	end_time = db.Column(db.DateTime)
 	section_id = db.Column(db.Integer, db.ForeignKey('section.id'))
-	section = db.relationship('Section', backref='schedules')
+	section = db.relationship('Section', backref='schedule')
 
 	def __init__(self, *args, **kwargs):
 		db.Model.__init__(self, *args, **kwargs)
@@ -73,7 +73,8 @@ class Video(db.Model):
 	id = db.Column(db.Integer, primary_key = True)
 	filename = db.Column(db.String(25))
 	start_time = db.Column(db.DateTime)
-	section_id = db.Column(db.Integer)
+	section_id = db.Column(db.Integer, db.ForeignKey('section.id'))
+	section = db.relationship('Section', backref='videos')
 
 	def __repr(self):
 		return '<Video %s>' % (self.filename)

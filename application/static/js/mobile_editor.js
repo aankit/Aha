@@ -28,15 +28,15 @@ function setup() {
 	countdown = false;
 	textFont("Helvetica");
 	setInterval(function() {
-		getSection();
-		// getVideo(saver.section_id);
+		updateVideo();
+		console.log(saver.section_id);
+		console.log(saver.video_id);
 	}, 10000);
 }
 
 function draw() {
 	//
 	//get or start recording of a video
-
 	background(0);
 	bar(canvas, sliderBar); //draw the bar
 	//draw highlighted time segment if one exists

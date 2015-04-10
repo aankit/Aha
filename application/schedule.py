@@ -20,7 +20,7 @@ def cam_record(start_time, section_id):
 			section_id = section_id)
 		db.session.add(video_obj)
 		db.session.commit()
-	return recording_filename
+	return video_obj.id
 
 def cam_off():
 	'''Turns the current picam recording off if recording,
@@ -31,9 +31,12 @@ def cam_off():
 		picam.record_off()
 	if picam_pid:
 		picam.service_off()
-	return recording_filename
+	return 0
 
 def add_section(form, session):
+	'''Need to refactor, the section validation should happen
+	at the form level. New recording and edit recording forms
+	need different validation'''
 	section_name = Section.query.filter(Section.name==form.section.data.title()).all()
 	if section_name:
 		return False
