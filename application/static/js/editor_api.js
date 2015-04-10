@@ -45,21 +45,24 @@ function updateVideo(){
 		type: 'GET',
 		data: {"q": JSON.stringify({"filters": filters})},
 		success: function(data){
+			getVideo();
 			try{
 				saver.schedule_id = data.objects[0].id;
-				getVideo();
 			} catch (err){
 				//use the ad hoc section idea of 100, could add some other options here on user input?
 				//also I don't have to automatically start the video here, and could ask the user to do it.
 				if(saver.schedule_id!==100){
-					console.log("starting an ad hoc recording");
+					// to look for 
+					if(saver.video_id===0){
+						console.log("starting an ad hoc recording");
+						startNewVideo();
+					}
 					saver.schedule_id = 100;
-					startNewVideo();
 				} else {
 					console.log("no scheduled recording, ad hoc already started");
 				}
 			}
-			// timeoutID = setTimeout(updateVideo, 10000); //setTimeout
+			timeoutID = setTimeout(updateVideo, 10000); //setTimeout
 		},
 		error: function(xhr) {
 			alert('Something went wrong getting the section this recording is related to.'); //or whatever
@@ -68,6 +71,7 @@ function updateVideo(){
 }
 
 function startNewVideo(){
+	//could I have different types of new videos?
 	if(saver.schedule_id===100){
 		current_timestamp = moment().format("YYYY-MM-DD HH:mm:ss");
 		//turn camera on, get new video filename and create and commit a video data obj

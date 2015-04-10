@@ -7,7 +7,10 @@ import time
 def cam_record(schedule_id, start_time=None):
 	'''Turns the picam service on if not on,
 	starts recording if not already recording,
-	and saves the new video'''
+	and saves the new video in DB. 
+
+	Returns the video_id, if any.'''
+	video_id = 0
 	if start_time == None:
 		t = datetime.now()
 		start_time = datetime(t.year, t.month, t.day, t.hour, t.minute)
