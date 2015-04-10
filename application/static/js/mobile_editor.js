@@ -155,7 +155,6 @@ function touchEnded() {
 
 function touchStarted() {
 	saver.timestamp =  moment(); //database doesn't contain dates, just times
-	console.log("timestamp", saver.timestamp);
 	if(countdown){
 		if((mouseX > saver.undo.minX && mouseX < saver.undo.maxX) && (mouseY > saver.undo.minY && mouseY < saver.undo.maxY)){
 			highlight.begin = 0;

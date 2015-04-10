@@ -8,7 +8,6 @@ function postMarker(video_id, timestamp, direction, duration){
 	}
 	// console.log("v", video_id);
 	// console.log("d", day);
-	console.log("t", timestamp);
 	// console.log("dir: ", direction);
 	// console.log("duration: ", duration);
 	//let's build our data object for POSTing
@@ -16,14 +15,11 @@ function postMarker(video_id, timestamp, direction, duration){
 	if( direction > 0){
 		start_time = moment(timestamp).format("YYYY-MM-DD HH:mm:ss");
 		end_time = moment(timestamp).add(duration, 'minutes');
-		console.log("t", timestamp);
 	} else if (direction < 0 ){
 		start_time = moment(timestamp).subtract(duration, 'minutes');
 		end_time = moment(timestamp).format("YYYY-MM-DD HH:mm:ss");
-		console.log("t", timestamp);
 	}
 	//turn timestamp into string for POSTing
-	console.log("t", timestamp);
 	timestamp = timestamp.format("YYYY-MM-DD HH:mm:ss");
 	data = {
 		"video_id": video_id,
