@@ -3,7 +3,7 @@ from flask import render_template, url_for
 from application.models import *
 from application import app, schedule, api_manager
 from application.forms import SignupForm, SigninForm, ScheduleForm
-import time
+import datetime
 
 for model_name in app.config['API_MODELS']:
   model_class = app.config['API_MODELS'][model_name]
@@ -78,8 +78,8 @@ def camera_on():
   section_id = request.args.get('section_id')
   timestamp_string = request.args.get('timestamp')
   if state == 'on':
-    timestamp_obj = time.strptime(timestamp_string, "%Y-%m-%d %H:%M:%S")
-    video_id = schedule.cam_record(timestamp_obj, section_id)
+    datetime_timestamp = datetime.strptime(timestamp_string, "%Y-%m-%d %H:%M:%S")
+    video_id = schedule.cam_record(datetime_timestamp, section_id)
     return video_id
   elif state == 'off':
     schedule.cam.off()
