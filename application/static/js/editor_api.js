@@ -14,9 +14,9 @@ function postMarker(video_id, timestamp, direction, duration){
 	//get section_id for posting
 	if( direction > 0){
 		start_time = moment(timestamp).format("YYYY-MM-DD HH:mm:ss");
-		end_time = moment(timestamp).add(duration, 'minutes');
+		end_time = moment(timestamp).add(duration, 'minutes').format("YYYY-MM-DD HH:mm:ss");
 	} else if (direction < 0 ){
-		start_time = moment(timestamp).subtract(duration, 'minutes');
+		start_time = moment(timestamp).subtract(duration, 'minutes').format("YYYY-MM-DD HH:mm:ss");
 		end_time = moment(timestamp).format("YYYY-MM-DD HH:mm:ss");
 	}
 	//turn timestamp into string for POSTing

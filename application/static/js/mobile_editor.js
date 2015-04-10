@@ -118,7 +118,7 @@ function updateSaver(t){
 		highlight.end = t;
 	}
 	saver.duration = Math.floor(abs(t-0.5)/(0.5*scale*4));
-	// console.log(saver.duration);
+	console.log(saver.duration);
 }
 
 function touchMoved(){
