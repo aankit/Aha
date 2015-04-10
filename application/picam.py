@@ -19,8 +19,6 @@ def service_state():
 def record_on():
 	sh.touch(app.config["RECORD_PATH"] + '/start_record')
 	current_file = os.listdir(app.config["TMP_VIDEO_PATH"])
-	print current_file
-	print "------"
 	return current_file[0] #only one file can exist here at a time
 
 def record_off():
