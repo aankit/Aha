@@ -1,7 +1,7 @@
 from flask import request, session, redirect, flash
 from flask import render_template, url_for
 from application.models import *
-from application import app, schedule, api_manager
+from application import app, schedule, picam, api_manager
 from application.forms import SignupForm, SigninForm, ScheduleForm
 from datetime import datetime
 
