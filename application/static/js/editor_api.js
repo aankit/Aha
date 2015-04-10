@@ -54,7 +54,7 @@ function updateVideo(){
 				if(saver.schedule_id!==100){
 					console.log("starting an ad hoc recording");
 					saver.schedule_id = 100;
-					startNewVideo(schedule_id);
+					startNewVideo();
 				} else {
 					console.log("no scheduled recording, ad hoc already started");
 				}
@@ -66,8 +66,8 @@ function updateVideo(){
 	});
 }
 
-function startNewVideo(schedule_id){
-	if(schedule_id===100){
+function startNewVideo(){
+	if(saver.schedule_id===100){
 		current_timestamp = moment().format("YYYY-MM-DD HH:mm:ss");
 		//turn camera on, get new video filename and create and commit a video data obj
 		console.log("making a new video, this should only happen once.");

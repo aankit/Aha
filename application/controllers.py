@@ -82,7 +82,7 @@ def camera_on():
     video_id = schedule.cam_record(schedule_id, datetime_timestamp)
     return str(video_id)
   elif state == 'off':
-    schedule.cam.off()
+    schedule.cam_off()
     return 'off'
   elif state == 'current':
     curr_recording = picam.record_state()
