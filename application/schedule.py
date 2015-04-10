@@ -116,11 +116,7 @@ def edit_schedule(form, section_id):
 				schedule_obj.end_time = form.end_time.data
 			#delete days that the user has not specified in new schedule
 			else:
-				jobs = schedule_obj.jobs
-				for job in jobs:
-					remove_cron(job.job_id)
-				db.session.delete(schedule_obj)
-				db.session.commit()		
+				delete_schedule(schedule_obj.id)		
 		#and add days not in there
 		for day in form.days.data:
 			if day not in [schedule_obj.day for schedule_obj in schedule_objs]:
