@@ -7,3 +7,4 @@ picam-1.2.9-binary
 *.db
 *.sqlite
 *.log
+/static/lib/*/*
