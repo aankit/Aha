@@ -1,4 +1,4 @@
-function postMarker(video_id, day, timestamp, direction, duration){
+function postMarker(video_id, timestamp, direction, duration){
     //event handler functions, currently the Failed function isn't called on error, not sure why
 	function addComplete(evt) {
 		console.log("added");
@@ -6,16 +6,24 @@ function postMarker(video_id, day, timestamp, direction, duration){
 	function addFailed(evt){
 		alert("The marker was not added");
 	}
+	// console.log("v", video_id);
+	// console.log("d", day);
+	console.log("t", timestamp);
+	// console.log("dir: ", direction);
+	// console.log("duration: ", duration);
 	//let's build our data object for POSTing
 	//get section_id for posting
 	if( direction > 0){
-		start_time = new Date(timestamp._d.getTime() + duration);
-		end_time = timestamp;
-	} else if (duration <0 ){
-		start_time = timestamp;
-		end_time = new Date( timestamp._d.getTime() + duration);
+		start_time = moment(timestamp).format("YYYY-MM-DD HH:mm:ss");
+		end_time = moment(timestamp).add(duration, 'minutes');
+		console.log("t", timestamp);
+	} else if (direction < 0 ){
+		start_time = moment(timestamp).subtract(duration, 'minutes');
+		end_time = moment(timestamp).format("YYYY-MM-DD HH:mm:ss");
+		console.log("t", timestamp);
 	}
 	//turn timestamp into string for POSTing
+	console.log("t", timestamp);
 	timestamp = timestamp.format("YYYY-MM-DD HH:mm:ss");
 	data = {
 		"video_id": video_id,

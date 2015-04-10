@@ -29,7 +29,7 @@ function setup() {
 	countdown = false;
 	textFont("Helvetica");
 	// getSection(); //will be called every ten seconds
-	getVideo();
+	// getVideo();
 }
 
 function draw() {
@@ -58,7 +58,7 @@ function draw() {
 			highlight.end = 0;
 			//POST our data!!
 
-			postMarker(saver.video_id, saver.day, saver.timestamp, saver.direction, saver.duration);
+			postMarker(saver.video_id, saver.timestamp, saver.direction, saver.duration);
 			resetSaver();
 			countdown = false;
 		}
@@ -97,8 +97,7 @@ function resetCursor(){
 function resetSaver(){
 	oldVals = saver;
 	saver = {
-		day: '', //to check against database to find section
-		timestamp: '', //to check against database to find section
+		timestamp: '', //what time did the human try to save from or starting from
 		direction: 0,	//forward, back, around
 		duration: 0,	//seconds selected
 		undo: {}, //the undo box object passed back from confirm box function
@@ -118,8 +117,6 @@ function updateSaver(t){
 		highlight.begin = 0.5;
 		highlight.end = t;
 	}
-	saver.day = moment().format('d'); //based on recurring events, so  day is important
-	saver.timestamp =  moment(); //database doesn't contain dates, just times
 	saver.duration = Math.floor(abs(t-0.5)/(0.5*scale*4));
 	// console.log(saver.duration);
 }
@@ -157,6 +154,8 @@ function touchEnded() {
 }
 
 function touchStarted() {
+	saver.timestamp =  moment(); //database doesn't contain dates, just times
+	console.log("timestamp", saver.timestamp);
 	if(countdown){
 		if((mouseX > saver.undo.minX && mouseX < saver.undo.maxX) && (mouseY > saver.undo.minY && mouseY < saver.undo.maxY)){
 			highlight.begin = 0;

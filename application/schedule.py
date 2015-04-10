@@ -23,6 +23,8 @@ def cam_record(schedule_id, start_time=None):
 		time.sleep(2)
 	if recording_filename:
 		cam_off()
+		picam.service_on()
+		time.sleep(2)
 	#start recording
 	recording_filename = picam.record_on()
 	video_obj = Video(filename=recording_filename, 
