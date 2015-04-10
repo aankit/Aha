@@ -1,5 +1,5 @@
 from application import app
-import sh, time, os
+import sh, os
 
 def service_on():
 	sh.sudo('service','picam', 'start')
@@ -25,14 +25,8 @@ def record_off():
 	sh.touch(app.config["RECORD_PATH"] + '/stop_record')
 
 def record_state():
-	curr_recording = sh.ls(app.config["TMP_VIDEO_PATH"]).stdout
-	if curr_recording:
-		return curr_recording
+	current_file = os.listdir(app.config["TMP_VIDEO_PATH"])
+	if current_file:
+		return current_file[0]
 	else:
 		return False
-
-def test():
-	pid = service_on()
-	time.sleep(2)
-	current_file = record_on()
-	return current_file

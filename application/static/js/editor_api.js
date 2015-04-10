@@ -105,7 +105,7 @@ function startNewVideo(){
 		url: 'camera/',
 		type: 'GET',
 		data: {"state": "on",
-		"schedule_id":saver.schedule_id,
+		"schedule_id":100,
 		"timestamp":current_timestamp},
 		success: function(data){
 			console.log(data + " is now recording");

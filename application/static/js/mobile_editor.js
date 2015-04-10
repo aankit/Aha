@@ -102,7 +102,6 @@ function resetSaver(){
 		direction: 0,	//forward, back, around
 		duration: 0,	//seconds selected
 		undo: {}, //the undo box object passed back from confirm box function
-		schedule_id: 0,
 		video_id: 0
 	};
 }
