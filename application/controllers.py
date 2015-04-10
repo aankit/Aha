@@ -80,7 +80,7 @@ def camera_on():
   if state == 'on':
     datetime_timestamp = datetime.strptime(timestamp_string, "%Y-%m-%d %H:%M:%S")
     video_id = schedule.cam_record(section_id, datetime_timestamp)
-    return video_id
+    return str(video_id)
   elif state == 'off':
     schedule.cam.off()
     return 'off'
@@ -90,7 +90,7 @@ def camera_on():
       video_id = db.session.query(Video).filter(Video.filename==curr_recording).one()
     except:
       video_id = -1
-    return video_id
+    return str(video_id)
   elif state == 'live':
     return render_template('live.html')
   else:

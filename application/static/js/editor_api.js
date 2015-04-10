@@ -62,14 +62,14 @@ function updateVideo(){
 function getVideo(section_id){
 	console.log(section_id);
 	if(section_id===100){
-		timestamp = moment().format("YYYY-MM-DD HH:mm:ss")
+		current_timestamp = moment().format("YYYY-MM-DD HH:mm:ss");
 		//turn camera on, get new video filename and create and commit a video data obj
 		$.ajax({
 			url: 'camera/',
 			type: 'GET',
 			data: {"state": "on",
 			"section_id":section_id,
-			"timestamp":timestamp},
+			"timestamp":current_timestamp},
 			success: function(data){
 				console.log(data + "is now recording");
 				saver.video_id = data;
