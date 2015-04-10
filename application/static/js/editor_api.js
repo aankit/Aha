@@ -47,14 +47,16 @@ function updateVideo(){
 		success: function(data){
 			try{
 				saver.schedule_id = data.objects[0].id;
+				getVideo();
 			} catch (err){
 				//use the ad hoc section idea of 100, could add some other options here on user input?
 				//also I don't have to automatically start the video here, and could ask the user to do it.
-				if(saver.schedule!==100){
+				if(saver.schedule_id!==100){
 					saver.schedule_id = 100;
 					startNewVideo(schedule_id);
+				} else {
+					console.log("no scheduled recording, ad hoc already started");
 				}
-				getVideo();
 			}
 		},
 		error: function(xhr) {
@@ -74,7 +76,7 @@ function startNewVideo(schedule_id){
 			"schedule_id":schedule_id,
 			"timestamp":current_timestamp},
 			success: function(data){
-				console.log(data + "is now recording");
+				console.log(data + " is now recording");
 				saver.video_id = data;
 			},
 			error: function(xhr){

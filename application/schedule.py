@@ -2,9 +2,7 @@ from application.models import *
 from application import scheduler
 from application import picam
 from datetime import datetime
-
-def scheduler_job():
-	print "scheduler job working"
+import time
 
 def cam_record(schedule_id, start_time=None):
 	'''Turns the picam service on if not on,
