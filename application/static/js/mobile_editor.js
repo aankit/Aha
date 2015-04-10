@@ -58,7 +58,7 @@ function draw() {
 			highlight.end = 0;
 			//POST our data!!
 
-			postMarker(saver.timestamp, saver.direction, saver.duration);
+			postMarker(saver.video_id, saver.day, saver.timestamp, saver.direction, saver.duration);
 			resetSaver();
 			countdown = false;
 		}

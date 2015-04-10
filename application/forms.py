@@ -116,7 +116,7 @@ class ScheduleForm(Form):
 		d = dict()
 		if schedule_objs:
 			d['days'] = [schedule_obj.day for schedule_obj in schedule_objs]
-			d['section'] = schedule_objs[0].name
+			d['section'] = schedule_objs[0].section.name
 			d['start_time'] = self.toggleTime(schedule_objs[0].start_time)
 			d['start_ampm'] = self.getAMPM(schedule_objs[0].start_time)
 			d['end_time'] = self.toggleTime(schedule_objs[0].end_time)
