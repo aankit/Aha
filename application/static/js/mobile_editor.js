@@ -28,7 +28,7 @@ function setup() {
 	countdown = false;
 	textFont("Helvetica");
 	var timeoutID = 0;
-	getSection(); //will be called every ten seconds
+	// getSection(); //will be called every ten seconds
 	getVideo();
 }
 
