@@ -22,7 +22,8 @@ def cam_record(section_id, start_time=None):
 			section_id = section_id)
 		db.session.add(video_obj)
 		db.session.commit()
-	return video_obj.id
+		video_id = video_obj.id
+	return video_id
 
 def cam_off():
 	'''Turns the current picam recording off if recording,

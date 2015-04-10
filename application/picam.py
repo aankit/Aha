@@ -3,11 +3,11 @@ import sh, time, os
 
 def service_on():
 	sh.sudo('service','picam', 'start')
-	pid = sh.pidof('picam')
+	pid = service_state
 	command_sent = time.time()
 	current_time = time.time()
 	while not pid:
-		pid = sh.pidof('picam')
+		pid = service_state
 		current_time = time.time()
 		if command_sent - current_time > 20:
 			app.logger.warning("picam service on timed out")
@@ -26,9 +26,7 @@ def service_state():
 
 def record_on():
 	sh.touch(app.config["RECORD_PATH"] + '/start_record')
-	videos = os.listdir(app.config["VIDEO_PATH"])
-	video_times = [os.path.getctime(app.config["VIDEO_PATH"] + '/' + video) for video in videos]
-	current_file = videos[video_times.index(min(video_times))]
+	current_file = os.listdir(app.config["TMP_VIDEO_PATH"])
 	return current_file
 
 def record_off():
