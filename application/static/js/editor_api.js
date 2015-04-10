@@ -127,7 +127,7 @@ function getVideo(){
 		type: 'GET',
 		data: {"state": "current"},
 		success: function(data) {
-			if(video===-1){
+			if(data===-1){
 				startNewVideo();
 			} else {
 				saver.video_id = data;
