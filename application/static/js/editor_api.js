@@ -128,7 +128,8 @@ function getVideo(){
 		type: 'GET',
 		data: {"state": "current"},
 		success: function(data) {
-			if(data===-1){
+			data = parseInt(data);
+			if(data === -1){
 				startNewVideo();
 			} else {
 				saver.video_id = data;
