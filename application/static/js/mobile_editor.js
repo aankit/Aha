@@ -27,15 +27,14 @@ function setup() {
 	};
 	countdown = false;
 	textFont("Helvetica");
-	setInterval(function() {
-		updateVideo();
-		console.log("schedule id:" , saver.schedule_id);
-		console.log("video id:", saver.video_id);
-	}, 20000);
+	var timeoutID = 0;
+	updateVideo(); //will be called every ten seconds
 }
 
 function draw() {
 	//
+	console.log("schedule id:" , saver.schedule_id);
+	console.log("video id:", saver.video_id);
 	//get or start recording of a video
 	background(0);
 	bar(canvas, sliderBar); //draw the bar
@@ -60,7 +59,7 @@ function draw() {
 			highlight.end = 0;
 			//POST our data!!
 
-			// postMarker(saver.timestamp, saver.direction, saver.duration);
+			postMarker(saver.timestamp, saver.direction, saver.duration);
 			resetSaver();
 			countdown = false;
 		}

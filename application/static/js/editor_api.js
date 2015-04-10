@@ -1,10 +1,10 @@
-function postMarker(section_id, video_id, day, timestamp, direction, duration){
+function postMarker(video_id, day, timestamp, direction, duration){
     //event handler functions, currently the Failed function isn't called on error, not sure why
 	function addComplete(evt) {
 		console.log("added");
 	}
 	function addFailed(evt){
-		alert("The scenario was not added");
+		alert("The marker was not added");
 	}
 	//let's build our data object for POSTing
 	//get section_id for posting
@@ -23,7 +23,7 @@ function postMarker(section_id, video_id, day, timestamp, direction, duration){
 		"start_time": start_time,
 		"end_time": end_time
 	};
-
+	console.log(data);
 	// POST the data!!!
 	var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
 	xmlhttp.addEventListener("load", addComplete, false);
@@ -59,6 +59,7 @@ function updateVideo(){
 					console.log("no scheduled recording, ad hoc already started");
 				}
 			}
+			timeoutID = setTimeout(updateVideo, 10000); //setTimeout
 		},
 		error: function(xhr) {
 			alert('Something went wrong getting the section this recording is related to.'); //or whatever
