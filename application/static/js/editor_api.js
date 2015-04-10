@@ -59,7 +59,7 @@ function updateVideo(){
 					console.log("no scheduled recording, ad hoc already started");
 				}
 			}
-			timeoutID = setTimeout(updateVideo, 10000); //setTimeout
+			// timeoutID = setTimeout(updateVideo, 10000); //setTimeout
 		},
 		error: function(xhr) {
 			alert('Something went wrong getting the section this recording is related to.'); //or whatever
