@@ -53,7 +53,7 @@ function updateVideo(){
 				//also I don't have to automatically start the video here, and could ask the user to do it.
 				if(saver.schedule_id!==100){
 					// to look for 
-					if(saver.video_id===0){
+					if(saver.video_id<=0){
 						console.log("starting an ad hoc recording");
 						startNewVideo();
 					}
