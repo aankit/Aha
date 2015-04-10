@@ -46,10 +46,10 @@ function updateVideo(){
 		data: {"q": JSON.stringify({"filters": filters})},
 		success: function(data){
 			try{
-				saver.section_id = data.objects[0].section_id;
+				saver.schedule_id = data.objects[0].id;
 			} catch (err){
 				//use the ad hoc section idea
-				saver.section_id = 100;
+				saver.schedule_id = 100;
 			}
 			getVideo(saver.section_id);
 		},
@@ -59,16 +59,16 @@ function updateVideo(){
 	});
 }
 
-function getVideo(section_id){
-	console.log(section_id);
-	if(section_id===100){
+function getVideo(schedule_id){
+	console.log(schedule_id);
+	if(schedule_id===100){
 		current_timestamp = moment().format("YYYY-MM-DD HH:mm:ss");
 		//turn camera on, get new video filename and create and commit a video data obj
 		$.ajax({
 			url: 'camera/',
 			type: 'GET',
 			data: {"state": "on",
-			"section_id":section_id,
+			"schedule_id":schedule_id,
 			"timestamp":current_timestamp},
 			success: function(data){
 				console.log(data + "is now recording");

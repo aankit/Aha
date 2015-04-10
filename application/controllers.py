@@ -75,11 +75,11 @@ def profile():
 @app.route('/camera')
 def camera_on():
   state = request.args.get('state')
-  section_id = request.args.get('section_id')
+  schedule_id = request.args.get('schedule_id')
   timestamp_string = request.args.get('timestamp')
   if state == 'on':
     datetime_timestamp = datetime.strptime(timestamp_string, "%Y-%m-%d %H:%M:%S")
-    video_id = schedule.cam_record(section_id, datetime_timestamp)
+    video_id = schedule.cam_record(schedule_id, datetime_timestamp)
     return str(video_id)
   elif state == 'off':
     schedule.cam.off()

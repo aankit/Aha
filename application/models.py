@@ -44,8 +44,8 @@ class Schedule(db.Model):
 	__tablename__ = 'schedule'
 	id = db.Column(db.Integer, primary_key = True)
 	day = db.Column(db.Integer)
-	start_time = db.Column(db.DateTime)
-	end_time = db.Column(db.DateTime)
+	start_time = db.Column(db.DateTime) #these times all happen on January 1st, 1900
+	end_time = db.Column(db.DateTime)   #since I don't care about dates for recurring scheduling
 	section_id = db.Column(db.Integer, db.ForeignKey('section.id'))
 	section = db.relationship('Section', backref='schedule')
 
@@ -72,9 +72,9 @@ class Video(db.Model):
 	__tablename__ = 'video'
 	id = db.Column(db.Integer, primary_key = True)
 	filename = db.Column(db.String(25))
-	start_time = db.Column(db.DateTime)
-	section_id = db.Column(db.Integer, db.ForeignKey('section.id'))
-	section = db.relationship('Section', backref='videos')
+	start_time = db.Column(db.DateTime) #this is an actual time!
+	schedule_id = db.Column(db.Integer, db.ForeignKey('schedule.id'))
+	schedule = db.relationship('Schedule', backref='videos')
 
 	def __repr(self):
 		return '<Video %s>' % (self.filename)
