@@ -164,3 +164,18 @@ function touchStarted() {
 		}
 	}
 }
+
+$( window ).on("beforeunload", function() {
+	$.ajax({
+		url: 'camera/',
+		type: 'GET',
+		data: {"state": "off"},
+		success: function(data){
+			console.log(data);
+		},
+		error: function(error){
+			console.log(error);
+		}
+	});
+	return "Please make sure that you turn the turn off recording.";
+});
