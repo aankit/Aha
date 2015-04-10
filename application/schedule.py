@@ -1,6 +1,7 @@
 from application.models import *
 from application import scheduler
 from application import picam
+from datetime import datetime
 
 def scheduler_job():
 	print "scheduler job working"
@@ -10,13 +11,16 @@ def cam_record(schedule_id, start_time=None):
 	starts recording if not already recording,
 	and saves the new video'''
 	if start_time == None:
-		start_time = datetime.now()
+		t = datetime.now()
+		start_time = datetime(t.year, t.month, t.day, t.hour, t.minute)
 	picam_pid = picam.service_state()
 	recording_filename = picam.record_state()
 	if not picam_pid:
 		picam.service_on()
+		time.sleep(2)
 	if not recording_filename:
 		recording_filename = picam.record_on()
+		# print recording_filename
 		video_obj = Video(filename=recording_filename, 
 			start_time = start_time, 
 			schedule_id = schedule_id)
@@ -63,7 +67,7 @@ def add_schedule(form, day, section_id):
 	end_job_id = "%d_end" % (schedule_obj.id)
 	#create cron jobs
 	scheduler.add_job(cam_record, "cron", 
-		kwargs={"schedule_id":schedule_obj.id, "start_time":schedule_obj.start_time},
+		kwargs={"schedule_id":schedule_obj.id},
 		id=start_job_id,
 		day_of_week=day, 
 		hour=form.start_time.data.hour, 

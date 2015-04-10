@@ -4,14 +4,6 @@ import sh, time, os
 def service_on():
 	sh.sudo('service','picam', 'start')
 	pid = service_state()
-	command_sent = time.time()
-	current_time = time.time()
-	while not pid:
-		pid = service_state()
-		current_time = time.time()
-		if command_sent - current_time > 20:
-			app.logger.warning("picam service on timed out")
-			break;
 	return pid
 
 def service_off():
@@ -27,7 +19,9 @@ def service_state():
 def record_on():
 	sh.touch(app.config["RECORD_PATH"] + '/start_record')
 	current_file = os.listdir(app.config["TMP_VIDEO_PATH"])
-	return current_file
+	print current_file
+	print "------"
+	return current_file[0] #only one file can exist here at a time
 
 def record_off():
 	sh.touch(app.config["RECORD_PATH"] + '/stop_record')
@@ -39,5 +33,8 @@ def record_state():
 	else:
 		return False
 
-
-
+def test():
+	pid = service_on()
+	time.sleep(2)
+	current_file = record_on()
+	return pid, current_file
