@@ -16,7 +16,7 @@ function postMarker(section_id, video_id, day, timestamp, direction, duration){
 		end_time = new Date( timestamp._d.getTime() + duration);
 	}
 	//turn timestamp into string for POSTing
-	timestamp = "1900-01-01T" + timestamp.format("HH:mm:ss");
+	timestamp = timestamp.format("YYYY-MM-DD HH:mm:ss");
 	data = {
 		"video_id": video_id,
 		"timestamp": timestamp,
@@ -35,7 +35,7 @@ function postMarker(section_id, video_id, day, timestamp, direction, duration){
 
 function updateVideo(){
 	//first let's check the schedule and then get the appropriate video id
-	timestamp = "1900-01-01T" + moment().format("HH:mm:ss");
+	timestamp = "1900-01-01T" + moment().format("HH:mm:ss"); //ONLY USE THE WEIRD 1900 timestamp to look up in sched
 	day = moment()._d.getDay()-1;
 	filters = [{"name": "start_time", "op" : "lte", "val": timestamp},
 	{"name": "end_time", "op": "gte", "val": timestamp},
@@ -62,7 +62,7 @@ function updateVideo(){
 function getVideo(section_id){
 	console.log(section_id);
 	if(section_id===100){
-		timestamp = "1900-01-01 " + moment().format("HH:mm:ss");
+		timestamp = moment().format("YYYY-MM-DD HH:mm:ss")
 		//turn camera on, get new video filename and create and commit a video data obj
 		$.ajax({
 			url: 'camera/',
