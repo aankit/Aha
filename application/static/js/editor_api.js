@@ -52,6 +52,7 @@ function updateVideo(){
 				//use the ad hoc section idea of 100, could add some other options here on user input?
 				//also I don't have to automatically start the video here, and could ask the user to do it.
 				if(saver.schedule_id!==100){
+					console.log("starting an ad hoc recording");
 					saver.schedule_id = 100;
 					startNewVideo(schedule_id);
 				} else {
@@ -69,6 +70,7 @@ function startNewVideo(schedule_id){
 	if(schedule_id===100){
 		current_timestamp = moment().format("YYYY-MM-DD HH:mm:ss");
 		//turn camera on, get new video filename and create and commit a video data obj
+		console.log("making a new video, this should only happen once.");
 		$.ajax({
 			url: 'camera/',
 			type: 'GET',

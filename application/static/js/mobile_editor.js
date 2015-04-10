@@ -29,9 +29,9 @@ function setup() {
 	textFont("Helvetica");
 	setInterval(function() {
 		updateVideo();
-		console.log(saver.section_id);
-		console.log(saver.video_id);
-	}, 10000);
+		console.log("schedule id:" , saver.schedule_id);
+		console.log("video id:", saver.video_id);
+	}, 20000);
 }
 
 function draw() {
