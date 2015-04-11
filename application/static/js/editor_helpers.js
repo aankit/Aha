@@ -74,7 +74,7 @@ function confirmBox(c, s){
 }
 
 function videoWait(c){
-	if(saver.video_id===0){
+	if(saver.video_id<=0){
 		console.log("shoot em in the back now");
 		fill(128);
 		rect(0,0,c.width, c.height);
