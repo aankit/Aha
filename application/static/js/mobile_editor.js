@@ -34,6 +34,7 @@ function setup() {
 }
 
 function draw() {
+	console.log(videoType);
 	//get or start recording of a video
 	background(0);
 	bar(canvas, sliderBar); //draw the bar
