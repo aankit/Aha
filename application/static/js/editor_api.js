@@ -63,7 +63,7 @@ function startNewVideo(){
 	$.ajax({
 		url: 'camera/',
 		type: 'GET',
-		data: {"state": "on",
+		data: {"state": "record",
 		"schedule_id":100,
 		"timestamp":current_timestamp},
 		success: function(data){

@@ -78,10 +78,13 @@ def camera():
   schedule_id = request.args.get('schedule_id')
   timestamp_string = request.args.get('timestamp')
   #turn the camera on and return the DB id of the new video
-  if state == 'on':
+  if state == 'record':
     datetime_timestamp = datetime.strptime(timestamp_string, "%Y-%m-%d %H:%M:%S")
     video_id = schedule.cam_record(schedule_id, datetime_timestamp)
     return str(video_id)
+  elif state == 'service':
+    pid = picam.service_on()
+    return str(pid)
   #turn the camera off
   elif state == 'off':
     schedule.cam_off()
