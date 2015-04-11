@@ -72,3 +72,19 @@ function confirmBox(c, s){
 	text(undo_text, c.width/2, undoTop+15);
 	return {minX: undoLeftX, maxX: undoRightX, minY: undoTop, maxY: undoBottom};
 }
+
+function videoWait(c){
+	if(saver.video_id===0){
+		console.log("shoot em in the back now");
+		fill(128);
+		rect(0,0,c.width, c.height);
+		waitText = "Please wait while the\ncurrent video is\n accessed or a new\n video is created.";
+		textAlign(CENTER);
+		fill(255);
+		textSize(20);
+		noStroke();
+		textLeading(20);
+		text(waitText, c.width/2, c.height/3);
+
+	}
+}
