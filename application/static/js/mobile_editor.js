@@ -8,8 +8,9 @@ var videoType; //adhoc or scheduled
 
 function setup() {
 	canvas = createCanvas(205, 350);
-	canvas.position(windowWidth/2-125, windowHeight/7);
+	// canvas.position(windowWidth/2-125, windowHeight/7);
 	canvas.style("border", "1px solid");
+	canvas.parent("canvas-holder");
 	sliderBar = {
 		x1 : canvas.width-40,
 		y1 : 20,
@@ -30,7 +31,7 @@ function setup() {
 	countdown = false;
 	textFont("Helvetica");
 	// getSection(); //will be called every ten seconds
-	getVideo();
+	// getVideo();
 }
 
 function draw() {
@@ -123,7 +124,7 @@ function updateSaver(t){
 
 function touchMoved(){
 	cursor.radius = 40;
-	if(abs(mouseX-cursor.cx)<cursor.radius && abs(mouseY-cursor.cy)<cursor.radius && !countdown)
+	if(abs(mouseX-cursor.cx)<cursor.radius && abs(mouseY-cursor.cy)<cursor.radius && !countdown && saver.video_id>0)
 		//t is the way we move along the curve of the bezier, between zero and one.
 		//the scale is used to step through the bezier and is equivalent to one minute.
 		for(t=0;t<1;t+=scale){
