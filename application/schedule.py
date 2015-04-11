@@ -104,7 +104,7 @@ def delete_schedule(schedule_id):
 			db.session.delete(job)
 			scheduler.remove_job(job.job_id)
 		except:
-			print 'no job' #can get rid of this later
+			db.session.rollback()#can get rid of this later
 	return day, name
 
 def edit_schedule(form, section_id):

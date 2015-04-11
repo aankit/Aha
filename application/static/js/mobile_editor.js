@@ -3,7 +3,8 @@ var sliderBar; //slider bar obj
 var scale; //scale of the slider
 var saver; //saves the marked time!!
 var highlight, release_time, prev_millis, redo_time, countdown; //time selection variables
-var videoTimeoutID;
+var videoTimeoutID; //self-explanatory
+var videoType; //adhoc or scheduled
 
 function setup() {
 	canvas = createCanvas(205, 350);
@@ -117,7 +118,6 @@ function updateSaver(t){
 		highlight.end = t;
 	}
 	saver.duration = Math.floor(abs(t-0.5)/(0.5*scale*4));
-	console.log(saver.duration);
 }
 
 function touchMoved(){
@@ -165,16 +165,18 @@ function touchStarted() {
 }
 
 $( window ).on("beforeunload", function() {
-	$.ajax({
-		url: 'camera/',
-		type: 'GET',
-		data: {"state": "off"},
-		success: function(data){
-			console.log(data);
-		},
-		error: function(error){
-			console.log(error);
-		}
-	});
-	return "Please make sure that you turn the turn off recording.";
+	if(videoType==="adhoc"){
+		$.ajax({
+			url: 'camera/',
+			type: 'GET',
+			data: {"state": "off"},
+			success: function(data){
+				console.log(data);
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});
+		return "Please make sure that you turn the turn off recording.";
+	}
 });

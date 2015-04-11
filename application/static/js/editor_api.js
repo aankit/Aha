@@ -6,10 +6,6 @@ function postMarker(video_id, timestamp, direction, duration){
 	function addFailed(evt){
 		alert("The marker was not added");
 	}
-	// console.log("v", video_id);
-	// console.log("d", day);
-	// console.log("dir: ", direction);
-	// console.log("duration: ", duration);
 	//let's build our data object for POSTing
 	//get section_id for posting
 	if( direction > 0){
@@ -27,7 +23,6 @@ function postMarker(video_id, timestamp, direction, duration){
 		"start_time": start_time,
 		"end_time": end_time
 	};
-	console.log(data);
 	// POST the data!!!
 	var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
 	xmlhttp.addEventListener("load", addComplete, false);
@@ -65,7 +60,6 @@ function startNewVideo(){
 	//could I have different types of new videos?
 	current_timestamp = moment().format("YYYY-MM-DD HH:mm:ss");
 	//turn camera on, get new video filename and create and commit a video data obj
-	console.log("making a new video, this should only happen once.");
 	$.ajax({
 		url: 'camera/',
 		type: 'GET',
@@ -73,9 +67,10 @@ function startNewVideo(){
 		"schedule_id":100,
 		"timestamp":current_timestamp},
 		success: function(data){
-			console.log(data + " is now recording");
-			saver.video_id = data;
-			console.log(saver.video_id);
+			video_id = parseInt(data, 10);
+			console.log(video_id);
+			saver.video_id = video_id;
+			videoType = "adhoc";
 			videoTimeoutID = setTimeout(getVideo, 10000); //setTimeout
 		},
 		error: function(xhr){
@@ -93,12 +88,11 @@ function getVideo(){
 		success: function(data) {
 			video_id = parseInt(data, 10);
 			if(video_id === -1){
-				console.log("here!");
-				console.log(video_id);
 				startNewVideo();
 			} else {
 				saver.video_id = video_id;
 				console.log(saver.video_id);
+				videoType = "scheduled";
 				clearTimeout(videoTimeoutID);
 				videoTimeoutID = setTimeout(getVideo, 10000);
 			}
