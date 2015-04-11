@@ -18,6 +18,10 @@ handler.setLevel(logging.INFO)
 app.logger.addHandler(handler)
 
 import application.models
+from application.filters import datetimeformat, dayformat
+
+app.jinja_env.filters['datetimeformat'] = datetimeformat
+app.jinja_env.filters['dayformat'] = dayformat
 
 from application.schedulerConfig import jobstores, executors, job_defaults, timezone
 scheduler = BackgroundScheduler(jobstores=jobstores, 

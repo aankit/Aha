@@ -73,7 +73,7 @@ def profile():
     return render_template('home.html', user=user)
 
 @app.route('/camera')
-def camera_on():
+def camera():
   state = request.args.get('state')
   schedule_id = request.args.get('schedule_id')
   timestamp_string = request.args.get('timestamp')
@@ -95,7 +95,7 @@ def camera_on():
     else:
       video_id = -1
     return str(video_id)
-  elif state == 'live':
+  elif state=='live':
     return render_template('live.html')
   else:
     return render_template('404.html')

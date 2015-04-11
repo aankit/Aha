@@ -15,17 +15,6 @@
     <script>jwplayer.key="tSjzVP1Nl+Jx8mYEpoRw2xHjomlWTNcRZkMAPw==";</script> 
     
     <script type="text/javascript">
-    //     function loadCanvas(id) {
-    //     var canvas = document.createElement('canvas');
-    //     div = document.getElementById(id); 
-    //     canvas.id     = "CursorLayer";
-    //     canvas.width  = window.innerWidth
-    //     canvas.height = window.innerHeight;
-    //     canvas.style.zIndex   = 8;
-    //     canvas.style.position = "absolute";
-    //     canvas.style.border   = "1px solid";
-    //     div.appendChild(canvas)
-    // }
     </script>
   </head>
   <body>
@@ -48,7 +37,8 @@
           {% if 'email' in session %}
           <li><a href="{{ url_for('home') }}">Home</a></li>
           <li><a href="{{ url_for('view_schedule') }}">Schedule</a></li>
-          <li><a href="{{ url_for('editor') }}">Editor</a></li>
+          <li><a href="{{ url_for('editor') }}">Real-Time Capture</a></li>
+          <li><a href="{{ url_for('camera', state='live') }}">Live View</a></li>
           <li><a href="{{ url_for('signout') }}">Sign Out</a></li>
           {% else %}
           <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
