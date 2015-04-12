@@ -47,6 +47,13 @@ $( window ).on("beforeunload", function() {
 
 <script type="text/javascript">
     
+    jwplayer("container").setup({
+        file: 'rtmp://aha.local/webcam/flv:mystream',
+        // androidhls: true,
+        // file: 'http://aha.local/hls/index.m3u8',
+        primary: 'flash'
+    });
+
     // jwplayer("container").setup({
     //     // file: 'rtmp://aha.local/webcam/flv:mystream',
     //     androidhls: true,
