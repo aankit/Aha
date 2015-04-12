@@ -182,6 +182,10 @@ def delete_recording(id):
 def editor():
   return render_template("mobile_editor.html")
 
+@app.route('/example')
+def example():
+  return render_template("example.html")
+
 
 @app.route('/logo')
 def logo():
