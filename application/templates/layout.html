@@ -59,7 +59,7 @@
       {% if messages %}
         <ul>
         {% for message in messages %}
-            <li class="success">{{ message }} </li>
+            <li class="success">{{ message|datetimeformat|dayformat }} </li>
         {% endfor %}
         </ul>
       {% endif %}

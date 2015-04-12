@@ -96,10 +96,11 @@ def camera():
       video_id = -1
     return str(video_id)
   elif state=='live':
-    picam.service_on()
+    pid = picam.service_on()
     return render_template('live.html')
   else:
     return render_template('404.html')
+
 
 @app.route('/schedule')
 def view_schedule():
