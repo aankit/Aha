@@ -4,18 +4,6 @@
 
 {% block javascript %}
 <script type="text/javascript">
-// 	$.ajax({
-// 		url: 'camera/',
-// 		type: 'GET',
-// 		async: false,
-// 		data: {"state": "service"},
-// 		success: function(data){
-// 			console.log(data);
-// 		},
-// 		error: function(data){
-// 			console.log(data);
-// 		}
-// 	});
 $( window ).on("beforeunload", function() {
 	$.ajax({
 		url: 'camera/',
@@ -30,12 +18,6 @@ $( window ).on("beforeunload", function() {
 	});
 	return "Please make sure that you turn the turn off recording.";
 
-	 jwplayer("container").setup({
-        file: 'rtmp://aha.local/webcam/flv:mystream',
-        // androidhls: true,
-        // file: 'http://aha.local/hls/index.m3u8',
-        primary: 'flash'
-    });
 });
 
 </script>
@@ -43,16 +25,16 @@ $( window ).on("beforeunload", function() {
 {% endblock %}
 
 <!-- <iframe src="/hls/index.m3u8" width="400" height="300" style="border:none"></iframe> -->
-<div id="container">Loading the player...</div>
+<!-- <div id="container">Loading the player...</div> -->
+
+<video id="example_video_1" class="video-js vjs-default-skin" controls preload="none" width="640" height="264"
+      poster="http://video-js.zencoder.com/oceans-clip.png"
+      data-setup="{}">
+    <source src="rtmp://aha.local/webcam/mystream" type='rtmp/flv' />
+  </video>
 
 <script type="text/javascript">
     
-    jwplayer("container").setup({
-        file: 'rtmp://aha.local/webcam/flv:mystream',
-        // androidhls: true,
-        // file: 'http://aha.local/hls/index.m3u8',
-        primary: 'flash'
-    });
 
     // jwplayer("container").setup({
     //     // file: 'rtmp://aha.local/webcam/flv:mystream',
