@@ -16,6 +16,21 @@
 // 			console.log(data);
 // 		}
 // 	});
+$( window ).on("beforeunload", function() {
+	$.ajax({
+		url: 'camera/',
+		type: 'GET',
+		data: {"state": "off"},
+		success: function(data){
+			console.log(data);
+		},
+		error: function(error){
+			console.log(error);
+		}
+	});
+	return "Please make sure that you turn the turn off recording.";
+});
+
 </script>
 
 {% endblock %}
@@ -25,12 +40,12 @@
 
 <script type="text/javascript">
     
-    jwplayer("container").setup({
-        // file: 'rtmp://aha.local/webcam/flv:mystream',
-        androidhls: true,
-        file: 'http://aha.local/hls/index.m3u8',
-        primary: 'flash'
-    });
+    // jwplayer("container").setup({
+    //     // file: 'rtmp://aha.local/webcam/flv:mystream',
+    //     androidhls: true,
+    //     file: 'http://aha.local/hls/index.m3u8',
+    //     primary: 'flash'
+    // });
 
 $( window ).on("beforeunload", function() {
 	$.ajax({
