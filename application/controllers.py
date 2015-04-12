@@ -82,9 +82,6 @@ def camera():
     datetime_timestamp = datetime.strptime(timestamp_string, "%Y-%m-%d %H:%M:%S")
     video_id = schedule.cam_record(schedule_id, datetime_timestamp)
     return str(video_id)
-  elif state == 'service':
-    pid = picam.service_on()
-    return str(pid)
   #turn the camera off
   elif state == 'off':
     schedule.cam_off()
@@ -99,6 +96,7 @@ def camera():
       video_id = -1
     return str(video_id)
   elif state=='live':
+    picam.service_on()
     return render_template('live.html')
   else:
     return render_template('404.html')
