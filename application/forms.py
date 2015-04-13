@@ -99,7 +99,7 @@ class ScheduleForm(Form):
                 .join(Schedule.section) \
                 .filter(Schedule.day.in_(self.days.data)) \
                 .filter(((Schedule.start_time <= self.start_time.data) & (Schedule.end_time > self.start_time.data)) |
-                ((Schedule.start_time < self.end_time.data) & (Schedule.end_time >= self.end_time.data))).one()
+                ((Schedule.start_time < self.end_time.data) & (Schedule.end_time >= self.end_time.data))).all()
 
             if conflict:
                 self.days.errors.append("One or more of the times you are scheduling conflicts with this %r" % (conflict))
