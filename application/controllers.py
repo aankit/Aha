@@ -163,10 +163,10 @@ def edit_recording(id):
             form.end_time.data = d['end_time']
             form.end_ampm.data = d['end_ampm']
             return render_template('recording.html',
-                title = "Edit Recording",
-                endpoint = 'edit_recording',
-                id = id,
-                form = form)
+                title="Edit Recording",
+                endpoint='edit_recording',
+                id=id,
+                form=form)
         else:
             return render_template("error.html", error="Class doesn't exist :(")
 
