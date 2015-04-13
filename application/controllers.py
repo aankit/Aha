@@ -13,7 +13,8 @@ for model_name in app.config['API_MODELS']:
 def home():
     if 'email' not in session:
         return redirect(url_for('signin'))
-        user = User.query.filter_by(email=session['email']).first()
+
+    user = User.query.filter_by(email=session['email']).first()
     if user is None:
         return redirect(url_for('signup'))
     else:
