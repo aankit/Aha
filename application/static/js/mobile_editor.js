@@ -31,11 +31,10 @@ function setup() {
 	countdown = false;
 	textFont("Helvetica");
 	// getSection(); //will be called every ten seconds
-	// getVideo();
+	getVideo();
 }
 
 function draw() {
-	console.log(videoType);
 	//get or start recording of a video
 	background(0);
 	bar(canvas, sliderBar); //draw the bar

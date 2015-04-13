@@ -41,7 +41,7 @@ def signup():
 def signin():
   form = SigninForm()
   if 'email' in session:
-    return redirect(url_for('home')) 
+    return redirect(url_for('home'))
 
   if request.method == 'POST':
     if form.validate() == False:
@@ -49,7 +49,7 @@ def signin():
     else:
       session['email'] = form.email.data
       return redirect(url_for('home'))
-                 
+
   elif request.method == 'GET':
     return render_template('signin.html', form=form)
 
@@ -57,7 +57,7 @@ def signin():
 @app.route('/signout')
 def signout():
   if 'email' not in session:
-    return redirect(url_for('signin'))   
+    return redirect(url_for('signin'))
   session.pop('email', None)
   return redirect(url_for('home'))
 
@@ -106,7 +106,7 @@ def camera():
 def view_schedule():
   form = ScheduleForm()
   jobs = schedule.get_scheduled()
-  return render_template('schedule.html', 
+  return render_template('schedule.html',
     jobs=jobs,
     form=form)
 
@@ -133,10 +133,10 @@ def add_recording():
       return redirect(url_for('view_schedule'))
   #GET
   else:
-    return render_template('recording.html', 
-      form=form, 
-      title = "Add Recording", 
-      endpoint='add_recording', 
+    return render_template('recording.html',
+      form=form,
+      title = "Add Recording",
+      endpoint='add_recording',
       name=None)
 
 
@@ -162,11 +162,11 @@ def edit_recording(id):
       form.days.data = d['days']
       form.start_time.data =  d['start_time']
       form.start_ampm.data = d['start_ampm']
-      form.end_time.data = d['end_time'] 
+      form.end_time.data = d['end_time']
       form.end_ampm.data = d['end_ampm']
-      return render_template('recording.html', 
-        title = "Edit Recording", 
-        endpoint = 'edit_recording', 
+      return render_template('recording.html',
+        title = "Edit Recording",
+        endpoint = 'edit_recording',
         id = id,
         form = form)
     else:
