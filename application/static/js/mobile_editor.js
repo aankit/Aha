@@ -5,6 +5,7 @@ var saver; //saves the marked time!!
 var highlight, release_time, prev_millis, redo_time, countdown; //time selection variables
 var videoTimeoutID; //self-explanatory
 var videoType; //adhoc or scheduled
+var videoID;
 
 function setup() {
 	canvas = createCanvas(205, 350);
@@ -59,7 +60,7 @@ function draw() {
 			highlight.end = 0;
 			//POST our data!!
 
-			postMarker(saver.video_id, saver.timestamp, saver.direction, saver.duration);
+			postMarker(videoID, saver.timestamp, saver.direction, saver.duration);
 			resetSaver();
 			countdown = false;
 		}
@@ -102,7 +103,6 @@ function resetSaver(){
 		direction: 0,	//forward, back, around
 		duration: 0,	//seconds selected
 		undo: {}, //the undo box object passed back from confirm box function
-		video_id: 0
 	};
 }
 
@@ -123,7 +123,7 @@ function updateSaver(t){
 
 function touchMoved(){
 	cursor.radius = 40;
-	if(abs(mouseX-cursor.cx)<cursor.radius && abs(mouseY-cursor.cy)<cursor.radius && !countdown && saver.video_id>0)
+	if(abs(mouseX-cursor.cx)<cursor.radius && abs(mouseY-cursor.cy)<cursor.radius && !countdown && videoID>0)
 		//t is the way we move along the curve of the bezier, between zero and one.
 		//the scale is used to step through the bezier and is equivalent to one minute.
 		for(t=0;t<1;t+=scale){

@@ -3,62 +3,55 @@
 {% block content %}
 
 {% block javascript %}
-<script type="text/javascript">
-// $( window ).on("beforeunload", function() {
-// 	$.ajax({
-// 		url: 'camera/',
-// 		type: 'GET',
-// 		data: {"state": "off"},
-// 		success: function(data){
-// 			console.log(data);
-// 		},
-// 		error: function(error){
-// 			console.log(error);
-// 		}
-// 	});
-// 	return "Please make sure that you turn the turn off recording.";
 
-// });
 
-</script>
+  <!-- Media Sources plugin -->
+  <script src="/static/lib/videojs-contrib-media-sources-0.3.1/src/videojs-media-sources.js"></script>
 
+  <!-- HLS plugin -->
+  <script src="/static/lib/videojs-contrib-hls-0.12.0/src/videojs-hls.js"></script>
+
+  <!-- segment handling -->
+  <script src="/static/lib/videojs-contrib-hls-0.12.0/src/xhr.js"></script>
+  <script src="/static/lib/videojs-contrib-hls-0.12.0/src/flv-tag.js"></script>
+  <script src="/static/lib/videojs-contrib-hls-0.12.0/src/stream.js"></script>
+  <script src="/static/lib/videojs-contrib-hls-0.12.0/src/exp-golomb.js"></script>
+  <script src="/static/lib/videojs-contrib-hls-0.12.0/src/h264-stream.js"></script>
+  <script src="/static/lib/videojs-contrib-hls-0.12.0/src/aac-stream.js"></script>
+  <script src="/static/lib/videojs-contrib-hls-0.12.0/src/metadata-stream.js"></script>
+  <script src="/static/lib/videojs-contrib-hls-0.12.0/src/segment-parser.js"></script>
+
+  <!-- m3u8 handling -->
+  <script src="/static/lib/videojs-contrib-hls-0.12.0/src/m3u8/m3u8-parser.js"></script>
+  <script src="/static/lib/videojs-contrib-hls-0.12.0/src/playlist-loader.js"></script>
+
+  <script src="/static/lib/pkcs7/dist/pkcs7.unpad.js"></script>
+  <script src="/static/lib/videojs-contrib-hls-0.12.0/src/decrypter.js"></script>
+
+  <script src="/static/lib/videojs-contrib-hls-0.12.0/src/bin-utils.js"></script>
 {% endblock %}
+  
+  <!-- example MPEG2-TS segments -->
+  <!-- bipbop -->
+  <!-- <script src="test/tsSegment.js"></script> -->
+  <!-- bunnies -->
+  <!--<script src="test/tsSegment-bc.js"></script>-->
 
-<iframe src="/hls/index.m3u8" width="400" height="300" style="border:none"></iframe>
-<!-- <div id="container">Loading the player...</div> -->
-
-<!-- <video id="example_video_1" class="video-js vjs-default-skin" controls preload="auto" width="640" height="264"
-      poster="http://video-js.zencoder.com/oceans-clip.png"
-      data-setup="{}">
-   <source src="rmtp://aha.local/rtmp/&flv:live" type='rtmp/flv'>
-    <source src="rtmp://cp67126.edgefcs.net/ondemand/&mp4:mediapm/ovp/content/test/video/spacealonehd_sounas_640_300.mp4" type='rtmp/mp4'>
-  </video> -->
-
-<script type="text/javascript">
-    
-
-    // jwplayer("container").setup({
-    //     // file: 'rtmp://aha.local/webcam/flv:mystream',
-    //     androidhls: true,
-    //     file: 'http://aha.local/hls/index.m3u8',
-    //     primary: 'flash'
-    // });
-
-// $( window ).on("beforeunload", function() {
-// 	$.ajax({
-// 		url: 'camera/',
-// 		type: 'GET',
-// 		data: {"state": "off"},
-// 		success: function(data){
-// 			console.log(data);
-// 		},
-// 		error: function(error){
-// 			console.log(error);
-// 		}
-// 	});
-// 	return "Please make sure that you turn the turn off recording.";
-// });
-
-</script>
+  <video id="video"
+         class="video-js vjs-default-skin"
+         height="250"
+         width="300"
+         controls
+         preload>
+    <source
+       src="/hls/index.m3u8"
+       type="application/x-mpegURL" />
+  </video>
+  
+  <script>
+    videojs.options.flash.swf = '/static/lib/video-js/video-js.swf';
+    // initialize the player
+    var player = videojs('video', { muted: true });
+  </script>
 
 {% endblock %}

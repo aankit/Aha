@@ -74,7 +74,7 @@ function confirmBox(c, s){
 }
 
 function videoWait(c){
-	if(saver.video_id<=0){
+	if(videoID<=0){
 		fill(128);
 		rect(0,0,c.width, c.height);
 		waitText = "Please wait while the\ncurrent video is\n accessed or a new\n video is created.";

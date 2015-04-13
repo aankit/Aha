@@ -69,7 +69,7 @@ function startNewVideo(){
 		success: function(data){
 			video_id = parseInt(data, 10);
 			console.log(video_id);
-			saver.video_id = video_id;
+			videoID = video_id;
 			videoType = "adhoc";
 			videoTimeoutID = setTimeout(getVideo, 10000); //setTimeout
 		},
@@ -87,11 +87,11 @@ function getVideo(){
 		data: {"state": "current"},
 		success: function(data) {
 			video_id = parseInt(data, 10);
+			console.log(video_id);
 			if(video_id === -1){
 				startNewVideo();
 			} else {
-				saver.video_id = video_id;
-				console.log(saver.video_id);
+				videoID = video_id;
 				videoType = "scheduled";
 				clearTimeout(videoTimeoutID);
 				videoTimeoutID = setTimeout(getVideo, 10000);
