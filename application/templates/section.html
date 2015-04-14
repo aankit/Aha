@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+ 
+{% block content %}
+
+{% for message in form.name.errors %}
+<div class="bg-danger">{{ message }}</div>
+{% endfor %}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-6 col-md-8">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <tr>
+            <td>Class Name</td>
+            <td>Scheduled Recordings</td>
+            <td>Roster</td>
+            <td>Lesson Plans</td>
+            <td>Student Work</td>
+            <td></td>
+            <td></td>
+          </tr>
+          {% for section in sections %}
+            <tr>
+                <td>{{ section.name }}</td>
+                <td>placeholder</td>
+                <td>placeholder</td>
+                <td>placeholder</td>
+                <td>placeholder</td>
+                <td>
+                    <a href="{{ url_for('section', action='delete', id=section.id) }}">Delete</a>
+                </td>
+                <td>
+                    <a href="{{ url_for('section', action='edit', id=section.id) }}">Edit</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+      </div>
+    </div>
+    <div class="col-xs-6 col-md-4">
+  <form enctype='application/json' action="/section" method=post>
+    {{ form.hidden_tag() }}
+     <div class="form-group">
+    {{ form.name.label }}
+    <div class=".col-xs-6 .col-md-4">
+    {{ form.name }}
+    </div>
+    </div>
+    {{ form.submit(class="btn btn-success") }}
+
+  </form>
+</div>
+</div>
+     
+{% endblock %}

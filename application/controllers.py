@@ -2,12 +2,13 @@ from flask import request, session, redirect, flash
 from flask import render_template, url_for
 from application.models import *
 from application import app, schedule, picam, api_manager
-from application.forms import SignupForm, SigninForm, ScheduleForm
+from application.forms import *
 from datetime import datetime
 
 for model_name in app.config['API_MODELS']:
     model_class = app.config['API_MODELS'][model_name]
     api_manager.create_api(model_class, methods=['GET', 'POST'])
+
 
 @app.route('/')
 def home():
@@ -32,6 +33,7 @@ def signup():
             db.session.add(newuser)
             db.session.commit()
             session['email'] = newuser.email
+            session['id'] = newuser.id
             return redirect(url_for('add_recording'))
 
     elif request.method == 'GET':
@@ -45,10 +47,12 @@ def signin():
         return redirect(url_for('home'))
 
     if request.method == 'POST':
-        if form.validate() is False:
+        user = form.validate()
+        if user is False:
             return render_template('signin.html', form=form)
         else:
-            session['email'] = form.email.data
+            session['email'] = user.email
+            session['id'] = user.id
             return redirect(url_for('home'))
     elif request.method == 'GET':
         return render_template('signin.html', form=form)
@@ -71,6 +75,7 @@ def profile():
         return redirect(url_for('signup'))
     else:
         return render_template('home.html', user=user)
+
 
 @app.route('/camera')
 def camera():
@@ -107,6 +112,40 @@ def view_schedule():
     form = ScheduleForm()
     jobs = schedule.get_scheduled()
     return render_template('schedule.html', jobs=jobs, form=form)
+
+
+@app.route('/section', methods=['GET', 'POST'])
+def section():
+    form = SectionForm()
+    sections = Section.query.filter_by(user_id=session['id']).all()
+    #POST
+    if request.method == 'POST' and form.validate():
+        section_obj = Section(name=form.name.data,
+            user_id=db.session.query(User).filter_by(email=session['email']).first().id)
+        db.session.add(section_obj)
+        try:
+            db.session.commit()
+            flash("Successly added section %s" % (section_obj.name))
+        except Exception as error:
+            flash("Database error: %s" % (error))
+        return redirect(url_for('section'))
+    #GET
+    else:
+        action = request.args.get('action')
+        section_id = request.args.get('id')
+        section = Section.query.filter_by(id=section_id).first()
+        if action == 'delete':
+            section_name = section.name
+            db.session.delete(section)
+            try:
+                db.session.commit()
+                flash("Deleted %s" % (section.name))
+                return redirect(url_for('section'))
+            except Exception as error:
+                flash("Database error: %s" % (error))
+        elif action == 'edit':
+            form.name.data = section.name
+        return render_template('section.html', sections=sections, form=form)
 
 
 @app.route('/recording', methods=['GET', 'POST'])
@@ -170,15 +209,18 @@ def edit_recording(id):
         else:
             return render_template("error.html", error="Class doesn't exist :(")
 
-@app.route('/recording/d/<id>')
-def delete_recording(id):
-    day, section_name = schedule.delete_schedule(id)
+
+@app.route('/recording/d/<schedule_id>')
+def delete_recording(scheduel_id):
+    day, section_name = schedule.remove_jobs(schedule_id)
     flash("You have successfully deleted the %d recording for %s" % (day, section_name))
     return redirect(url_for("view_schedule"))
+
 
 @app.route('/editor')
 def editor():
     return render_template("mobile_editor.html")
+
 
 @app.route('/example')
 def example():

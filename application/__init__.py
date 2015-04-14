@@ -13,9 +13,11 @@ app.session_interface = session_interface()
 
 db = SQLAlchemy(app)
 api_manager = APIManager(app, flask_sqlalchemy_db=db)
+
 handler = RotatingFileHandler(app.config['LOG_FILE'], maxBytes=10000, backupCount=1)
 handler.setLevel(logging.INFO)
 app.logger.addHandler(handler)
+logging.basicConfig()
 
 import application.models
 from application.filters import datetimeformat, dayformat
@@ -24,9 +26,9 @@ app.jinja_env.filters['datetimeformat'] = datetimeformat
 app.jinja_env.filters['dayformat'] = dayformat
 
 from application.schedulerConfig import jobstores, executors, job_defaults, timezone
-scheduler = BackgroundScheduler(jobstores=jobstores, 
-	executors=executors, 
-	job_defaults=job_defaults, 
+scheduler = BackgroundScheduler(jobstores=jobstores,
+	executors=executors,
+	job_defaults=job_defaults,
 	timezone=timezone)
 
 scheduler.start()
