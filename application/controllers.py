@@ -1,7 +1,7 @@
 from flask import request, session, redirect, flash
 from flask import render_template, url_for
 from application.models import *
-from application import app, schedule, picam, api_manager
+from application import app, video, picam, api_manager
 from application.forms import *
 from datetime import datetime
 
@@ -29,12 +29,12 @@ def signup():
         if form.validate() is False:
             return render_template('signup.html', form=form)
         else:
-            newuser = User(form.firstname.data, form.lastname.data, form.email.data, form.password.data)
+            newuser = User(form.email.data, form.password.data)
             db.session.add(newuser)
             db.session.commit()
             session['email'] = newuser.email
             session['id'] = newuser.id
-            return redirect(url_for('add_recording'))
+            return redirect(url_for('section'))
 
     elif request.method == 'GET':
         return render_template('signup.html', form=form)
@@ -85,11 +85,11 @@ def camera():
     #turn the camera on and return the DB id of the new video
     if state == 'on':
         datetime_timestamp = datetime.strptime(timestamp_string, "%Y-%m-%d %H:%M:%S")
-        video_id = schedule.cam_record(schedule_id, datetime_timestamp)
+        video_id = video.cam_record(schedule_id, datetime_timestamp)
         return str(video_id)
     #turn the camera off
     elif state == 'off':
-        schedule.cam_off()
+        video.cam_off()
         return 'off'
     #return the DB id of the current video being recorded or -1 if no video being recorded.
     elif state == 'current':
@@ -107,27 +107,6 @@ def camera():
         return render_template('404.html')
 
 
-@app.route('/schedule', methods=['GET', 'POST'])
-def view_schedule():
-    form = newScheduleForm()
-    form.populate_section(session["id"])
-    print form.data
-    #POST
-    if request.method == 'POST' and form.validate():
-        for day in form.days.data:
-            try:
-                schedule.add_schedule(form, day, section_id)
-            except Exception as error:
-                db.session.rollback()
-                return render_template("error.html", error="%d: %s" % (500, error))
-        flash('Success! You have added your recordings.')
-        return redirect(url_for('view_schedule'))
-    #GET
-    else:
-        jobs = schedule.get_scheduled()
-        return render_template('schedule.html', jobs=jobs, form=form)
-
-
 @app.route('/section', methods=['GET', 'POST'])
 def section():
     form = SectionForm()
@@ -141,15 +120,19 @@ def section():
             db.session.commit()
             flash("Successly added section %s" % (section_obj.name))
         except Exception as error:
+            db.session.rollback()
             flash("Database error: %s" % (error))
         return redirect(url_for('section'))
     #GET
     else:
         action = request.args.get('action')
-        section_id = request.args.get('id')
+        section_id = request.args.get('section_id')
         section = Section.query.filter_by(id=section_id).first()
         if action == 'delete':
-            section_name = section.name
+            recordings = video.get_jobs(section_id)
+            for recording in recordings:
+                video.remove_jobs(recording.id)
+                db.session.delete(recording)
             db.session.delete(section)
             try:
                 db.session.commit()
@@ -157,82 +140,64 @@ def section():
                 return redirect(url_for('section'))
             except Exception as error:
                 flash("Database error: %s" % (error))
-        elif action == 'add_recording':
-            form = newScheduleForm()
-            form.name.data = section.name
-            return render_template('recording.html',
-                form=form,
-                title="Add Recording",
-                endpoint="add_recording")
         return render_template('section.html', sections=sections, form=form)
 
 
-@app.route('/recording', methods=['GET', 'POST'])
-def add_recording():
+@app.route('/schedule', methods=['GET', 'POST'])
+def schedule():
     form = newScheduleForm()
-    print form.data
+    state = request.args.get("action")
+    section_id = request.args.get("section_id")
+    section = Section.query.filter_by(id=section_id).first()
+    recordings = video.get_jobs(section_id)  #need to make an active and inactive job function & list
     #POST
     if request.method == 'POST' and form.validate():
-        section_id = schedule.add_section(form, session)
-        if section_id:
-            #iterate through the days
-            for day in form.days.data:
-                try:
-                    schedule.add_schedule(form, day, section_id)
-                except Exception as error:
-                    db.session.rollback()
-                    return render_template("error.html", error="%d: %s" % (500, error))
-            flash('Success! You have added your recordings.')
-            return redirect(url_for('view_schedule'))
-        else:
-            flash('Section name already taken!')
-            return redirect(url_for('view_schedule'))
+        #iterate through the days
+        print form.start_time.data.hour
+        print form.end_time.data.hour
+        for day in form.days.data:
+            try:
+                d1, d2 = video.add_jobs(form, day, section_id)
+                flash('Success! You have added a %s recording for %s.' % (str(d1), str(d2)))
+            except Exception as error:
+                db.session.rollback()
+                flash('There was a database error %s' % (error))
+        return redirect(url_for('schedule', section_id=section_id))
     #GET
     else:
-        return render_template('recording.html',
-                    form=form,
-                    title="Add Recording",
-                    endpoint='add_recording')
+        if state == "deactivate":
+            recording_id = request.args.get("recording_id")
+            day, start_time = video.remove_jobs(recording_id)
+            flash("You have successfully deactivated %s's %d recording at %s" % (section.name, day, start_time))
+            return redirect(url_for("schedule"))
+        return render_template('schedule.html', recordings=recordings, form=form, section=section)
 
 
-@app.route('/recording/<id>', methods=['GET', 'POST'])
-def edit_recording(id):
-    form = ScheduleForm()
-
+@app.route('/recording', methods=['GET', 'POST'])
+def recording():
+    form = newScheduleForm()
+    section_id = request.args.get("section_id")
+    section = Section.query.filter_by(id=section_id).first()
+    recording_id = request.args.get("recording_id")
     #POST
     if request.method == 'POST' and form.validate():
-        section_id = Section.query.filter_by(name=form.section.data).first().id
-        status, message = schedule.edit_schedule(form, section_id)
+        message = video.edit_jobs(form, recording_id)
         #respond to the client
-        if status == 201:
-            flash(message)
-            return redirect(url_for('view_schedule'))
-        else:
-            return render_template("error.html", error="%d: %s" % (status, message))
+        flash(message)
+        return redirect(url_for('schedule', section_id=section_id))
     #GET
     else:
-        d = form.get_data(id)
+        d = form.get_data(recording_id)
         if d:
-            form.section.data = d['section']
             form.days.data = d['days']
             form.start_time.data = d['start_time']
-            form.start_ampm.data = d['start_ampm']
             form.end_time.data = d['end_time']
-            form.end_ampm.data = d['end_ampm']
             return render_template('recording.html',
-                title="Edit Recording",
-                endpoint='edit_recording',
-                id=id,
+                section=section,
+                id=recording_id,
                 form=form)
         else:
-            return render_template("error.html", error="Class doesn't exist :(")
-
-
-@app.route('/recording/d/<schedule_id>')
-def delete_recording(scheduel_id):
-    day, section_name = schedule.remove_jobs(schedule_id)
-    flash("You have successfully deleted the %d recording for %s" % (day, section_name))
-    return redirect(url_for("view_schedule"))
+            return render_template("error.html", error="Couldn't get data for this recording")
 
 
 @app.route('/editor')

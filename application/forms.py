@@ -81,7 +81,6 @@ class LessonSegment(Form):
 class LessonPlan(Form):
     section = SelectField("Choose a section:",
         [validators.Required("Please choose a section.")],
-        choices=db.session.query(Section.id, Section.name).all(),
         coerce=int)
 
     def __init__(self, *args, **kwargs):
@@ -112,42 +111,32 @@ class SectionForm(Form):
 
 
 class newScheduleForm(Form):
-    section = SelectField("Choose a section:",
-        [validators.Required("Please choose a section.")],
-        coerce=int)
-    days = SelectMultipleField("What days do you see them?",
-        [validators.Required("Please enter the days you teach this class")],
+    days = SelectMultipleField("Choose day(s) for recording?",
+        [validators.Required("Please enter the day(s)")],
         choices=[(0, "Monday"), (1, "Tuesday"), (2, "Wednesday"), (3, "Thursday"), (4, "Friday")],
         option_widget=widgets.CheckboxInput(),
         widget=widgets.ListWidget(prefix_label=False),
         coerce=int)
-    start_time = TimeField("Start Time",[validators.Required("What time does class start?")])
-    end_time = TimeField("End Time",[validators.Required("What time does class end?")])
+    start_time = TimeField("Start Time",[validators.Required("What time should recording start?")])
+    end_time = TimeField("End Time",[validators.Required("What time should recording end?")])
     submit = SubmitField("Submit")
 
     def __init__(self, *args, **kwargs):
         Form.__init__(self, *args, **kwargs)
 
-    def validate_on_submit():
-        if not Form.validate():
+    def validate(self):
+        if not Form.validate(self):
             return False
+        else:
+            return True
 
-    def populate_section(self, user_id):
-        self.section.choices = db.session.query(Section.id, Section.name).filter_by(user_id=user_id).all()
-
-    def get_data(self, id):
-        section_id = db.session.query(Schedule.section_id).filter_by(id=id).one()
-        schedule_objs = db.session.query(Schedule) \
-            .join(Schedule.section) \
-            .filter(Section.id == section_id[0]).all()
+    def get_data(self, recording_id):
+        schedule_objs = db.session.query(Schedule).filter_by(recording_id=recording_id).all()
         d = dict()
         if schedule_objs:
             d['days'] = [schedule_obj.day for schedule_obj in schedule_objs]
-            d['section'] = schedule_objs[0].section.name
             d['start_time'] = self.toggleTime(schedule_objs[0].start_time)
-            d['start_ampm'] = self.getAMPM(schedule_objs[0].start_time)
             d['end_time'] = self.toggleTime(schedule_objs[0].end_time)
-            d['end_ampm'] = self.getAMPM(schedule_objs[0].end_time)
         return d
 
 

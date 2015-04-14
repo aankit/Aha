@@ -34,7 +34,7 @@
       <ul class="nav navbar-nav">
           {% if 'email' in session %}
           <li><a href="{{ url_for('home') }}">Home</a></li>
-          <li><a href="{{ url_for('view_schedule') }}">Schedule</a></li>
+          <li><a href="{{ url_for('section') }}">Manage Recordings</a></li>
           <li><a href="{{ url_for('editor') }}">Real-Time Capture</a></li>
           <li><a href="{{ url_for('camera', state='live') }}">Live View</a></li>
           <li><a href="{{ url_for('signout') }}">Sign Out</a></li>

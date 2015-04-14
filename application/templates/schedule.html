@@ -2,12 +2,8 @@
  
 {% block content %}
   
-  <h3>Recording Schedule</h3>
+  <h3>Recording Schedule for {{ section.name }}</h3>
  
-  {% for message in form.section.errors %}
-    <div class="bg-danger">{{ message }}</div>
-  {% endfor %}
-
   {% for message in form.days.errors %}
     <div class="bg-danger">{{ message }}</div>
   {% endfor %}
@@ -24,20 +20,23 @@
       <div class="table-responsive">
         <table class="table table-hover">
           <tr>
-            <td>Class Name</td>
             <td>Day</td>
             <td>Start Time</td>
             <td>End Time</td>
             <td><td>
           </tr>
-          {% for job in jobs %}
+          {% for recording in recordings %}
             <tr>
-              <td>{{ job.section.name }}</td>
-              <td>{{ job.day|dayformat }}</td>
-              <td>{{ job.start_time|datetimeformat }}</td>
-              <td>{{ job.end_time|datetimeformat }}</td>
-              <td><a href="{{ url_for('delete_recording', id=job.id) }}">Delete</td>
-              <td><a href="{{ url_for('edit_recording', id=job.id) }}">Edit</td>
+              <td>{{ recording.day|dayformat }}</td>
+              <td>{{ recording.start_time|datetimeformat }}</td>
+              <td>{{ recording.end_time|datetimeformat }}</td>
+              <td><a href="{{ url_for('schedule', state='deactivate', section_id=section.id, recording_id=recording.id) }}">
+                Deactivate</a>
+              </td>
+              <td>
+                <a href="{{ url_for('recording', section_id=section.id, recording_id=recording.id) }}">
+                  Edit</a>
+                </td>
             </tr>
           {% endfor %}
         </table>
@@ -45,14 +44,9 @@
     </div>
     <div class="col-xs-6 col-md-4">
       <h4>Schedule a New Recording</h4>
-      <form action="{{ url_for('add_recording') }}" method=post>
+      <form action="{{ url_for('schedule', section_id=section.id ) }}" method=post>
         {{ form.hidden_tag() }}
-      <div class="form-group">
-        {{ form.section.label }}
-        <div class=".col-xs-6 .col-md-4">
-        {{ form.section }}
-      </div>
-    	</div>
+
         {{ form.days.label }}
         <div class=".col-xs-6 .col-md-4">
         {{ form.days }}
@@ -60,13 +54,13 @@
       <div class="form-group">
         {{ form.start_time.label }}
         <div class=".col-xs-6 .col-md-4">
-        {{ form.start_time(placeholder="e.g. 9:00") }} {{ form.start_ampm }}
+        {{ form.start_time }}
       </div>
     	</div>
      	<div class="form-group">
         {{ form.end_time.label }}
         <div class=".col-xs-6 .col-md-4">
-        {{ form.end_time(placeholder="e.g. 9:45") }} {{ form.end_ampm }}
+        {{ form.end_time }}
       </div>
     	</div>
         {{ form.submit(class="btn btn-success") }}

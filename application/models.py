@@ -1,3 +1,4 @@
+from sqlalchemy.dialects import postgresql
 from werkzeug import generate_password_hash, check_password_hash
 from application import db
 from application import app
@@ -7,12 +8,11 @@ class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True)
-    pwdhash = db.Column(db.String(54))
+    pwdhash = db.Column(db.String(100))
     timezone = db.String(db.String(15))
     rubric_url = db.String(db.String(200))
 
-
-    def __init__(self, firstname, lastname, email, password):
+    def __init__(self, email, password):
         self.email = email.lower()
         self.set_password(password)
 
@@ -45,8 +45,8 @@ class Schedule(db.Model):
     __tablename__ = 'schedule'
     id = db.Column(db.Integer, primary_key=True)
     day = db.Column(db.Integer)
-    start_time = db.Column(db.DateTime)  # these times all happen on January 1st, 1900
-    end_time = db.Column(db.DateTime)    # since I don't care about dates for recurring scheduling
+    start_time = db.Column(postgresql.TIME())  # these times all happen on January 1st, 1900
+    end_time = db.Column(postgresql.TIME())    # since I don't care about dates for recurring scheduling
     section_id = db.Column(db.Integer, db.ForeignKey('section.id'))
     section = db.relationship('Section', backref='schedule')
 

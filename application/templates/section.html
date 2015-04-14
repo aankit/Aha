@@ -27,10 +27,10 @@
                 <td>placeholder</td>
                 <td>placeholder</td>
                 <td>
-                    <a href="{{ url_for('section', action='delete', id=section.id) }}">Delete</a>
+                    <a href="{{ url_for('schedule', section_id=section.id) }}">Schedule</a>
                 </td>
                 <td>
-                    <a href="{{ url_for('section', action='edit', id=section.id) }}">Edit</a>
+                    <a href="{{ url_for('section', action='delete', section_id=section.id) }}">Delete</a>
                 </td>
             </tr>
             {% endfor %}
