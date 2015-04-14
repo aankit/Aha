@@ -45,8 +45,8 @@ class Schedule(db.Model):
     __tablename__ = 'schedule'
     id = db.Column(db.Integer, primary_key=True)
     day = db.Column(db.Integer)
-    start_time = db.Column(postgresql.TIME())  # these times all happen on January 1st, 1900
-    end_time = db.Column(postgresql.TIME())    # since I don't care about dates for recurring scheduling
+    start_time = db.Column(postgresql.TIME())
+    end_time = db.Column(postgresql.TIME())
     section_id = db.Column(db.Integer, db.ForeignKey('section.id'))
     section = db.relationship('Section', backref='schedule')
 

@@ -37,7 +37,7 @@
   <!-- bunnies -->
   <!--<script src="test/tsSegment-bc.js"></script>-->
 
-  <video id="video"
+  <video id={{ pid }}
          class="video-js vjs-default-skin"
          height="250"
          width="300"
@@ -51,7 +51,8 @@
   <script>
     videojs.options.flash.swf = '/static/lib/video-js/video-js.swf';
     // initialize the player
-    var player = videojs('video', { muted: true });
+
+    var player = videojs({{ pid|safe }}, { muted: true });
   </script>
 
 {% endblock %}

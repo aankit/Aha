@@ -4,6 +4,7 @@ from application.models import *
 from application import app, video, picam, api_manager
 from application.forms import *
 from datetime import datetime
+import json
 
 for model_name in app.config['API_MODELS']:
     model_class = app.config['API_MODELS'][model_name]
@@ -70,11 +71,11 @@ def signout():
 def settings():
     if 'email' not in session:
         return redirect(url_for('signin'))
-    user = User.query.filter_by(email=session['email']).first()
-    if user is None:
-        return redirect(url_for('signup'))
-    else:
-        return render_template('home.html', user=user)
+    # here we can configure timezone, teacher observation rubric for scraping
+
+@app.route('/editor')
+def editor():
+    return render_template("mobile_editor.html")
 
 
 @app.route('/camera')
@@ -101,8 +102,9 @@ def camera():
             video_id = -1
         return str(video_id)
     elif state == 'live':
-        pid = picam.service_on()
-        return render_template('live.html')
+        # pid = picam.service_on()
+        pid = 1234
+        return render_template('live.html', pid=json.dumps(pid))
     else:
         return render_template('404.html')
 
@@ -198,11 +200,6 @@ def recording():
                 form=form)
         else:
             return render_template("error.html", error="Couldn't get data for this recording")
-
-
-@app.route('/editor')
-def editor():
-    return render_template("mobile_editor.html")
 
 
 @app.route('/example')
