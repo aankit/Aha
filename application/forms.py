@@ -62,13 +62,14 @@ class SigninForm(Form):
 
 class Student(Form):
     nickname = StringField("Name/Nickname", [validators.Required("Please enter a name for the student")])
-    grade = StringField("Grade", [validators.Required("Please provide student's grade")])
+    category = StringField("Category", [validators.Required("Please ")])
 
     def __init__(self, *args, **kwargs):
         Form.__init__(self, *args, **kwargs)
 
 
 class LessonSegment(Form):
+    name = StringField("Segment Name", [validators.Required("What do you want to call this segment")])
     start_time = IntegerField("How many minutes into the lesson do you intend on starting?",
         [validators.Required("Please enter when the segment starts.")])
     end_time = IntegerField("When do you intend of ending?", [validators.Required("Please enter when the segment ends")])
@@ -82,39 +83,77 @@ class LessonPlan(Form):
         [validators.Required("Please choose a section.")],
         choices=db.session.query(Section.id, Section.name).all(),
         coerce=int)
-    learning_outcomes = StringField("Student Learning Outcomes")
 
     def __init__(self, *args, **kwargs):
             Form.__init__(self, *args, **kwargs)
 
     def validate(self):
-            if not Form.validate(self):
-                return False
+        if not Form.validate(self):
+            return False
 
 
 class SectionForm(Form):
     name = StringField("Section/Class Name", [validators.Required("Please enter a section/class name")])
-    submit = SubmitField("Add Section")
+    # submit = SubmitField("Add Section")
 
     def __init__(self, *args, **kwargs):
         Form.__init__(self, *args, **kwargs)
 
-    def validate(self):
+    def validate(self, user_id):
         if not Form.validate(self):
             return False
 
-        section = Section.query.filter_by(name=self.name.data.lower()).first()
+        section = Section.query.filter_by(user_id=user_id, name=self.name.data.title()).first()
         if section:
-            self.name.errors.append("That email is already taken.")
+            self.name.errors.append("That section name is already taken.")
             return False
         else:
             return True
 
 
+class newScheduleForm(Form):
+    section = SelectField("Choose a section:",
+        [validators.Required("Please choose a section.")],
+        coerce=int)
+    days = SelectMultipleField("What days do you see them?",
+        [validators.Required("Please enter the days you teach this class")],
+        choices=[(0, "Monday"), (1, "Tuesday"), (2, "Wednesday"), (3, "Thursday"), (4, "Friday")],
+        option_widget=widgets.CheckboxInput(),
+        widget=widgets.ListWidget(prefix_label=False),
+        coerce=int)
+    start_time = TimeField("Start Time",[validators.Required("What time does class start?")])
+    end_time = TimeField("End Time",[validators.Required("What time does class end?")])
+    submit = SubmitField("Submit")
+
+    def __init__(self, *args, **kwargs):
+        Form.__init__(self, *args, **kwargs)
+
+    def validate_on_submit():
+        if not Form.validate():
+            return False
+
+    def populate_section(self, user_id):
+        self.section.choices = db.session.query(Section.id, Section.name).filter_by(user_id=user_id).all()
+
+    def get_data(self, id):
+        section_id = db.session.query(Schedule.section_id).filter_by(id=id).one()
+        schedule_objs = db.session.query(Schedule) \
+            .join(Schedule.section) \
+            .filter(Section.id == section_id[0]).all()
+        d = dict()
+        if schedule_objs:
+            d['days'] = [schedule_obj.day for schedule_obj in schedule_objs]
+            d['section'] = schedule_objs[0].section.name
+            d['start_time'] = self.toggleTime(schedule_objs[0].start_time)
+            d['start_ampm'] = self.getAMPM(schedule_objs[0].start_time)
+            d['end_time'] = self.toggleTime(schedule_objs[0].end_time)
+            d['end_ampm'] = self.getAMPM(schedule_objs[0].end_time)
+        return d
+
+
 class ScheduleForm(Form):
     section = SelectField("Choose a section:",
         [validators.Required("Please choose a section.")],
-        choices=db.session.query(Section.id, Section.name).all(),
         coerce=int)
 
     days = SelectMultipleField("What days do you see them?",
@@ -125,16 +164,14 @@ class ScheduleForm(Form):
         coerce=int)
     #start time, separating AM and PM because of date formatting issues with %p, good place to optimize later
     start_time = TimeField("Start Time",
-        [validators.Required("What time does class start?")],
-        format = '%I:%M')
+        [validators.Required("What time does class start?")])
     start_ampm = SelectField("AM/PM",
         [validators.Required("Please select AM/PM for start time")], 
         choices=[("AM", "AM"), ("PM", "PM")])
 
     #end time, same deal as start time
     end_time = TimeField("End Time",
-        [validators.Required("What time does class end?")],
-        format = '%I:%M')
+        [validators.Required("What time does class end?")])
     end_ampm = SelectField("AM/PM",
         [validators.Required("Please select AM/PM for end time")], 
         choices=[("AM", "AM"), ("PM", "PM")])
@@ -169,6 +206,9 @@ class ScheduleForm(Form):
                 return False
             else:
                 return True
+
+    def populate_section(self, user_id):
+        self.section.choices = db.session.query(Section.id, Section.name).filter_by(user_id=user_id).all()
 
     def get_data(self, id):
         section_id = db.session.query(Schedule.section_id).filter_by(id=id).one()

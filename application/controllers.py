@@ -66,8 +66,8 @@ def signout():
     return redirect(url_for('home'))
 
 
-@app.route('/profile')
-def profile():
+@app.route('/settings')
+def settings():
     if 'email' not in session:
         return redirect(url_for('signin'))
     user = User.query.filter_by(email=session['email']).first()
@@ -107,11 +107,25 @@ def camera():
         return render_template('404.html')
 
 
-@app.route('/schedule')
+@app.route('/schedule', methods=['GET', 'POST'])
 def view_schedule():
-    form = ScheduleForm()
-    jobs = schedule.get_scheduled()
-    return render_template('schedule.html', jobs=jobs, form=form)
+    form = newScheduleForm()
+    form.populate_section(session["id"])
+    print form.data
+    #POST
+    if request.method == 'POST' and form.validate():
+        for day in form.days.data:
+            try:
+                schedule.add_schedule(form, day, section_id)
+            except Exception as error:
+                db.session.rollback()
+                return render_template("error.html", error="%d: %s" % (500, error))
+        flash('Success! You have added your recordings.')
+        return redirect(url_for('view_schedule'))
+    #GET
+    else:
+        jobs = schedule.get_scheduled()
+        return render_template('schedule.html', jobs=jobs, form=form)
 
 
 @app.route('/section', methods=['GET', 'POST'])
@@ -119,7 +133,7 @@ def section():
     form = SectionForm()
     sections = Section.query.filter_by(user_id=session['id']).all()
     #POST
-    if request.method == 'POST' and form.validate():
+    if request.method == 'POST' and form.validate(session["id"]):
         section_obj = Section(name=form.name.data,
             user_id=db.session.query(User).filter_by(email=session['email']).first().id)
         db.session.add(section_obj)
@@ -143,15 +157,20 @@ def section():
                 return redirect(url_for('section'))
             except Exception as error:
                 flash("Database error: %s" % (error))
-        elif action == 'edit':
+        elif action == 'add_recording':
+            form = newScheduleForm()
             form.name.data = section.name
+            return render_template('recording.html',
+                form=form,
+                title="Add Recording",
+                endpoint="add_recording")
         return render_template('section.html', sections=sections, form=form)
 
 
 @app.route('/recording', methods=['GET', 'POST'])
 def add_recording():
-    form = ScheduleForm()
-
+    form = newScheduleForm()
+    print form.data
     #POST
     if request.method == 'POST' and form.validate():
         section_id = schedule.add_section(form, session)
@@ -173,8 +192,7 @@ def add_recording():
         return render_template('recording.html',
                     form=form,
                     title="Add Recording",
-                    endpoint='add_recording',
-                    name=None)
+                    endpoint='add_recording')
 
 
 @app.route('/recording/<id>', methods=['GET', 'POST'])
