@@ -19,8 +19,4 @@ job_defaults = {
 
 }
 
-<<<<<<< HEAD
 timezone = pytz.timezone('US/Eastern') #this should be set by user
-=======
-timezone = pytz.timezone('US/Eastern')  # this should be set by user
->>>>>>> 01a186655242095437da56df65b530ef8c5aa61f
