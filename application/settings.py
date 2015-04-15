@@ -1,6 +1,6 @@
 DEBUG = True
 SECRET_KEY = 'newkey'  # make sure to change this
-SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://aha:aha@localhost/aha'  # 'sqlite:///test.db'
+SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://aha:aha@/aha'  # 'sqlite:///test.db'
 WTF_CSRF_ENABLED = True
 VIDEO_PATH = '/home/pi/picam/rec/archive'
 TMP_VIDEO_PATH = '/home/pi/picam/rec/tmp'

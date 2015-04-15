@@ -6,7 +6,7 @@ from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor
 #make sure to add code that sets timezone from database
 
 jobstores = {
-    'default': SQLAlchemyJobStore(url='sqlite:///jobs.sqlite') #replace with postgres
+        'default': SQLAlchemyJobStore(url='postgresql+psycopg2://aha:aha@/aha') #replace with postgres
 }
 executors = {
     'default': ThreadPoolExecutor(20),
