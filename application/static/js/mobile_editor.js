@@ -32,7 +32,8 @@ function setup() {
 	countdown = false;
 	textFont("Helvetica");
 	// getSection(); //will be called every ten seconds
-	getVideo();
+	// getVideo();
+	videoID=1;
 }
 
 function draw() {
@@ -65,12 +66,36 @@ function draw() {
 			countdown = false;
 		}
 	} else {
-		if (saver.duration >0 ){
+		if (saver.duration > 0 && saver.direction !== 0 ){
 			//text is still showing because saver.duration hasn't been reset, maybe i can use that.
-			fill(30, 223, 184);
+			fill(255);
 			textSize(14);
-			// textMode()
-			text(saverDirection(saver) + " " + saver.duration + " min", cursor.cx-75, cursor.cy);
+			if (saver.direction !== 0){
+				// textMode()
+				text(saverDirection(saver) + " " + saver.duration + " min", cursor.cx-75, cursor.cy);
+			}
+		} else {
+			if(abs(mouseX-cursor.cx)<cursor.radius && abs(mouseY-cursor.cy)<cursor.radius && saver.timestamp && videoID>0){
+				saver.direction = 0;
+				time_since_touch = moment().unix() - saver.timestamp.unix();
+				console.log(time_since_touch);
+				select = scale * 5 * time_since_touch;
+				if (select<0.5) {
+					highlight.begin = 0.5 - select;
+					highlight.end = 0.5 + select;
+				} else {
+					highlight.begin = 0;
+					highlight.end = 1;
+				}
+				saver.duration = Math.floor(Math.abs(select)/(0.5*scale*4));
+				noStroke();
+				fill(255);
+				textSize(14);
+				futureText = bezXY(sliderBar, highlight.begin);
+				pastText = bezXY(sliderBar, highlight.end);
+				text(saverDirection(saver)[0] + " " + saver.duration + "min", futureText.cx-75, futureText.cy);
+				text(saverDirection(saver)[1] + " " + saver.duration + "min", pastText.cx-75, pastText.cy);
+			}
 		}
 	}
 
@@ -79,7 +104,7 @@ function draw() {
 	fill(cursor.fillColor);
 	ellipse(cursor.cx, cursor.cy, cursor.radius, cursor.radius);
 	//check if the video needs to be changed
-	videoWait(canvas);
+	// videoWait(canvas);
 }
 
 
@@ -97,7 +122,7 @@ function resetCursor(){
 }
 
 function resetSaver(){
-	oldVals = saver;
+	var oldVals = saver;
 	saver = {
 		timestamp: '', //what time did the human try to save from or starting from
 		direction: 0,	//forward, back, around
@@ -109,17 +134,38 @@ function resetSaver(){
 function updateSaver(t){
 	//we use the cursor position at this point to set the saver parameters
 	//this means that the saver is not tied to the interface
-	if((t - 0.5)<0){
-		saver.direction = 1; //we are going forwards in time
-		highlight.begin = t;
-		highlight.end = 0.5;
-	} else if((t - 0.5)>0){
-		saver.direction = -1; //are we going backwards in time	
-		highlight.begin = 0.5;
-		highlight.end = t;
+	var select = t - 0.5;
+	var duration = Math.floor(Math.abs(select)/(0.5*scale*4));
+	if(duration>0){
+		if(select<0){
+			saver.direction = 1; //we are going forwards in time
+			highlight.begin = t;
+			highlight.end = 0.5;
+		} else if(select>0){
+			saver.direction = -1; //are we going backwards in time	
+			highlight.begin = 0.5;
+			highlight.end = t;
+		}
+		saver.duration = duration;
 	}
-	saver.duration = Math.floor(abs(t-0.5)/(0.5*scale*4));
+	
+
 }
+
+function saverDirection(){
+	dir = '';
+	if(saver.direction>0){
+		dir = "+";
+	}
+	else if(saver.direction<0){
+		dir = "-";
+	} else {
+		//both directions here!
+		dir = "+-";
+	}
+	return dir;
+}
+
 
 function touchMoved(){
 	cursor.radius = 40;
@@ -141,6 +187,7 @@ function touchMoved(){
 
 function touchEnded() {
 	if(!countdown){
+		console.log()
 		release_time = millis(); //this is initial value when waiting before posting
 		prev_millis = 0;
 		redo_time = 0;

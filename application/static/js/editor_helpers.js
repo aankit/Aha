@@ -11,20 +11,8 @@ function bar(c, b){
 	//lower 10 minute line
 }
 
-function saverDirection(s){
-	dir = '';
-	if(s.direction>0){
-		dir = "+";
-	}
-	else if(s.direction<0){
-		dir = "-";
-	} else {
-		//both directions here!
-	}
-	return dir;
-}
 
-function bezXY(b, t, x, y){
+function bezXY(b, t){
 	x = Math.pow(1-t, 3) * b.x1 + 3 * Math.pow(1 - t, 2) * t * b.x2 + 3 * (1 - t) * Math.pow(t,2) * b.x3 + Math.pow(t,3) * b.x4;
 	y = Math.pow(1-t, 3) * b.y1 + 3 * Math.pow(1 - t, 2) * t * b.y2 + 3 * (1 - t) * Math.pow(t,2) * b.y3 + Math.pow(t,3) * b.y4;
 	return {'t': t, 'cx': x, 'cy': y};
@@ -44,9 +32,11 @@ function confirmBox(c, s){
 	textSize(13);
 	save_text = '';
 	if (s.direction === -1){
-		save_text = "From " + s.duration + " min ago to Now.";
+		save_text = "From " + s.duration + " min Ago to Now.";
 	} else if (s.direction === 1){
 		save_text = "From Now to " + s.duration + " min from Now.";
+	} else if (s.direction === 0){
+		save_text = s.duration + "min Ago to " + s.duration + " min from Now.";
 	}
 	text(save_text, c.width/2, boxY+38);
 	rectMode(CENTER);
