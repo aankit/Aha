@@ -102,8 +102,7 @@ def camera():
             video_id = -1
         return str(video_id)
     elif state == 'live':
-        # pid = picam.service_on()
-        pid = 1234
+        pid = picam.service_on()
         return render_template('live.html', pid=json.dumps(pid))
     else:
         return render_template('404.html')
