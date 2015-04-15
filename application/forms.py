@@ -131,7 +131,7 @@ class newScheduleForm(Form):
             return True
 
     def get_data(self, recording_id):
-        schedule_objs = db.session.query(Schedule).filter_by(recording_id=recording_id).all()
+        schedule_objs = db.session.query(Schedule).filter_by(id=recording_id).all()
         d = dict()
         if schedule_objs:
             d['days'] = [schedule_obj.day for schedule_obj in schedule_objs]
@@ -155,14 +155,14 @@ class ScheduleForm(Form):
     start_time = TimeField("Start Time",
         [validators.Required("What time does class start?")])
     start_ampm = SelectField("AM/PM",
-        [validators.Required("Please select AM/PM for start time")], 
+        [validators.Required("Please select AM/PM for start time")],
         choices=[("AM", "AM"), ("PM", "PM")])
 
     #end time, same deal as start time
     end_time = TimeField("End Time",
         [validators.Required("What time does class end?")])
     end_ampm = SelectField("AM/PM",
-        [validators.Required("Please select AM/PM for end time")], 
+        [validators.Required("Please select AM/PM for end time")],
         choices=[("AM", "AM"), ("PM", "PM")])
 
     submit = SubmitField("Submit")

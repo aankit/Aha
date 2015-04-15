@@ -81,8 +81,8 @@ def add_jobs(form, day, section_id):
     except Exception as error:
         return "couldn't add schedule obj", error
     #create job ids
-    start_job_id = "section_%d-schedule_%d-start" % (section_id, schedule_obj.id)
-    end_job_id = "section_%d-schedule_%d-end" % (section_id, schedule_obj.id)
+    start_job_id = "section_%d-schedule_%d-start" % (int(section_id), schedule_obj.id)
+    end_job_id = "section_%d-schedule_%d-end" % (int(section_id), schedule_obj.id)
     #create cron jobs
     try:
         scheduler.add_job(cam_record, "cron",
