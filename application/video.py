@@ -6,11 +6,13 @@ from datetime import datetime
 import time
 
 def cam_record(schedule_id, start_time=None):
-    '''Turns the picam service on if not on,
+    '''
+    Turns the picam service on if not on,
     starts recording, ending existing recording,
     and saves the new video in DB.
 
-    Returns the video_id, if any.'''
+    Returns the video_id, if any.
+    '''
     #create start timestamp if none provided
     if start_time==None:
         t = datetime.now()
@@ -40,8 +42,10 @@ def cam_record(schedule_id, start_time=None):
 
 
 def cam_off():
-    '''Turns the current picam recording off if recording,
-    turns the picam service_off if on'''
+    '''
+    Turns the current picam recording off if recording,
+    turns the picam service_off if on
+    '''
     picam_pid = picam.service_state()
     recording_filename = picam.record_state()
     if recording_filename:
@@ -49,6 +53,20 @@ def cam_off():
     if picam_pid:
         picam.service_off()
     return 0
+
+
+def process_video(event):
+    '''
+    Runs as APScheduler JOB_EXECUTION_EVENT | JOB_ERROR_EVENT
+    for use after the cam_off event is called by application scheduler.
+    '''
+    app.logger()
+    found_markers = {}
+    video = db.session.query(Video).filter_by(id=event.retval).first()
+    m = db.session.query(Marker).filter_by(video_id=video.id).all()
+    found_markers[video.id] = []
+    for fm in m:
+        found_markers[video.id].append(fm)
 
 
 def add_jobs(form, day, section_id):
