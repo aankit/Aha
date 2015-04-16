@@ -153,7 +153,7 @@ class ScheduleForm(Form):
             conflicts = conflicts.filter(Schedule.id != recording_id)
         conflict = conflicts.first()
         if conflict:
-            self.days.errors.append("One or more of the times you are scheduling conflicts with the %s %s of %s"
+            self.start_time.errors.append("One or more of the times you are scheduling conflicts with the %s %s of %s"
                 % (dayformat(conflict.day), conflict.start_time, conflict.name))
             return True
         else:
