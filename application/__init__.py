@@ -25,12 +25,7 @@ from application.filters import datetimeformat, dayformat
 app.jinja_env.filters['datetimeformat'] = datetimeformat
 app.jinja_env.filters['dayformat'] = dayformat
 
-from application.schedulerConfig import jobstores, executors, job_defaults, timezone
-scheduler = BackgroundScheduler(jobstores=jobstores,
-	executors=executors,
-	job_defaults=job_defaults,
-	timezone=timezone)
-
+from application.schedulerConfig import scheduler
 scheduler.start()
 print 'scheduler started'
 

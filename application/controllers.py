@@ -152,9 +152,7 @@ def section():
 @app.route('/recordings', methods=['GET', 'POST'])
 def recordings():
     form = ScheduleForm()
-    state = request.args.get("state")
     section_id = request.args.get("section_id")
-    section = Section.query.filter_by(id=section_id).first()
     #POST
     if request.method == 'POST' and form.validate():
         #iterate through the days
@@ -168,6 +166,8 @@ def recordings():
         return redirect(url_for('recordings', section_id=section_id))
     #GET
     else:
+        state = request.args.get("state")
+        section = Section.query.filter_by(id=section_id).first()
         recording_id = request.args.get("recording_id")
         if state == "activate":
             schedule_obj = Schedule.query.filter_by(id=recording_id).first()

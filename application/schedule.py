@@ -61,13 +61,16 @@ def process_video(event):
     Runs as APScheduler JOB_EXECUTION_EVENT | JOB_ERROR_EVENT
     for use after the cam_off event is called by application scheduler.
     '''
-    app.logger()
-    found_markers = {}
-    video = db.session.query(Video).filter_by(id=event.retval).first()
-    m = db.session.query(Marker).filter_by(video_id=video.id).all()
-    found_markers[video.id] = []
-    for fm in m:
-        found_markers[video.id].append(fm)
+    if event.exception:
+        app.logger.info('the job failed :(')
+    else:
+        app.logger.info('The job worked :)')
+    # found_markers = {}
+    # video = db.session.query(Video).filter_by(id=event.retval).first()
+    # m = db.session.query(Marker).filter_by(video_id=video.id).all()
+    # found_markers[video.id] = []
+    # for fm in m:
+    #     found_markers[video.id].append(fm)
 
 
 def add_jobs(form, day, section_id):
