@@ -5,6 +5,7 @@ from application import db
 from datetime import datetime
 import time
 
+
 def cam_record(schedule_id, start_time=None):
     '''
     Turns the picam service on if not on,
@@ -14,7 +15,7 @@ def cam_record(schedule_id, start_time=None):
     Returns the video_id, if any.
     '''
     # create start timestamp if none provided
-    if start_time == None:
+    if start_time is None:
         t = datetime.now()
         start_time = datetime(t.year, t.month, t.day, t.hour, t.minute)
     #check state of camera

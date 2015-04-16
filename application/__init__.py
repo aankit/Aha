@@ -17,7 +17,7 @@ api_manager = APIManager(app, flask_sqlalchemy_db=db)
 handler = RotatingFileHandler(app.config['LOG_FILE'], maxBytes=10000, backupCount=1)
 handler.setLevel(logging.INFO)
 app.logger.addHandler(handler)
-logging.basicConfig()
+logging.basicConfig(filename='second_aha.log', level=logging.DEBUG)  # not sure how to properly configure logger
 
 import application.models
 from application.filters import datetimeformat, dayformat

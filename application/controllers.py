@@ -3,6 +3,7 @@ from flask import render_template, url_for
 from application.models import *
 from application import app, scheduler, schedule, picam, api_manager
 from application.forms import SignupForm, SigninForm, ScheduleForm, SectionForm
+from application.filters import dayformat
 from datetime import datetime
 import json, urllib
 
@@ -123,7 +124,7 @@ def section():
         db.session.add(section_obj)
         try:
             db.session.commit()
-            flash("Successly added section %s" % (section_obj.name))
+            flash("Successfully added section %s" % (section_obj.name))
         except Exception as error:
             db.session.rollback()
             flash("Database error: %s" % (error))
@@ -159,8 +160,8 @@ def recordings():
         #iterate through the days
         for day in form.days.data:
             try:
-                d1, d2 = schedule.add_jobs(form, day, section_id)
-                flash('Success! You have added a %s recording for %s.' % (str(d1), str(d2)))
+                day, time = schedule.add_jobs(form, day, section_id)
+                flash('Success! You have added a %s recording for %s.' % (dayformat(day), time))
             except Exception as error:
                 db.session.rollback()
                 flash('There was a database error %s' % (error))
@@ -175,7 +176,7 @@ def recordings():
             return redirect(url_for('recordings', section_id=section_id))
         if state == "deactivate":
             day, start_time = schedule.halt_jobs(recording_id, "pause")
-            flash("You have successfully deactivated %s's %d recording at %s" % (section.name, day, start_time))
+            flash("You have successfully deactivated %s's %d recording at %s" % (section.name, dayformat(day), start_time))
             return redirect(url_for('recordings', section_id=section_id))
         active_recordings = schedule.get_jobs(section_id, 'active')  # need to make an active and inactive job function & list
         inactive_recordings = schedule.get_jobs(section_id, 'inactive')
