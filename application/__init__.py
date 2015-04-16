@@ -34,7 +34,8 @@ scheduler = BackgroundScheduler(jobstores=jobstores,
 
 from apscheduler.events import *
 from application.schedule import process_video
-scheduler.add_listener(process_video, EVENT_JOB_EXCUTED | EVENT_JOB_ERROR)
+
+scheduler.add_listener(process_video, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR)
 scheduler.start()
 print 'scheduler started'
 
