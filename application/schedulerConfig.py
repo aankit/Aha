@@ -2,8 +2,7 @@ import pytz
 
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor
-from apscheduler.events import *
-from application.schedule import process_video
+
 
 #make sure to add code that sets timezone from database
 
@@ -22,10 +21,3 @@ job_defaults = {
 }
 
 timezone = pytz.timezone('US/Eastern') #this should be set by user
-
-scheduler = BackgroundScheduler(jobstores=jobstores,
-    executors=executors,
-    job_defaults=job_defaults,
-    timezone=timezone)
-
-scheduler.add_listener(process_video, EVENT_JOB_EXCUTED | EVENT_JOB_ERROR)

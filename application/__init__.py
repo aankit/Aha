@@ -25,7 +25,16 @@ from application.filters import datetimeformat, dayformat
 app.jinja_env.filters['datetimeformat'] = datetimeformat
 app.jinja_env.filters['dayformat'] = dayformat
 
-from application.schedulerConfig import scheduler
+from application.schedulerConfig import jobstores, executors, job_defaults
+
+scheduler = BackgroundScheduler(jobstores=jobstores,
+    executors=executors,
+    job_defaults=job_defaults,
+    timezone=timezone)
+
+from apscheduler.events import *
+from application.schedule import process_video
+scheduler.add_listener(process_video, EVENT_JOB_EXCUTED | EVENT_JOB_ERROR)
 scheduler.start()
 print 'scheduler started'
 
