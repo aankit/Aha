@@ -47,6 +47,8 @@ class Schedule(db.Model):
     day = db.Column(db.Integer)
     start_time = db.Column(postgresql.TIME())
     end_time = db.Column(postgresql.TIME())
+    start_job_id = db.Column(db.String(50))
+    end_job_id = db.Column(db.String(50))
     section_id = db.Column(db.Integer, db.ForeignKey('section.id'))
     section = db.relationship('Section', backref='schedule')
 
@@ -55,20 +57,6 @@ class Schedule(db.Model):
 
     def __repr__(self):
         return '<Schedule %r - %r>' % (self.start_time, self.end_time)
-
-
-class Job(db.Model):
-    __tablename__ = 'job'
-    id = db.Column(db.Integer, primary_key=True)
-    job_id = db.Column(db.Integer)
-    schedule_id = db.Column(db.Integer, db.ForeignKey('schedule.id'))
-    schedule = db.relationship('Schedule', backref='jobs')
-
-    def __init__(self, *args, **kwargs):
-        db.Model.__init__(self, *args, **kwargs)
-
-    def __repr__(self):
-        return '<Job %s>' % (self.job_id)
 
 
 class Video(db.Model):

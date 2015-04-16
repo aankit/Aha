@@ -13,11 +13,11 @@
   {% for message in form.end_time.errors %}
     <div class="bg-danger">{{ message }}</div>
   {% endfor %}
-  <h4>{{ Edit Recording for {{section.name}} }}</h4>
-  <form action="{{ url_for('recording', recording_id=id) }}" method=post>
-    {{ form.days.label }}
-    {{ form.days }}
-      <div class="form-group">
+  <h4> Edit Recording for {{section.name}} </h4>
+  <form action="{{ url_for('recording', section_id = section.id, recording_id=id) }}" method=post>
+  {{ form.hidden_tag() }}
+  <div class="hidden">{{form.days}}</div>
+  <div class="form-group">
     {{ form.start_time.label }}
     {{ form.start_time }}
 	</div>

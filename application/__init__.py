@@ -36,5 +36,3 @@ print 'scheduler started'
 
 #our routes
 import application.controllers
-import application.video
-import application.picam
