@@ -1,5 +1,5 @@
 from application.models import *
-from application import scheduler
+from application.schedulerConfig import scheduler
 from application import picam
 from application import db
 from datetime import datetime
