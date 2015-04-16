@@ -2,7 +2,7 @@ from flask import request, session, redirect, flash
 from flask import render_template, url_for
 from application.models import *
 from application import app, scheduler, schedule, picam, api_manager
-from application.forms import *
+from application.forms import SignupForm, SigninForm, ScheduleForm, SectionForm
 from datetime import datetime
 import json, urllib
 
@@ -131,9 +131,9 @@ def section():
     #GET
     else:
         action = request.args.get('action')
-        section_id = request.args.get('section_id')
-        section = Section.query.filter_by(id=section_id).first()
         if action == 'delete':
+            section_id = request.args.get('section_id')
+            section = Section.query.filter_by(id=section_id).first()
             recordings = schedule.get_jobs(section_id, "all")
             for recording in recordings:
                 schedule.halt_jobs(recording.id, "remove")
