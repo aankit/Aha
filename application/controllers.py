@@ -4,7 +4,7 @@ from application.models import *
 from application import app, scheduler, schedule, picam, api_manager
 from application.forms import *
 from datetime import datetime
-import json
+import json, urllib
 
 for model_name in app.config['API_MODELS']:
     model_class = app.config['API_MODELS'][model_name]
@@ -73,6 +73,7 @@ def settings():
         return redirect(url_for('signin'))
     # here we can configure timezone, teacher observation rubric for scraping
 
+
 @app.route('/editor')
 def editor():
     return render_template("mobile_editor.html")
@@ -103,6 +104,9 @@ def camera():
         return str(video_id)
     elif state == 'live':
         pid = picam.service_on()
+        ret = urllib.urlopen('http://aha.local/hls/index.m3u8')
+        while ret.code == 404:
+            ret = urllib.urlopen('http://aha.local/hls/index.m3u8')
         return render_template('live.html', pid=json.dumps(pid))
     else:
         return render_template('404.html')
