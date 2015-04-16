@@ -112,15 +112,11 @@ def add_jobs(form, day, section_id):
 
 def halt_jobs(recording_id, how):
     recording = db.session.query(Schedule).filter_by(id=recording_id).first()
+    db.session.delete(recording)
     job_ids = [recording.start_job_id, recording.end_job_id]
     for job_id in job_ids:
         if how == "remove":
             scheduler.remove_job(job_id)
-            db.session.delete(recording)
-            try:
-                db.session.commit()
-            except:
-                db.session.rollback()
         elif how == "pause":
             scheduler.pause_job(job_id)
     return recording.day, recording.start_time
