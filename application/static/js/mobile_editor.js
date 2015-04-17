@@ -32,8 +32,8 @@ function setup() {
 	countdown = false;
 	textFont("Helvetica");
 	// getSection(); //will be called every ten seconds
-	// getVideo();
-	videoID=1;
+	getVideo();
+	// videoID=1;
 }
 
 function draw() {
