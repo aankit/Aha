@@ -176,7 +176,7 @@ def recordings():
             return redirect(url_for('recordings', section_id=section_id))
         if state == "deactivate":
             day, start_time = schedule.halt_jobs(recording_id, "pause")
-            flash("You have successfully deactivated %s's %d recording at %s" % (section.name, dayformat(day), start_time))
+            flash("You have successfully deactivated %s's %s recording at %s" % (section.name, dayformat(day), start_time))
             return redirect(url_for('recordings', section_id=section_id))
         active_recordings = schedule.get_jobs(section_id, 'active')  # need to make an active and inactive job function & list
         inactive_recordings = schedule.get_jobs(section_id, 'inactive')

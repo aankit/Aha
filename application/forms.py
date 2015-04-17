@@ -153,6 +153,8 @@ class ScheduleForm(Form):
             conflicts = conflicts.filter(Schedule.id != recording_id)
         conflict = conflicts.first()
         if conflict:
+            self.start_time.errors = list(self.start_time.errors)  
+            # this is a hack, not sure why the Form.validate wasn't validating so I removed it and need to list() it
             self.start_time.errors.append("One or more of the times you are scheduling conflicts with the %s %s of %s"
                 % (dayformat(conflict.day), conflict.start_time, conflict.name))
             return True
