@@ -63,14 +63,16 @@ def process_video(event):
     '''
     if event.exception:
         app.logger.info('the job failed :(')
+
     else:
         app.logger.info('The job worked :)')
-    # found_markers = {}
-    # video = db.session.query(Video).filter_by(id=event.retval).first()
-    # m = db.session.query(Marker).filter_by(video_id=video.id).all()
-    # found_markers[video.id] = []
-    # for fm in m:
-    #     found_markers[video.id].append(fm)
+        found_markers = {}
+        video = db.session.query(Video).filter_by(id=event.retval).first()
+        m = db.session.query(Marker).filter_by(video_id=video.id).all()
+        found_markers[video.id] = []
+        for fm in m:
+            found_markers[video.id].append(fm)
+        app.logger.info(found_markers)
 
 
 def add_jobs(form, day, section_id):
