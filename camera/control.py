@@ -1,4 +1,4 @@
-from camera import settings
+import settings
 import sh
 import os
 import time

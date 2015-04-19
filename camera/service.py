@@ -1,6 +1,6 @@
-#!/usr/bin/env python
+#!/var/www/Aha/venv/bin/python
 
-from camera import control
+import control
 
 #refresh happens...
 old_filename = control.record_state()
