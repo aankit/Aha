@@ -1,3 +1,5 @@
+#!/var/www/Aha/venv/bin/python
+
 from camera import control
 
 refresh_state = control.recording_refresh()
