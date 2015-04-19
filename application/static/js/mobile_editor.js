@@ -32,8 +32,8 @@ function setup() {
 	countdown = false;
 	textFont("Helvetica");
 	// getSection(); //will be called every ten seconds
-	getVideo();
-	// videoID=1;
+	// getVideo();
+	videoID=1;
 }
 
 function draw() {
@@ -187,7 +187,6 @@ function touchMoved(){
 
 function touchEnded() {
 	if(!countdown){
-		console.log()
 		release_time = millis(); //this is initial value when waiting before posting
 		prev_millis = 0;
 		redo_time = 0;
