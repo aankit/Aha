@@ -44,3 +44,12 @@ def record_state():
 def get_recording(file_list_index=0):
     all_recordings = [settings.ARCHIVE_RECORDING_PATH+filename for filename in os.listdir(settings.ARCHIVE_RECORDING_PATH)]
     return sorted(all_recordings, key=os.path.getctime, reverse=True)[file_list_index]
+
+
+def refresh_recording():
+    current_file = record_state()
+    if current_file:
+        record_off()
+        record_on()
+    else:
+        print "nothing recording"
