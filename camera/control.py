@@ -59,11 +59,10 @@ def record_refresh():
     current_file = record_state()
     if current_file:
         record_off()
-        # sleep(1)
         new_file = record_on()
         return new_file
     else:
-        return "nothing recording"
+        return None
 
 
 def get_all_recordings():
