@@ -70,10 +70,17 @@ def get_all_recordings():
 
 
 def get_recording(file_list_index=0):
-    return sorted(get_all_recordings(), key=os.path.getctime, reverse=True)[file_list_index]
+    sorted_filenames_with_path = sorted(get_all_recordings(), key=os.path.getctime, reverse=True)[file_list_index]
+    sorted_filenames = [filename.split('/')[-1] for filename in sorted_filenames_with_path]
+    return sorted_filenames
 
 
-def clean_archive():
-    for recording in get_all_recordings():
+def clean_archive(file_list_index=None):
+    if file_list_index is None:
+        for recording in get_all_recordings():
+            os.remove(recording)
+            print "removed: %s" % (recording)
+    else:
+        recording = get_recording(file_list_index)
         os.remove(recording)
         print "removed: %s" % (recording)
