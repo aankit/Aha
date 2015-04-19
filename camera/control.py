@@ -28,10 +28,10 @@ def service_refresh():
 
 
 def record_on():
-    sh.touch(settings.ONOFF_PATH + '/start_record')
-    current_file = os.listdir(settings.CURRENT_RECORDING_PATH)
-    # while len(current_file) == 0:
-    #     current_file = os.listdir(settings.CURRENT_RECORDING_PATH)
+    current_file = ''
+    while len(current_file) == 0:
+        sh.touch(settings.ONOFF_PATH + '/start_record')
+        current_file = os.listdir(settings.CURRENT_RECORDING_PATH)
     return current_file[0]  # only one file can exist here at a time
 
 
@@ -48,11 +48,11 @@ def record_state():
 
 
 def record_refresh():
-    current_file = record_state()
+    current_file = control.record_state()
     if current_file:
-        record_off()
-        sleep(0.5)
-        new_file = record_on()
+        control.record_off()
+        # sleep(1)
+        new_file = control.record_on()
         return new_file
     else:
         return "nothing recording"
