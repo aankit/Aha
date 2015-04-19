@@ -1,6 +1,7 @@
 from camera import settings
 import sh
 import os
+from time import sleep
 
 
 def service_on():
@@ -40,18 +41,22 @@ def record_state():
     else:
         return False
 
+
 def record_refresh():
     current_file = record_state()
     if current_file:
         record_off()
+        sleep(0.1)
         new_file = record_on()
         return new_file
     else:
         return "nothing recording"
+
 
 def get_recording(file_list_index=0):
     all_recordings = [settings.ARCHIVE_RECORDING_PATH+filename for filename in os.listdir(settings.ARCHIVE_RECORDING_PATH)]
     return sorted(all_recordings, key=os.path.getctime, reverse=True)[file_list_index]
 
 
-
+def clean_archive():
+    return "done"
