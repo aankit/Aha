@@ -22,6 +22,11 @@ def service_state():
         return False
 
 
+def service_refresh():
+    service_off()
+    service_on()
+
+
 def record_on():
     sh.touch(settings.ONOFF_PATH + '/start_record')
     current_file = os.listdir(settings.CURRENT_RECORDING_PATH)
@@ -46,17 +51,22 @@ def record_refresh():
     current_file = record_state()
     if current_file:
         record_off()
-        sleep(0.1)
+        sleep(0.5)
         new_file = record_on()
         return new_file
     else:
         return "nothing recording"
 
 
+def get_all_recordings():
+    return [settings.ARCHIVE_RECORDING_PATH+filename for filename in os.listdir(settings.ARCHIVE_RECORDING_PATH)]
+
+
 def get_recording(file_list_index=0):
-    all_recordings = [settings.ARCHIVE_RECORDING_PATH+filename for filename in os.listdir(settings.ARCHIVE_RECORDING_PATH)]
-    return sorted(all_recordings, key=os.path.getctime, reverse=True)[file_list_index]
+    return sorted(get_all_recordings(), key=os.path.getctime, reverse=True)[file_list_index]
 
 
 def clean_archive():
-    return "done"
+    for recording in get_all_recordings():
+        os.remove(recording)
+        print "removed: %s" % (recording)
