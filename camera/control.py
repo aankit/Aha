@@ -28,15 +28,18 @@ def service_refresh():
 
 
 def record_on():
-    current_file = ''
-    while len(current_file) == 0:
-        sh.touch(settings.ONOFF_PATH + '/start_record')
-        current_file = os.listdir(settings.CURRENT_RECORDING_PATH)
+    sh.touch(settings.ONOFF_PATH + '/start_record')
+    while not record_state():
+        print "starting"
+    current_file = os.listdir(settings.CURRENT_RECORDING_PATH)
     return current_file[0]  # only one file can exist here at a time
 
 
 def record_off():
     sh.touch(settings.ONOFF_PATH + '/stop_record')
+    while record_state():
+        print "stopping"
+    return "off"
 
 
 def record_state():
