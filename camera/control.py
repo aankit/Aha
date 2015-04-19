@@ -1,7 +1,7 @@
 from camera import settings
 import sh
 import os
-from time
+import time
 
 
 def service_on():
