@@ -1,4 +1,4 @@
-#!/var/www/Aha/venv/bin/python
+#!/usr/bin/env python
 
 from camera import control
 
