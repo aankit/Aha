@@ -2,7 +2,7 @@
 
 from camera import control
 
-refresh_state = control.recording_refresh()
+refresh_state = control.record_refresh()
 
 if refresh_state is None:
     filename = control.record_on()
