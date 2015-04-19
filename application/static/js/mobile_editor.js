@@ -37,7 +37,8 @@ function setup() {
 }
 
 function draw() {
-	//get or start recording of a video
+	console.log(videoID);
+    //get or start recording of a video
 	background(0);
 	bar(canvas, sliderBar); //draw the bar
 	//draw highlighted time segment if one exists
@@ -104,7 +105,7 @@ function draw() {
 	fill(cursor.fillColor);
 	ellipse(cursor.cx, cursor.cy, cursor.radius, cursor.radius);
 	//check if the video needs to be changed
-	// videoWait(canvas);
+	videoWait(canvas);
 }
 
 
