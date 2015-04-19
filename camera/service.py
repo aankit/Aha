@@ -1,10 +1,10 @@
-from camera.control import *
+from camera import control
 
-refresh_state = recording_refresh()
+refresh_state = control.recording_refresh()
 
 if refresh_state is None:
-    filename = record_on()
+    filename = contorl.record_on()
 elif refresh_state:
-    filename = refresh_state
+    filename = control.refresh_state
 
 print filename
