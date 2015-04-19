@@ -48,18 +48,18 @@ def record_state():
 
 
 def record_refresh():
-    current_file = control.record_state()
+    current_file = record_state()
     if current_file:
-        control.record_off()
+        record_off()
         # sleep(1)
-        new_file = control.record_on()
+        new_file = record_on()
         return new_file
     else:
         return "nothing recording"
 
 
 def get_all_recordings():
-    return [settings.ARCHIVE_RECORDING_PATH+filename for filename in os.listdir(settings.ARCHIVE_RECORDING_PATH)]
+    return [settings.ARCHIVE_RECORDING_PATH+'/'+filename for filename in os.listdir(settings.ARCHIVE_RECORDING_PATH)]
 
 
 def get_recording(file_list_index=0):
