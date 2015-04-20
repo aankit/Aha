@@ -72,7 +72,7 @@ function draw() {
 				saver.direction = 0;
 				time_since_touch = moment().unix() - saver.timestamp.unix();
 				console.log(time_since_touch);
-				select = scale * 5 * time_since_touch;
+				select = scale * 4.8 * time_since_touch;
 				if (select<0.5) {
 					highlight.begin = 0.5 - select;
 					highlight.end = 0.5 + select;

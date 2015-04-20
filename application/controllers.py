@@ -84,8 +84,8 @@ def settings():
     # here we can configure timezone, teacher observation rubric for scraping
 
 
-@app.route('/editor')
-def editor():
+@app.route('/capture')
+def capture():
     return render_template("mobile_editor.html")
 
 
