@@ -31,7 +31,7 @@ def service_refresh():
 def record_on():
     sh.touch(settings.ONOFF_PATH + '/start_record')
     now = time.time()
-    while not record_state():
+    while record_state() == 'off':
         print "starting"
         check = time.time()
         if check-now > 0.5:
@@ -43,7 +43,7 @@ def record_on():
 
 def record_off():
     sh.touch(settings.ONOFF_PATH + '/stop_record')
-    while record_state():
+    while record_state() == 'on':
         print "stopping"
     return datetime.now()
 
@@ -56,9 +56,16 @@ def record_state():
         return 'off'
 
 
-def record_refresh():
-    current_file = record_state()
+def record_file():
+    current_file = os.listdir(settings.CURRENT_RECORDING_PATH)
     if current_file:
+        return current_file[0]
+    else:
+        False
+
+
+def record_refresh():
+    if record_state() == 'on':
         prev_end = record_off()
         new_file = record_on()
         return new_file, prev_end
