@@ -1,11 +1,11 @@
 #!/var/www/Aha/venv/bin/python
 
 from camera import control
-#import logging
+import logging
 
-#logging.basicConfig(filename=control.get_log_file(), level=logging.DEBUG)
+logging.basicConfig(filename=control.get_log_file(), level=logging.DEBUG)
 
-if control.record_state():
+if control.record_state() == 'on':
     #refresh happens...
     new_file, prev_end_datetime = control.record_refresh()
 
@@ -29,7 +29,6 @@ if control.record_state():
             .filter(
                 ((db_model.start_time <= start_time) & (db_model.end_time > start_time)) |
                 ((db_model.start_time < end_time) & (db_model.end_time >= end_time)) |
-                ((db_model.start_time < start_time) & (db_model.end_time > end_time)) |
                 ((db_model.start_time > start_time) & (db_model.end_time < end_time))
             ).all()
 
@@ -47,20 +46,20 @@ if control.record_state():
     end_time = datetime.time(prev_end_datetime)
     print date, start_time, end_time
 
-    schedule_matches = video_matches(Schedule, date, start_time, end_time)
-    marker_matches = video_matches(Marker, date, start_time, end_time)
+    # schedule_matches = video_matches(Schedule, date, start_time, end_time)
+    # marker_matches = video_matches(Marker, date, start_time, end_time)
 
-    if schedule_matches or marker_matches:
-        video_obj = Video(filename=filename, date=date, start_time=start_time, end_time=end_time)
-        db.session.add(video_obj)
-        for schedule_match in schedule_matches:
-            schedule_match.videos.append(video_obj)
-        for marker_match in marker_matches:
-            marker_match.videos.append(video_obj)
-        try:
-            db.session.commit()
-        except:
-            db.session.rollback()
-            print "couldn't write to the database"
-    else:
-        control.remove_recording(file_index)
+    # if schedule_matches or marker_matches:
+    #     video_obj = Video(filename=filename, date=date, start_time=start_time, end_time=end_time)
+    #     db.session.add(video_obj)
+    #     for schedule_match in schedule_matches:
+    #         schedule_match.videos.append(video_obj)
+    #     for marker_match in marker_matches:
+    #         marker_match.videos.append(video_obj)
+    #     try:
+    #         db.session.commit()
+    #     except:
+    #         db.session.rollback()
+    #         print "couldn't write to the database"
+    # else:
+    #     control.remove_recording(file_index)
