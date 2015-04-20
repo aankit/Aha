@@ -5,7 +5,7 @@ import logging
 
 logging.basicConfig(filename=control.get_log_file(), level=logging.DEBUG)
 
-if control.service_state():
+if control.record_state() == 'on':
     #refresh happens...
     new_file, prev_end_datetime = control.record_refresh()
 
