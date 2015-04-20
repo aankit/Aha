@@ -37,14 +37,15 @@ if control.record_state() == 'on':
     #get the file that start 30 minutes ago and ended 15 minutes ago, its the second one
     file_index = 1
     filename = control.get_recording(file_index)
-    #get the filename minus '.ts' since it is the date and time of the vid
-    filename_date = filename[:-3]
-    #get date, start and end time to see if we should save it.
-    datetime_obj = datetime.strptime(filename_date, '%Y-%m-%d_%H-%M-%S')
-    date = datetime.date(datetime_obj)
-    start_time = datetime.time(datetime_obj)
-    end_time = datetime.time(prev_end_datetime)
-    print date, start_time, end_time
+    if filename:
+        #get the filename minus '.ts' since it is the date and time of the vid
+        filename_date = filename[:-3]
+        #get date, start and end time to see if we should save it.
+        datetime_obj = datetime.strptime(filename_date, '%Y-%m-%d_%H-%M-%S')
+        date = datetime.date(datetime_obj)
+        start_time = datetime.time(datetime_obj)
+        end_time = datetime.time(prev_end_datetime)
+        print date, start_time, end_time
 
     # schedule_matches = video_matches(Schedule, date, start_time, end_time)
     # marker_matches = video_matches(Marker, date, start_time, end_time)

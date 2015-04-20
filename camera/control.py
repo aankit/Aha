@@ -79,12 +79,17 @@ def get_all_recordings():
 
 def get_recording(file_list_index=0, full_path=False):
     sorted_filenames_with_path = sorted(get_all_recordings(), key=os.path.getctime, reverse=True)
+    return_list = []
     if full_path:
-        return sorted_filenames_with_path
+        return_list = sorted_filenames_with_path
     else:
         sorted_filenames = [filename.split('/')[-1] for filename in sorted_filenames_with_path]
-        get_file = sorted_filenames[file_list_index]
-        return get_file
+        return_list = sorted_filenames
+    try:
+        get_file = return_list[file_list_index]
+    except:
+        get_file = None
+    return get_file
 
 
 def remove_recording(file_list_index=0):
