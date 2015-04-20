@@ -2,7 +2,7 @@
  
 {% block content %}
 
-{% for message in form.name.errors %}
+{% for message in form.question.errors %}
 <div class="bg-danger">{{ message }}</div>
 {% endfor %}
 
@@ -19,18 +19,18 @@
             <td></td>
             <td></td>
           </tr>
-          {% for section in sections %}
+          {% for investigation in investigations %}
             <tr>
-                <td>{{ section.name }}</td>
+                <td>{{ investigation.question }}</td>
                 <td>placeholder</td>
                 <td>placeholder</td>
                 <td>placeholder</td>
                 <td>placeholder</td>
                 <td>
-                    <a href="{{ url_for('recordings', section_id=section.id) }}">Schedule</a>
+                    <a href="{{ url_for('recordings', investigation_id=investigation.id) }}">Schedule</a>
                 </td>
                 <td>
-                    <a href="{{ url_for('section', action='delete', section_id=section.id) }}">Delete</a>
+                    <a href="{{ url_for('investigation', action='delete', investigation_id=investigation.id) }}">Delete</a>
                 </td>
             </tr>
             {% endfor %}
@@ -38,12 +38,12 @@
       </div>
     </div>
     <div class="col-xs-6 col-md-4">
-  <form enctype='application/json' action="/section" method=post>
+  <form enctype='application/json' action="/investigation" method=post>
     {{ form.hidden_tag() }}
      <div class="form-group">
-    {{ form.name.label }}
+    {{ form.question.label }}
     <div class=".col-xs-6 .col-md-4">
-    {{ form.name }}
+    {{ form.question(cols="35", rows="5", maxlength=140) }}
     </div>
     </div>
     <button type="submit" class="btn btn-default">Submit</button>

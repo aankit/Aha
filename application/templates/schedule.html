@@ -2,7 +2,7 @@
  
 {% block content %}
   
-  <h3>{{ section.name }} Schedule</h3>
+  <h3>{{ investigation.name }} Schedule</h3>
  
   {% for message in form.days.errors %}
     <div class="bg-danger">{{ message }}</div>
@@ -32,11 +32,11 @@
               <td>{{ recording.day|dayformat }}</td>
               <td>{{ recording.start_time|datetimeformat }}</td>
               <td>{{ recording.end_time|datetimeformat }}</td>
-              <td><a href="{{ url_for('recordings', state='deactivate', section_id=section.id, recording_id=recording.id) }}">
+              <td><a href="{{ url_for('recordings', state='deactivate', investigation_id=investigation.id, recording_id=recording.id) }}">
                 Deactivate</a>
               </td>
               <td>
-                <a href="{{ url_for('recording', section_id=section.id, recording_id=recording.id) }}">
+                <a href="{{ url_for('recording', investigation_id=investigation.id, recording_id=recording.id) }}">
                   Edit</a>
                 </td>
             </tr>
@@ -64,11 +64,11 @@
               <td>{{ recording.day|dayformat }}</td>
               <td>{{ recording.start_time|datetimeformat }}</td>
               <td>{{ recording.end_time|datetimeformat }}</td>
-              <td><a href="{{ url_for('recordings', state='activate', section_id=section.id, recording_id=recording.id) }}">
+              <td><a href="{{ url_for('recordings', state='activate', investigation_id=investigation.id, recording_id=recording.id) }}">
                 Activate</a>
               </td>
               <td>
-                <a href="{{ url_for('recording', section_id=section.id, recording_id=recording.id) }}">
+                <a href="{{ url_for('recording', investigation_id=investigation.id, recording_id=recording.id) }}">
                   Edit</a>
                 </td>
             </tr>
@@ -83,7 +83,7 @@
     </div>
     <div class="col-xs-6 col-md-4">
       <h4>Schedule a New Recording</h4>
-      <form action="{{ url_for('recordings', section_id=section.id ) }}" method=post>
+      <form action="{{ url_for('recordings', investigation_id=investigation.id ) }}" method=post>
         {{ form.hidden_tag() }}
 
         {{ form.days.label }}

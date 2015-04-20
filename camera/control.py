@@ -69,18 +69,27 @@ def get_all_recordings():
     return [settings.ARCHIVE_RECORDING_PATH+'/'+filename for filename in os.listdir(settings.ARCHIVE_RECORDING_PATH)]
 
 
-def get_recording(file_list_index=0):
-    sorted_filenames_with_path = sorted(get_all_recordings(), key=os.path.getctime, reverse=True)[file_list_index]
-    sorted_filenames = [filename.split('/')[-1] for filename in sorted_filenames_with_path]
-    return sorted_filenames
-
-
-def clean_archive(file_list_index=None):
-    if file_list_index is None:
-        for recording in get_all_recordings():
-            os.remove(recording)
-            print "removed: %s" % (recording)
+def get_recording(file_list_index=0, full_path=False):
+    sorted_filenames_with_path = sorted(get_all_recordings(), key=os.path.getctime, reverse=True)
+    if full_path:
+        return sorted_filenames_with_path
     else:
-        recording = get_recording(file_list_index)
+        sorted_filenames = [filename.split('/')[-1] for filename in sorted_filenames_with_path]
+        get_file = sorted_filenames[file_list_index]
+        return get_file
+
+
+def remove_recording(file_list_index=0):
+    recording = get_recording(file_list_index)
+    os.remove(recording)
+    print "removed: %s" % (recording)
+
+
+def clean_archive():
+    for recording in get_all_recordings():
         os.remove(recording)
         print "removed: %s" % (recording)
+
+
+def get_log_file():
+    return settings.LOG_FILE

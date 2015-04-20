@@ -64,16 +64,14 @@ function confirmBox(c, s){
 }
 
 function videoWait(c){
-	if(videoID<=0){
-		fill(128);
-		rect(0,0,c.width, c.height);
-		waitText = "Please wait while the\ncurrent video is\n accessed or a new\n video is created.";
-		textAlign(CENTER);
-		fill(255);
-		textSize(20);
-		noStroke();
-		textLeading(20);
-		text(waitText, c.width/2, c.height/3);
+	fill(128);
+	rect(0,0,c.width, c.height);
+	waitText = "Please wait while the\ncurrent video is\n accessed or a new\n video is created.";
+	textAlign(CENTER);
+	fill(255);
+	textSize(20);
+	noStroke();
+	textLeading(20);
+	text(waitText, c.width/2, c.height/3);
 
-	}
 }

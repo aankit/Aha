@@ -3,9 +3,6 @@ var sliderBar; //slider bar obj
 var scale; //scale of the slider
 var saver; //saves the marked time!!
 var highlight, release_time, prev_millis, redo_time, countdown; //time selection variables
-var videoTimeoutID; //self-explanatory
-var videoType; //adhoc or scheduled
-var videoID;
 
 function setup() {
 	canvas = createCanvas(205, 350);
@@ -31,13 +28,9 @@ function setup() {
 	};
 	countdown = false;
 	textFont("Helvetica");
-	// getSection(); //will be called every ten seconds
-	// getVideo();
-	videoID=1;
 }
 
 function draw() {
-	console.log(videoID);
     //get or start recording of a video
 	background(0);
 	bar(canvas, sliderBar); //draw the bar
@@ -61,8 +54,7 @@ function draw() {
 			highlight.begin = 0;
 			highlight.end = 0;
 			//POST our data!!
-
-			postMarker(videoID, saver.timestamp, saver.direction, saver.duration);
+			camera.postMarker(saver.timestamp, saver.direction, saver.duration);
 			resetSaver();
 			countdown = false;
 		}
@@ -76,7 +68,7 @@ function draw() {
 				text(saverDirection(saver) + " " + saver.duration + " min", cursor.cx-75, cursor.cy);
 			}
 		} else {
-			if(abs(mouseX-cursor.cx)<cursor.radius && abs(mouseY-cursor.cy)<cursor.radius && saver.timestamp && videoID>0){
+			if(abs(mouseX-cursor.cx)<cursor.radius && abs(mouseY-cursor.cy)<cursor.radius && saver.timestamp){
 				saver.direction = 0;
 				time_since_touch = moment().unix() - saver.timestamp.unix();
 				console.log(time_since_touch);
@@ -105,9 +97,11 @@ function draw() {
 	fill(cursor.fillColor);
 	ellipse(cursor.cx, cursor.cy, cursor.radius, cursor.radius);
 	//check if the video needs to be changed
-	videoWait(canvas);
+	// var camera_state = camera.control("state");
+	// if(camera_state !== "state"){
+	// 	videoWait(canvas);
+	// }
 }
-
 
 function resetCursor(){
 	oldVals = cursor;
@@ -170,7 +164,7 @@ function saverDirection(){
 
 function touchMoved(){
 	cursor.radius = 40;
-	if(abs(mouseX-cursor.cx)<cursor.radius && abs(mouseY-cursor.cy)<cursor.radius && !countdown && videoID>0)
+	if(abs(mouseX-cursor.cx)<cursor.radius && abs(mouseY-cursor.cy)<cursor.radius && !countdown)
 		//t is the way we move along the curve of the bezier, between zero and one.
 		//the scale is used to step through the bezier and is equivalent to one minute.
 		for(t=0;t<1;t+=scale){
@@ -211,20 +205,3 @@ function touchStarted() {
 		}
 	}
 }
-
-$( window ).on("beforeunload", function() {
-	if(videoType==="adhoc"){
-		$.ajax({
-			url: 'camera/',
-			type: 'GET',
-			data: {"state": "off"},
-			success: function(data){
-				console.log(data);
-			},
-			error: function(error){
-				console.log(error);
-			}
-		});
-		return "Please make sure that you turn the turn off recording.";
-	}
-});

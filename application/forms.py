@@ -1,5 +1,5 @@
 from flask.ext.wtf import Form
-from wtforms import StringField, SubmitField, PasswordField, IntegerField, HiddenField
+from wtforms import StringField, SubmitField, PasswordField, IntegerField, HiddenField, TextAreaField
 from wtforms_components import TimeField
 from wtforms import SelectField, validators, widgets, SelectMultipleField
 from datetime import timedelta
@@ -92,8 +92,10 @@ class LessonPlan(Form):
             return False
 
 
-class SectionForm(Form):
-    name = StringField("Section/Class Name", [validators.Required("Please enter a section/class name")])
+class InvestigationForm(Form):
+    question = TextAreaField("What question are you trying to answer?",
+                      [validators.Required("Please enter an investigation question."),
+                      validators.length(max=140)])
     # submit = SubmitField("Add Section")
 
     def __init__(self, *args, **kwargs):
@@ -103,9 +105,9 @@ class SectionForm(Form):
         if not Form.validate(self):
             return False
 
-        section = Section.query.filter_by(user_id=user_id, name=self.name.data.title()).first()
-        if section:
-            self.name.errors.append("That section name is already taken.")
+        investigation = Investigation.query.filter_by(user_id=user_id, question=self.question.data.capitalize()).first()
+        if investigation:
+            self.name.errors.append("You already asked that question, find it or ask another.")
             return False
         else:
             return True
@@ -134,29 +136,31 @@ class ScheduleForm(Form):
         if self.start_time.data > self.end_time.data:
             self.start_time.errors.append("Your start time comes after your end time...")
             return False
-        if  self.check_conflicts(recording_id):
-            return False
         else:
             return True
+        # if  self.check_conflicts(recording_id):
+        #     return False
+        # else:
+        #     return True
 
 
-    def check_conflicts(self, recording_id):
-        #check schedule first for if there is anything on the schedule for the days chosen
-        #then if there is start time conflict or an end time conflict
-        conflicts = db.session.query(Schedule.day, Schedule.start_time, Section.name) \
-            .join(Schedule.section) \
-            .filter(Schedule.day.in_(self.days.data)) \
-            .filter(
-                ((Schedule.start_time <= self.start_time.data) & (Schedule.end_time > self.start_time.data)) |
-                ((Schedule.start_time < self.end_time.data) & (Schedule.end_time >= self.end_time.data)))
-        if recording_id:
-            conflicts = conflicts.filter(Schedule.id != recording_id)
-        conflict = conflicts.first()
-        if conflict:
-            self.start_time.errors = list(self.start_time.errors)  
-            # this is a hack, not sure why the Form.validate wasn't validating so I removed it and need to list() it
-            self.start_time.errors.append("One or more of the times you are scheduling conflicts with the %s %s of %s"
-                % (dayformat(conflict.day), conflict.start_time, conflict.name))
-            return True
-        else:
-            return False
+    # def check_conflicts(self, recording_id):
+    #     #check schedule first for if there is anything on the schedule for the days chosen
+    #     #then if there is start time conflict or an end time conflict
+    #     conflicts = db.session.query(Schedule.day, Schedule.start_time, Section.name) \
+    #         .join(Schedule.section) \
+    #         .filter(Schedule.day.in_(self.days.data)) \
+    #         .filter(
+    #             ((Schedule.start_time <= self.start_time.data) & (Schedule.end_time > self.start_time.data)) |
+    #             ((Schedule.start_time < self.end_time.data) & (Schedule.end_time >= self.end_time.data)))
+    #     if recording_id:
+    #         conflicts = conflicts.filter(Schedule.id != recording_id)
+    #     conflict = conflicts.first()
+    #     if conflict:
+    #         self.start_time.errors = list(self.start_time.errors)  
+    #         # this is a hack, not sure why the Form.validate wasn't validating so I removed it and need to list() it
+    #         self.start_time.errors.append("One or more of the times you are scheduling conflicts with the %s %s of %s"
+    #             % (dayformat(conflict.day), conflict.start_time, conflict.name))
+    #         return True
+    #     else:
+    #         return False

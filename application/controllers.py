@@ -1,15 +1,24 @@
 from flask import request, session, redirect, flash
 from flask import render_template, url_for
 from application.models import *
-from application import app, scheduler, schedule, picam, api_manager
-from application.forms import SignupForm, SigninForm, ScheduleForm, SectionForm
-from application.filters import dayformat
-from datetime import datetime
-import json, urllib
+from application import app, api_manager
+from application.forms import SignupForm, SigninForm, ScheduleForm, InvestigationForm
+from camera import control
 
 for model_name in app.config['API_MODELS']:
     model_class = app.config['API_MODELS'][model_name]
     api_manager.create_api(model_class, methods=['GET', 'POST'])
+
+
+def commit_to_db(success_msg):
+    try:
+        db.session.commit()
+        flash(success_msg)
+        return 1
+    except Exception as error:
+        db.session.rollback()
+        flash("Database error: %s" % (error))
+        return 0
 
 
 @app.route('/')
@@ -36,7 +45,7 @@ def signup():
             db.session.commit()
             session['email'] = newuser.email
             session['id'] = newuser.id
-            return redirect(url_for('section'))
+            return redirect(url_for('investigation'))
 
     elif request.method == 'GET':
         return render_template('signup.html', form=form)
@@ -80,125 +89,114 @@ def editor():
     return render_template("mobile_editor.html")
 
 
+# need to transfer control of this to camera module
 @app.route('/camera')
 def camera():
     state = request.args.get('state')
-    schedule_id = request.args.get('schedule_id')
-    timestamp_string = request.args.get('timestamp')
     #turn the camera on and return the DB id of the new video
     if state == 'on':
-        datetime_timestamp = datetime.strptime(timestamp_string, "%Y-%m-%d %H:%M:%S")
-        video_id = schedule.cam_record(schedule_id, datetime_timestamp)
-        return str(video_id)
+        control.service_on()
+        control.record_on()
+        return 'on'
     #turn the camera off
     elif state == 'off':
-        schedule.cam_off()
+        control.record_off()
+        control.service_off()
         return 'off'
-    #return the DB id of the current video being recorded or -1 if no video being recorded.
-    elif state == 'current':
-        curr_recording = picam.record_state()
-        if curr_recording:
-            video_obj = db.session.query(Video).filter(Video.filename == curr_recording).one()
-            video_id = video_obj.id
+    elif state == 'state':
+        if control.record_state():
+            return 'on'
         else:
-            video_id = -1
-        return str(video_id)
+            return 'off'
     elif state == 'live':
-        pid = picam.service_on()
-        ret = urllib.urlopen('http://aha.local/hls/index.m3u8')
-        while ret.code == 404:
-            ret = urllib.urlopen('http://aha.local/hls/index.m3u8')
-        return render_template('live.html', pid=json.dumps(pid))
+        return render_template('live.html')
     else:
         return render_template('404.html')
 
 
-@app.route('/section', methods=['GET', 'POST'])
-def section():
-    form = SectionForm()
-    sections = Section.query.filter_by(user_id=session['id']).all()
+@app.route('/investigation', methods=['GET', 'POST'])
+def investigation():
+    form = InvestigationForm()
     #POST
     if request.method == 'POST' and form.validate(session["id"]):
-        section_obj = Section(name=form.name.data,
-            user_id=db.session.query(User).filter_by(email=session['email']).first().id)
-        db.session.add(section_obj)
-        try:
-            db.session.commit()
-            flash("Successfully added section %s" % (section_obj.name))
-        except Exception as error:
-            db.session.rollback()
-            flash("Database error: %s" % (error))
-        return redirect(url_for('section'))
+        investigation_obj = Investigation(question=form.question.data,
+                                          user_id=db.session.query(User)
+                                          .filter_by(email=session['email']).first().id)
+        db.session.add(investigation_obj)
+        commit_to_db("Successfully added investigation %s" % (investigation_obj.question))
+        return redirect(url_for('investigation'))
     #GET
     else:
         action = request.args.get('action')
         if action == 'delete':
-            section_id = request.args.get('section_id')
-            section = Section.query.filter_by(id=section_id).first()
-            recordings = schedule.get_jobs(section_id, "all")
+            investigation_id = request.args.get('investigation_id')
+            investigation = Investigation.query.filter_by(id=investigation_id).first()
+            recordings = db.session.query(Schedule).filter_by(investigation_id=investigation_id).all()
             for recording in recordings:
-                schedule.halt_jobs(recording.id, "remove")
                 db.session.delete(recording)
-            db.session.delete(section)
-            try:
-                db.session.commit()
-                flash("Deleted %s" % (section.name))
-                return redirect(url_for('section'))
-            except Exception as error:
-                flash("Database error: %s" % (error))
-        return render_template('section.html', sections=sections, form=form)
+            db.session.delete(investigation)
+            commit_to_db("Deleted %s" % (investigation.question))
+        investigations = Investigation.query.filter_by(user_id=session['id']).all()
+        return render_template('investigation.html', investigations=investigations, form=form)
 
 
 @app.route('/recordings', methods=['GET', 'POST'])
 def recordings():
     form = ScheduleForm()
-    section_id = request.args.get("section_id")
+    investigation_id = request.args.get("investigation_id")
     #POST
     if request.method == 'POST' and form.validate():
-        #iterate through the days
         for day in form.days.data:
-            try:
-                day, time = schedule.add_jobs(form, day, section_id)
-                flash('Success! You have added a %s recording for %s.' % (dayformat(day), time))
-            except Exception as error:
-                db.session.rollback()
-                flash('There was a database error %s' % (error))
-        return redirect(url_for('recordings', section_id=section_id))
+            #store the times
+            schedule_obj = Schedule(day=day,
+                                    active=True,
+                                    start_time=form.start_time.data,
+                                    end_time=form.end_time.data,
+                                    investigation_id=investigation_id)
+            db.session.add(schedule_obj)
+        commit_to_db('Success! You have added a recording.')
+        return redirect(url_for('recordings', investigation_id=investigation_id))
     #GET
     else:
         state = request.args.get("state")
-        section = Section.query.filter_by(id=section_id).first()
+        investigation = Investigation.query.filter_by(id=investigation_id).first()
         recording_id = request.args.get("recording_id")
         if state == "activate":
-            schedule_obj = Schedule.query.filter_by(id=recording_id).first()
-            scheduler.resume_job(schedule_obj.start_job_id)
-            scheduler.resume_job(schedule_obj.end_job_id)
-            return redirect(url_for('recordings', section_id=section_id))
+            schedule_obj = db.session.query(Schedule).filter_by(id=recording_id).first()
+            schedule_obj.active = True
+            commit_to_db("You have successfully activated a recording.")
+            return redirect(url_for('recordings', investigation_id=investigation_id))
         if state == "deactivate":
-            day, start_time = schedule.halt_jobs(recording_id, "pause")
-            flash("You have successfully deactivated %s's %s recording at %s" % (section.name, dayformat(day), start_time))
-            return redirect(url_for('recordings', section_id=section_id))
-        active_recordings = schedule.get_jobs(section_id, 'active')  # need to make an active and inactive job function & list
-        inactive_recordings = schedule.get_jobs(section_id, 'inactive')
+            schedule_obj = db.session.query(Schedule).filter_by(id=recording_id).first()
+            schedule_obj.active = False
+            commit_to_db("You have successfully deactivated a recording.")
+            return redirect(url_for('recordings', investigation_id=investigation_id))
+        active_recordings = db.session.query(Schedule) \
+            .filter_by(investigation_id=investigation_id) \
+            .filter_by(active=True).all()
+        inactive_recordings = db.session.query(Schedule) \
+            .filter_by(investigation_id=investigation_id) \
+            .filter_by(active=False).all()
         return render_template('schedule.html',
-            active_recordings=active_recordings,
-            inactive_recordings=inactive_recordings,
-            form=form,
-            section=section)
+                               active_recordings=active_recordings,
+                               inactive_recordings=inactive_recordings,
+                               form=form,
+                               investigation=investigation)
 
 
 @app.route('/recording', methods=['GET', 'POST'])
 def recording():
     form = ScheduleForm()
-    section_id = request.args.get("section_id")
-    section = Section.query.filter_by(id=section_id).first()
+    investigation_id = request.args.get("investigation_id")
+    investigation = Investigation.query.filter_by(id=investigation_id).first()
     recording_id = request.args.get("recording_id")
     #POST
     if request.method == 'POST' and form.validate(recording_id):
-        message = schedule.edit_job(form, recording_id)
-        #respond to the client
-        flash(message)
-        return redirect(url_for('recordings', section_id=section_id))
+        recording = db.session.query(Schedule).filter_by(id=recording_id).first()
+        recording.start_time = form.start_time.data
+        recording.end_time = form.end_time.data
+        commit_to_db("Edit succeeded")
+        return redirect(url_for('recordings', investigation_id=investigation_id))
     #GET
     else:
         schedule_obj = db.session.query(Schedule).filter_by(id=recording_id).first()
@@ -207,9 +205,9 @@ def recording():
             form.start_time.data = schedule_obj.start_time
             form.end_time.data = schedule_obj.end_time
             return render_template('recording.html',
-                section=section,
-                id=recording_id,
-                form=form)
+                                   investigation=investigation,
+                                   id=recording_id,
+                                   form=form)
         else:
             return render_template("error.html", error="Couldn't get data for this recording")
 
