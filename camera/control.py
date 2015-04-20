@@ -31,7 +31,6 @@ def record_on():
     sh.touch(settings.ONOFF_PATH + '/start_record')
     now = time.time()
     while record_state() == 'off':
-        print "starting"
         check = time.time()
         if check-now > 0.5:
             sh.touch(settings.ONOFF_PATH + '/start_record')
@@ -43,7 +42,7 @@ def record_off():
     filename = record_file()
     sh.touch(settings.ONOFF_PATH + '/stop_record')
     while record_state() == 'on':
-        print "stopping"
+        continue
     return filename
 
 
