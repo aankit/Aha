@@ -102,15 +102,16 @@ def camera():
     if state == 'on':
         control.service_on()
         control.record_on()
-        return 'on'
+        g.cam_state = 'on'
+        return redirect(url_for('home'))
     #turn the camera off
     elif state == 'off':
         control.record_off()
         control.service_off()
-        return 'off'
-    elif state == 'state':
-        g.cam_state = control.record_state()
+        g.cam_state = 'off'
         return redirect(url_for('home'))
+    elif state == 'state':
+        return control.record_state()
     elif state == 'live':
         return render_template('live.html')
     else:
