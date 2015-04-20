@@ -2,6 +2,7 @@ import settings
 import sh
 import os
 import time
+from datetime import datetime
 
 
 def service_on():
@@ -44,7 +45,7 @@ def record_off():
     sh.touch(settings.ONOFF_PATH + '/stop_record')
     while record_state():
         print "stopping"
-    return "off"
+    return datetime.now()
 
 
 def record_state():
@@ -58,11 +59,11 @@ def record_state():
 def record_refresh():
     current_file = record_state()
     if current_file:
-        record_off()
+        prev_end = record_off()
         new_file = record_on()
-        return new_file
+        return new_file, prev_end
     else:
-        return None
+        return None, None
 
 
 def get_all_recordings():
