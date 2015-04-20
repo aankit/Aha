@@ -1,7 +1,5 @@
 camera = {
 	postMarker: function (timestamp, direction, duration){
-		var start_time = null;
-		var end_time = null;
 		//event handler functions, currently the Failed function isn't called on error, not sure why
 		function addComplete(evt) {
 			console.log("added");
@@ -11,21 +9,25 @@ camera = {
 		}
 		//let's build our data object for POSTing
 		//get section_id for posting
-		if( direction > 0){
-			start_time = moment(timestamp).format("YYYY-MM-DD HH:mm:ss");
-			end_time = moment(timestamp).add(duration, 'minutes').format("YYYY-MM-DD HH:mm:ss");
-		} else if (direction < 0 ){
-			start_time = moment(timestamp).subtract(duration, 'minutes').format("YYYY-MM-DD HH:mm:ss");
-			end_time = moment(timestamp).format("YYYY-MM-DD HH:mm:ss");
-		} else if (direction===0){
-			start_time = moment(timestamp).subtract(duration, 'minutes').format("YYYY-MM-DD HH:mm:ss");
-			end_time = moment(timestamp).add(duration, 'minutes').format("YYYY-MM-DD HH:mm:ss");
-		}
+		var date = moment().format("YYYY-MM-DD");
 		var day = ((moment(timestamp).day()-1>=0) ? moment(timestamp).day()-1 : 6);
+		var start_time = null;
+		var end_time = null;
+		if( direction > 0){
+			start_time = moment(timestamp).format("HH:mm:ss");
+			end_time = moment(timestamp).add(duration, 'minutes').format("HH:mm:ss");
+		} else if (direction < 0 ){
+			start_time = moment(timestamp).subtract(duration, 'minutes').format("HH:mm:ss");
+			end_time = moment(timestamp).format("HH:mm:ss");
+		} else if (direction===0){
+			start_time = moment(timestamp).subtract(duration, 'minutes').format("HH:mm:ss");
+			end_time = moment(timestamp).add(duration, 'minutes').format("HH:mm:ss");
+		}
 		//turn timestamp into string for POSTing
-		timestamp = timestamp.format("YYYY-MM-DD HH:mm:ss");
+		// timestamp = timestamp.format("YYYY-MM-DD HH:mm:ss");
 		var data = {
 			"timestamp": timestamp,
+			"date": date,
 			"day": day,
 			"start_time": start_time,
 			"end_time": end_time

@@ -68,7 +68,7 @@ function draw() {
 				text(saverDirection(saver) + " " + saver.duration + " min", cursor.cx-75, cursor.cy);
 			}
 		} else {
-			if(abs(mouseX-cursor.cx)<cursor.radius && abs(mouseY-cursor.cy)<cursor.radius && saver.timestamp){
+			if(abs(touchX-cursor.cx)<cursor.radius && abs(touchY-cursor.cy)<cursor.radius && saver.timestamp){
 				saver.direction = 0;
 				time_since_touch = moment().unix() - saver.timestamp.unix();
 				console.log(time_since_touch);
@@ -164,12 +164,12 @@ function saverDirection(){
 
 function touchMoved(){
 	cursor.radius = 40;
-	if(abs(mouseX-cursor.cx)<cursor.radius && abs(mouseY-cursor.cy)<cursor.radius && !countdown)
+	if(abs(touchX-cursor.cx)<cursor.radius && abs(touchY-cursor.cy)<cursor.radius && !countdown)
 		//t is the way we move along the curve of the bezier, between zero and one.
 		//the scale is used to step through the bezier and is equivalent to one minute.
 		for(t=0;t<1;t+=scale){
 			bp = bezXY(sliderBar, t);
-			if(abs(mouseX - bp.cx) < 8 && abs(mouseY - bp.cy)<2){
+			if(abs(touchX - bp.cx) < 8 && abs(touchY - bp.cy)<2){
 				cursor.cx = bp.cx;
 				cursor.cy = bp.cy;
 				updateSaver(t);
@@ -197,7 +197,7 @@ function touchEnded() {
 function touchStarted() {
 	saver.timestamp =  moment(); //database doesn't contain dates, just times
 	if(countdown){
-		if((mouseX > saver.undo.minX && mouseX < saver.undo.maxX) && (mouseY > saver.undo.minY && mouseY < saver.undo.maxY)){
+		if((touchX > saver.undo.minX && touchX < saver.undo.maxX) && (touchY > saver.undo.minY && touchY < saver.undo.maxY)){
 			highlight.begin = 0;
 			highlight.end = 0;
 			resetSaver();

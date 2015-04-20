@@ -121,8 +121,9 @@ class Marker(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     timestamp = db.Column(db.DateTime)
     day = db.Column(db.Integer)
-    start_time = db.Column(db.DateTime)
-    end_time = db.Column(db.DateTime)
+    date = db.Column(db.Date)
+    start_time = db.Column(postgresql.TIME())
+    end_time = db.Column(postgresql.TIME())
     videos = db.relationship('Video', backref=db.backref('markers', lazy='dynamic'),
                              secondary=marker_videos)
 
