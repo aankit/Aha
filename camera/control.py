@@ -2,7 +2,6 @@ import settings
 import sh
 import os
 import time
-from datetime import datetime
 
 
 def service_on():

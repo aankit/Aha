@@ -4,19 +4,12 @@ from camera import control
 import logging
 
 logging.basicConfig(filename=control.get_log_file(), level=logging.DEBUG)
+#refresh happens...
 refresh_state = control.record_refresh()
+
+#if we had a refresh let's go ahead with some file evaluation
 if refresh_state:
-    #refresh happens...
     
-
-    #this is a little bit of a safety net...still not certain my refresh code is super reliable
-    # if new_file is None:
-    #     new_filename = control.record_on()
-    # elif new_file:
-    #     new_filename = control.record_state()
-    #maybe need to log this new file_name?
-
-    #and now we can take an opportunity to do some strategic things
     from application import db
     from application.models import Video, Schedule, Marker
     from datetime import datetime
@@ -30,7 +23,6 @@ if refresh_state:
                 ((db_model.start_time < end_time) & (db_model.end_time >= end_time)) |
                 ((db_model.start_time > start_time) & (db_model.end_time < end_time))
             ).all()
-
         return matches
 
     #get the file that start 30 minutes ago and ended 15 minutes ago, its the second one
@@ -49,8 +41,8 @@ if refresh_state:
         end_time = datetime.time(datetime.fromtimestamp(end_time_unix))
         print date, start_time, end_time
 
-    # schedule_matches = video_matches(Schedule, date, start_time, end_time)
-    # marker_matches = video_matches(Marker, date, start_time, end_time)
+    schedule_matches = video_matches(Schedule, date, start_time, end_time)
+    marker_matches = video_matches(Marker, date, start_time, end_time)
 
     # if schedule_matches or marker_matches:
     #     video_obj = Video(filename=filename, date=date, start_time=start_time, end_time=end_time)
