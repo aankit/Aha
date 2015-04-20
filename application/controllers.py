@@ -100,14 +100,14 @@ def camera():
     state = request.args.get('state')
     #turn the camera on and return the DB id of the new video
     if state == 'on':
-        control.service_on()
+        if control.service_state() is False:
+            control.service_on()
         control.record_on()
         g.cam_state = 'on'
         return redirect(url_for('home'))
     #turn the camera off
     elif state == 'off':
         control.record_off()
-        control.service_off()
         g.cam_state = 'off'
         return redirect(url_for('home'))
     elif state == 'state':
