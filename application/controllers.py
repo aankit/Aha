@@ -21,6 +21,11 @@ def commit_to_db(success_msg):
         return 0
 
 
+@app.before_request
+def before_request():
+    g.cam_state = control.record_state()
+
+
 @app.route('/')
 def home():
     if 'email' not in session:
@@ -104,10 +109,7 @@ def camera():
         control.service_off()
         return 'off'
     elif state == 'state':
-        if control.record_state():
-            return 'on'
-        else:
-            return 'off'
+        return control.record_state()
     elif state == 'live':
         return render_template('live.html')
     else:

@@ -51,9 +51,9 @@ def record_off():
 def record_state():
     current_file = os.listdir(settings.CURRENT_RECORDING_PATH)
     if current_file:
-        return current_file[0]
+        return 'on'
     else:
-        return False
+        return 'off'
 
 
 def record_refresh():
