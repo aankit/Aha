@@ -37,15 +37,15 @@ def record_on():
         if check-now > 0.5:
             sh.touch(settings.ONOFF_PATH + '/start_record')
             now = check
-    current_file = os.listdir(settings.CURRENT_RECORDING_PATH)
-    return current_file[0]  # only one file can exist here at a time
+    return record_file()
 
 
 def record_off():
+    filename = record_file()
     sh.touch(settings.ONOFF_PATH + '/stop_record')
     while record_state() == 'on':
         print "stopping"
-    return datetime.now()
+    return filename
 
 
 def record_state():
@@ -66,11 +66,11 @@ def record_file():
 
 def record_refresh():
     if record_state() == 'on':
-        prev_end = record_off()
-        new_file = record_on()
-        return new_file, prev_end
+        record_off()
+        record_on()
+        return True
     else:
-        return None, None
+        return False
 
 
 def get_all_recordings():
