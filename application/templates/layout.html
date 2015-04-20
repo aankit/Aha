@@ -48,8 +48,10 @@
             {% if g.cam_state=='off' %}
             <li><a href="{{ url_for('camera', state='on') }}">Record</a></li>
             {% else %}
-            <li><a href="{{ url_for('camera', state='off' }}">Stop</a></li>
-          {% else %}
+            <li><a href="{{ url_for('camera', state='off') }}">Stop</a></li>
+            {% endif %}
+        {% else %}
+        {% endif %}
       </ul>
      <!--  <form class="navbar-form navbar-right" role="search">
         <div class="form-group">
