@@ -67,8 +67,8 @@ class InvestigationForm(Form):
                               validators.length(max=140)])
     # submit = SubmitField("Add Section")
 
-    def __init__(self, question):
-        self.question = question.strip()
+    def __init__(self, *args, **kwargs):
+        Form.__init__(self, *args, **kwargs)
 
     def validate(self, user_id):
         if not Form.validate(self):

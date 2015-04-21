@@ -124,7 +124,7 @@ def investigation():
     form = InvestigationForm()
     #POST
     if request.method == 'POST' and form.validate(session["id"]):
-        investigation_obj = Investigation(question=form.question.data,
+        investigation_obj = Investigation(question=form.question.data.strip(),
                                           user_id=db.session.query(User)
                                           .filter_by(email=session['email']).first().id)
         db.session.add(investigation_obj)
