@@ -216,6 +216,11 @@ def recording():
             return render_template("error.html", error="Couldn't get data for this recording")
 
 
+@app.route('/videos', methods=['GET', 'POST'])
+def videos():
+    return render_template("videos.html")
+
+
 @app.route('/example')
 def example():
     return render_template("example.html")

@@ -62,6 +62,7 @@ class Investigation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     question = db.Column(db.String(140))
     start_date = db.Column(db.Date)
+    filepath = db.Column(db.String(50))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = db.relationship('User', backref='investigations')
 

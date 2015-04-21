@@ -42,6 +42,7 @@
          height="250"
          width="300"
          controls
+         muted
          preload>
     <source
        src="http://aha.local/hls/index.m3u8"
@@ -52,7 +53,7 @@
     videojs.options.flash.swf = '/static/lib/video-js/video-js.swf';
     // initialize the player
 
-    var player = videojs("live", { muted: true });
+    var player = videojs("live");
   </script>
 
 {% endblock %}
