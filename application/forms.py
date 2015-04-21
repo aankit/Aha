@@ -62,7 +62,7 @@ class SigninForm(Form):
 
 
 class InvestigationForm(Form):
-    question = TextAreaField("What question are you trying to answer?",
+    question = TextAreaField("Ask a question about your practice or classroom.",
                              [validators.Required("Please enter an investigation question."),
                               validators.length(max=140)])
     # submit = SubmitField("Add Section")
