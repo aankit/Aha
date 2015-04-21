@@ -28,7 +28,7 @@ def before_request():
     if 'id' not in session:
         return redirect(url_for('signin'))
     else:
-        g.user = User.query.all(id=session['id']).first()
+        g.user = User.query.filter_by(id=session['id']).first()
 
 
 @app.route('/')

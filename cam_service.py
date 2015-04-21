@@ -9,7 +9,7 @@ refresh_state = control.record_refresh()
 
 #if we had a refresh let's go ahead with some file evaluation
 if refresh_state:
-    from application import db
+    from application import app, db
     from application.models import Video, Schedule, Marker
     from datetime import datetime
     import os
@@ -49,7 +49,7 @@ if refresh_state:
             for schedule_match in schedule_matches:
                 schedule_match.videos.append(video_obj)
                 #let's save it to the file videos file path
-                schedule_match.investigation.question
+                schedule_match.investigation.id
             for marker_match in marker_matches:
                 marker_match.videos.append(video_obj)
             try:
