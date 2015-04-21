@@ -61,45 +61,14 @@ class SigninForm(Form):
             return False
 
 
-class Student(Form):
-    nickname = StringField("Name/Nickname", [validators.Required("Please enter a name for the student")])
-    category = StringField("Category", [validators.Required("Please ")])
-
-    def __init__(self, *args, **kwargs):
-        Form.__init__(self, *args, **kwargs)
-
-
-class LessonSegment(Form):
-    name = StringField("Segment Name", [validators.Required("What do you want to call this segment")])
-    start_time = IntegerField("How many minutes into the lesson do you intend on starting?",
-        [validators.Required("Please enter when the segment starts.")])
-    end_time = IntegerField("When do you intend of ending?", [validators.Required("Please enter when the segment ends")])
-
-    def __init__(self, *args, **kwargs):
-        Form.__init__(self, *args, **kwargs)
-
-
-class LessonPlan(Form):
-    section = SelectField("Choose a section:",
-        [validators.Required("Please choose a section.")],
-        coerce=int)
-
-    def __init__(self, *args, **kwargs):
-            Form.__init__(self, *args, **kwargs)
-
-    def validate(self):
-        if not Form.validate(self):
-            return False
-
-
 class InvestigationForm(Form):
     question = TextAreaField("What question are you trying to answer?",
-                      [validators.Required("Please enter an investigation question."),
-                      validators.length(max=140)])
+                             [validators.Required("Please enter an investigation question."),
+                              validators.length(max=140)])
     # submit = SubmitField("Add Section")
 
-    def __init__(self, *args, **kwargs):
-        Form.__init__(self, *args, **kwargs)
+    def __init__(self, question):
+        self.question = question.strip()
 
     def validate(self, user_id):
         if not Form.validate(self):
@@ -115,13 +84,17 @@ class InvestigationForm(Form):
 
 class ScheduleForm(Form):
     days = SelectMultipleField("Choose day(s) for recording?",
-        [validators.Required("Please enter the day(s)")],
-        choices=[(0, "Monday"), (1, "Tuesday"), (2, "Wednesday"), (3, "Thursday"), (4, "Friday")],
-        option_widget=widgets.CheckboxInput(),
-        widget=widgets.ListWidget(prefix_label=False),
-        coerce=int)
-    start_time = TimeField("Start Time",[validators.Required("What time should recording start?")])
-    end_time = TimeField("End Time",[validators.Required("What time should recording end?")])
+                               [validators.Required("Please enter the day(s)")],
+                               choices=[(0, "Monday"),
+                                        (1, "Tuesday"),
+                                        (2, "Wednesday"),
+                                        (3, "Thursday"),
+                                        (4, "Friday")],
+                               option_widget=widgets.CheckboxInput(),
+                               widget=widgets.ListWidget(prefix_label=False),
+                               coerce=int)
+    start_time = TimeField("Start Time", [validators.Required("What time should recording start?")])
+    end_time = TimeField("End Time", [validators.Required("What time should recording end?")])
     submit = SubmitField("Submit")
 
     def __init__(self, *args, **kwargs):

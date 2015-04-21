@@ -4,6 +4,7 @@ from application.models import *
 from application import app, api_manager
 from application.forms import SignupForm, SigninForm, ScheduleForm, InvestigationForm
 from camera import control
+import sh
 
 for model_name in app.config['API_MODELS']:
     model_class = app.config['API_MODELS'][model_name]
