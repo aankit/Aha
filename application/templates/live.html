@@ -50,10 +50,12 @@
   </video>
   
   <script>
-    videojs.options.flash.swf = '/static/lib/video-js/video-js.swf';
+    window.onload = function () {
+      videojs.options.flash.swf = '/static/lib/video-js/video-js.swf';
     // initialize the player
 
-    var player = videojs("live");
+      var player = videojs("live", { muted: true });
+    }
   </script>
 
 {% endblock %}
