@@ -40,12 +40,12 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True)
     pwdhash = db.Column(db.String(100))
-    timezone = db.String(db.String(15))
-    rubric_url = db.String(db.String(200))
+    media_url = db.String(db.String(200))
 
-    def __init__(self, email, password):
+    def __init__(self, email, password, media_url=app.config["MEDIA_URL"]):
         self.email = email.lower()
         self.set_password(password)
+        self.media_url = media_url
 
     def set_password(self, password):
         self.pwdhash = generate_password_hash(password)

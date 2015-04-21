@@ -25,6 +25,10 @@ def commit_to_db(success_msg):
 @app.before_request
 def before_request():
     g.cam_state = control.record_state()
+    if 'id' not in session:
+        return redirect(url_for('signin'))
+    else:
+        g.user = User.query.all(id=session['id']).first()
 
 
 @app.route('/')
@@ -123,12 +127,13 @@ def camera():
 def investigation():
     form = InvestigationForm()
     #POST
-    if request.method == 'POST' and form.validate(session["id"]):
+    if request.method == 'POST' and form.validate(session['id']):
         investigation_obj = Investigation(question=form.question.data.strip(),
-                                          user_id=db.session.query(User)
-                                          .filter_by(email=session['email']).first().id)
+                                          user_id=g.user.id)
         db.session.add(investigation_obj)
-        commit_to_db("Successfully added investigation %s" % (investigation_obj.question))
+        if commit_to_db("Successfully added investigation %s" % (investigation_obj.question)):
+            user = User.query.all(email=session['email']).first()
+            sh.mkdir(user.media_url+str(investigation_obj.id))
         return redirect(url_for('investigation'))
     #GET
     else:
@@ -140,7 +145,8 @@ def investigation():
             for recording in recordings:
                 db.session.delete(recording)
             db.session.delete(investigation)
-            commit_to_db("Deleted %s" % (investigation.question))
+            if commit_to_db("Deleted %s" % (investigation.question)):
+                sh.rm('-r', +str(investigation_id))
         investigations = Investigation.query.filter_by(user_id=session['id']).all()
         return render_template('investigation.html', investigations=investigations, form=form)
 
@@ -159,7 +165,8 @@ def recordings():
                                     end_time=form.end_time.data,
                                     investigation_id=investigation_id)
             db.session.add(schedule_obj)
-        commit_to_db('Success! You have added a recording.')
+        if commit_to_db('Success! You have added a recording.'):
+            sh.mkdir(g.user.media_url+str(investigation_id)+str(schedule_obj.id))
         return redirect(url_for('recordings', investigation_id=investigation_id))
     #GET
     else:
