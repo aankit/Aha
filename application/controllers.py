@@ -146,7 +146,7 @@ def investigation():
                 db.session.delete(recording)
             db.session.delete(investigation)
             if commit_to_db("Deleted %s" % (investigation.question)):
-                sh.rm('-r', +str(investigation_id))
+                sh.rm('-rf', ('/').join([str(g.user.media_url), str(investigation_id)]))
         investigations = Investigation.query.filter_by(user_id=session['id']).all()
         return render_template('investigation.html', investigations=investigations, form=form)
 
@@ -166,7 +166,8 @@ def recordings():
                                     investigation_id=investigation_id)
             db.session.add(schedule_obj)
         if commit_to_db('Success! You have added a recording.'):
-            media_url = ('/').join([g.user.media_url, str(investigation_id), str(schedule_obj.id)])
+            print g.user.media_url
+            media_url = ('/').join([str(g.user.media_url), str(investigation_id), str(schedule_obj.id)])
             print media_url
             sh.mkdir(media_url)
         return redirect(url_for('recordings', investigation_id=investigation_id))
