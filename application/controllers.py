@@ -132,7 +132,7 @@ def investigation():
                                           user_id=g.user.id)
         db.session.add(investigation_obj)
         if commit_to_db("Successfully added investigation %s" % (investigation_obj.question)):
-            user = User.query.all(email=session['email']).first()
+            user = User.query.(email=session['email']).first()
             sh.mkdir(user.media_url+str(investigation_obj.id))
         return redirect(url_for('investigation'))
     #GET
