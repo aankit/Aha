@@ -42,7 +42,7 @@ class User(db.Model):
     pwdhash = db.Column(db.String(100))
     media_url = db.Column(db.String(200))
 
-    def __init__(self, email, password, media_url=app.config["MEDIA_URL"]):
+    def __init__(self, email, password, media_url=app.config["MEDIA_DIR"]):
         self.email = email.lower()
         self.set_password(password)
         self.media_url = media_url
