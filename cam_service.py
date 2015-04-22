@@ -13,10 +13,10 @@ if refresh_state:
     from application.models import Schedule, Marker
     from datetime import datetime, date
     import os
-    from sh import ffmpeg, mkdir
+    from sh import ffmpeg, mkdir, touch
 
     #check database for matches
-    def video_matches(db_model, vid_starttime_obj, vid_endtime_obj):
+    def video_matches(db_model, filename, filename_with_path, vid_starttime_obj, vid_endtime_obj):
         #get the relevant information for the video
         vid_date = datetime.date(starttime_obj)
         vid_day = date.weekday()
@@ -57,21 +57,23 @@ if refresh_state:
                 mkdir(media_path)
             #now cut the vid and save it in the media directory, run it as a background to keep this moving
             cut_process = ffmpeg('-ss', ffmpeg_start,
-                   '-i', filename_with_path,
-                   '-to', ffmpeg_duration,
-                   '-c', 'copy',
-                   '-avoid_negative_ts', '1',
-                   media_path+'/'+filename,
-                   _bg=True)
+                                 '-i', filename_with_path,
+                                 '-to', ffmpeg_duration,
+                                 '-c', 'copy',
+                                 '-avoid_negative_ts', '1',
+                                 media_path+'/'+filename,
+                                 _bg=True)
             #now we need to create or append to the directory's concat text file for ffmpeg later on
-
+            if not os.path.isfile(media_path+'/'+'vidlist.txt'):
+                touch(media_path+'/'+'vidlist.txt')
+            with open(media_path+'/'+'vidlist.txt', 'a') as vidlist:
+                vidlist.write(filename)
         return 
 
 
     #get the file that start 30 minutes ago and ended 15 minutes ago, its the second one
     file_index = 1
-    filename = control.get_recording(file_index)
-    filename_with_path = control.get_recording(file_index, full_path=True)
+    filename, filename_with_path = control.get_recording(file_index, full_path=True)
     if filename:
         #get the filename minus '.ts' since it is the date and time of the vid
         filename_date = filename[:-3]
