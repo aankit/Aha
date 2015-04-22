@@ -166,7 +166,8 @@ def recordings():
                                     investigation_id=investigation_id)
             db.session.add(schedule_obj)
         if commit_to_db('Success! You have added a recording.'):
-            sh.mkdir(g.user.media_url+str(investigation_id)+str(schedule_obj.id))
+            media_url = [g.user.media_url, str(investigation_id), str(schedule_obj.id)].join('/')
+            sh.mkdir(media_url)
         return redirect(url_for('recordings', investigation_id=investigation_id))
     #GET
     else:
