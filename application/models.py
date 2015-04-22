@@ -40,7 +40,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True)
     pwdhash = db.Column(db.String(100))
-    media_url = db.String(db.String(200))
+    media_url = db.Column(db.String(200))
 
     def __init__(self, email, password, media_url=app.config["MEDIA_URL"]):
         self.email = email.lower()
