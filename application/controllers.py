@@ -130,7 +130,7 @@ def investigation():
         if commit_to_db("Successfully added investigation %s" % (investigation_obj.question)):
             user = User.query.filter_by(email=session['email']).first()
             print user.media_url
-            sh.mkdir(user.media_url+str(investigation_obj.id))
+            sh.mkdir(user.media_url + '/' + str(investigation_obj.id))
         return redirect(url_for('investigation'))
     #GET
     else:
