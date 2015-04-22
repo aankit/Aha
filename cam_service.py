@@ -11,18 +11,50 @@ refresh_state = control.record_refresh()
 if refresh_state:
     from application import app, db
     from application.models import Video, Schedule, Marker
-    from datetime import datetime
+    from datetime import datetime, date
     import os
+    from sh import ffmpeg
 
-    def video_matches(db_model, date, day, start_time, end_time):
+    #check database for matches
+    def video_matches(db_model, vid_starttime_obj, vid_endtime_obj):
+        #get the relevant information for the video
+        vid_date = datetime.date(starttime_obj)
+        vid_day = date.weekday()
+        vid_start_time = datetime.time(vid_starttime_obj)
+        vid_end_time = datetime.time(vid_endtime_obj)
+        #find the matches in the db
         matches = db.session.query(db_model) \
-            .filter(db_model.day == day) \
+            .filter(db_model.active == True) \
+            .filter(db_model.day == vid_day) \
             .filter(
-                ((db_model.start_time <= start_time) & (db_model.end_time > start_time)) |
-                ((db_model.start_time < end_time) & (db_model.end_time >= end_time)) |
-                ((db_model.start_time > start_time) & (db_model.end_time < end_time))
+                ((db_model.start_time <= vid_start_time) & (db_model.end_time > vid_start_time)) |
+                ((db_model.start_time < vid_end_time) & (db_model.end_time >= vid_end_time)) |
+                ((db_model.start_time >= vid_start_time) & (db_model.end_time <= vid_end_time))
             ).all()
+            
+        for match in matches:
+            vid_string_date = datetime.strftime(vid_date, '%Y_%m_%d')
+            #does the vid start or end come after match start or end respectively?
+            start_time_diff = vid_starttime_obj - datetime.combine(vid_date, match.start_time)
+            end_time_diff = vid_endtime_obj - datetime.combine(vid_date, match.end_time)
+            #get the clock timestamps of the start and end time that we need from this particular video
+            cut_start_time = match.start_time if start_time_diff.seconds > 15*60 else vid_start_time
+            cut_end_time = vid_end_time if end_time_diff.seconds > 15*60 else match.end_time
+            #check to see if media path exists or make it
+            try:
+                investigation_id = str(match.investigation.id)
+            except
+                investigation_id = "markers"
+            media_path = app.config['MEDIA_URL'] + '/' + investigation_id + '/' + str(match.id) + '/' + string_date)
+            if not os.path.isdir(media_path):
+                sh.mkdir(media_path)
+
+
+                
+
+
         return matches
+
 
     #get the file that start 30 minutes ago and ended 15 minutes ago, its the second one
     file_index = 1
@@ -32,30 +64,9 @@ if refresh_state:
         #get the filename minus '.ts' since it is the date and time of the vid
         filename_date = filename[:-3]
         #get date, start and end time to see if we should save it.
-        datetime_obj = datetime.strptime(filename_date, '%Y-%m-%d_%H-%M-%S')
-        date = datetime.date(datetime_obj)
-        day = date.weekday()
-        start_time = datetime.time(datetime_obj)
-        end_time_unix = os.path.getctime(filename_with_path)
-        end_time = datetime.time(datetime.fromtimestamp(end_time_unix))
-        print date, start_time, end_time
+        starttime_obj = datetime.strptime(filename_date, '%Y-%m-%d_%H-%M-%S')
+        endtime_obj = datetime.fromtimestamp(os.path.getctime(filename_with_path))
 
-        schedule_matches = video_matches(Schedule, date, day, start_time, end_time)
+        schedule_matches = video_matches(Schedule, starttime_obj, endtime_obj)
         marker_matches = video_matches(Marker, date, day, start_time, end_time)
 
-        if schedule_matches or marker_matches:
-            video_obj = Video(filename=filename, date=date, start_time=start_time, end_time=end_time)
-            db.session.add(video_obj)
-            for schedule_match in schedule_matches:
-                schedule_match.videos.append(video_obj)
-                #let's save it to the file videos file path
-                schedule_match.investigation.id
-            for marker_match in marker_matches:
-                marker_match.videos.append(video_obj)
-            try:
-                db.session.commit()
-            except:
-                db.session.rollback()
-                print "couldn't write to the database"
-        else:
-            control.remove_recording(file_index)

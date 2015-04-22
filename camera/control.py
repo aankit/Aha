@@ -32,7 +32,7 @@ def record_on():
     now = time.time()
     while record_state() == 'off':
         check = time.time()
-        if check-now > 0.5:
+        if check - now > 0.5:
             sh.touch(settings.ONOFF_PATH + '/start_record')
             now = check
     return record_file()

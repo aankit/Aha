@@ -37,6 +37,12 @@
           <li><a href="{{ url_for('investigation') }}">Investigate</a></li>
           <li><a href="{{ url_for('capture') }}">Real-Time Capture</a></li>
           <li><a href="{{ url_for('camera', state='live') }}">Live View</a></li>
+          <li><a href="{{ url_for('signout') }}">Sign Out</a></li>
+            {% if g.cam_state=='off' %}
+            <li><a href="{{ url_for('camera', state='on') }}">Record</a></li>
+            {% else %}
+            <li><a href="{{ url_for('camera', state='off') }}">Stop</a></li>
+            {% endif %}
           {% else %}
           <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
           <li><a href="{{ url_for('signin') }}">Sign In</a></li>
