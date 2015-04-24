@@ -23,9 +23,14 @@ if refresh_state:
         vid_start_time = datetime.time(vid_starttime_obj)
         vid_end_time = datetime.time(vid_endtime_obj)
         #find the matches in the db
-        matches = db.session.query(db_model) \
-            .filter(db_model.active == True) \
-            .filter(db_model.day == vid_day) \
+        #first if its a schedule, we need to look for actives, might as well get day in there as well
+        if db_model == Schedule:
+            active_matches = db.session.query(db_model).filter_by(active=True).filter_by(day=vid_day)
+        else:
+            #in the case of markers, they are all active and there is only one per date
+            active_matches = db.session.query(db_model).filter_by(date=vid_date)
+        #now get matches based on time
+        matches = active_matches \
             .filter(
                 ((db_model.start_time <= vid_start_time) & (db_model.end_time > vid_start_time)) |
                 ((db_model.start_time < vid_end_time) & (db_model.end_time >= vid_end_time)) |
