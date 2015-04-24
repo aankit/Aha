@@ -44,10 +44,13 @@
   
   <script>
     window.onload = function () {
-      videojs.options.flash.swf = '/static/lib/video-js/video-js.swf';
-    // initialize the player
+      if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+        videojs.options.flash.swf = '/static/lib/video-js/video-js.swf';
+            // initialize the player
+        var player = videojs("live");
+      }
+      
 
-      var player = videojs("live");
     }
   </script>
 
