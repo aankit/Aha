@@ -68,7 +68,7 @@ if refresh_state:
                 touch(media_path+'/'+'vidlist.txt')
             with open(media_path+'/'+'vidlist.txt', 'a') as vidlist:
                 vidlist.write(filename)
-        return 
+        return 0
 
 
     #get the file that start 30 minutes ago and ended 15 minutes ago, its the second one
