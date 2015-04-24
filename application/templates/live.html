@@ -32,7 +32,9 @@
 {% endblock %}
 
   <div id="vidContainer">
-    <video id='live'
+
+  </div>
+      <video id='live'
          class='video-js vjs-default-skin'
          controls
          preload>
@@ -40,32 +42,17 @@
              src='/hls/index.m3u8'
              type='application/x-mpegURL' />
         </video>
-  </div>
   
   <script>
     window.onload = function () {
-      vc = document.getElementByID("vidContainer");
-      vc.innerHTML = "waiting...";
+
       if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-        vc = document.getElementByID("vidContainer");
-        vc.innerHTML = "<iframe src='/hls/index.m3u8'></iframe>"
-        
+        console.log("mobile"); 
       } else {
-        vc.innerHTML = "  <video id='live'
-         class='video-js vjs-default-skin'
-         controls
-         preload>
-          <source
-             src='/hls/index.m3u8'
-             type='application/x-mpegURL' />
-        </video>"
-        videojs.options.flash.swf = '/static/lib/video-js/video-js.swf';
-            // initialize the player
-        var player = videojs("live");
       }
       videojs.options.flash.swf = '/static/lib/video-js/video-js.swf';
             // initialize the player
-        var player = videojs("live");
+      var player = videojs("live");
       
 
     }
