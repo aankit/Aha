@@ -17,7 +17,8 @@ def service_off():
 def service_state():
     try:
         pid = sh.pidof(settings.CAMERA)
-        return pid.stdout[:-1]
+        pid = pid.stdout[:-1]
+        return pid
     except:
         return False
 

@@ -1,9 +1,8 @@
 #!/var/www/Aha/venv/bin/python
 
 from camera import control
-import logging
 
-logging.basicConfig(filename=control.get_log_file(), level=logging.DEBUG)
+
 #refresh happens...
 refresh_state = control.record_refresh()
 
@@ -74,8 +73,6 @@ if refresh_state:
             with open(media_path+'/'+'vidlist.txt', 'a') as vidlist:
                 vidlist.write(filename)
         return 0
-
-
     #get the file that start 30 minutes ago and ended 15 minutes ago, its the second one
     file_index = 1
     filename, filename_with_path = control.get_recording(file_index, full_path=True)
@@ -88,3 +85,4 @@ if refresh_state:
 
         schedule_matches = video_matches(Schedule, filename, filename_with_path, starttime_obj, endtime_obj)
         marker_matches = video_matches(Marker, filename, filename_with_path, starttime_obj, endtime_obj)
+        os.remove(filename_with_path)

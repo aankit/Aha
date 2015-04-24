@@ -103,6 +103,7 @@ def camera():
     if state == 'on':
         if control.service_state() is False:
             control.service_on()
+            sh.sleep(1)
         control.record_on()
         g.cam_state = 'on'
         return redirect(url_for('home'))
