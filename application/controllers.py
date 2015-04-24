@@ -230,11 +230,6 @@ def videos():
     return render_template("videos.html")
 
 
-@app.route('/example')
-def example():
-    return render_template("example.html")
-
-
 @app.route('/logo')
 def logo():
     return send_from_directory(os.path.join(app.root_path, 'static'), 'img/aha.png')

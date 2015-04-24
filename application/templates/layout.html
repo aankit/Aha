@@ -48,17 +48,6 @@
           <li><a href="{{ url_for('signin') }}">Sign In</a></li>
           {% endif %}
       </ul>
-      <ul class="nav navbar-nav navbar-right">
-          {% if 'email' in session %}
-          <li><a href="{{ url_for('signout') }}">Sign Out</a></li>
-            {% if g.cam_state=='off' %}
-            <li><a href="{{ url_for('camera', state='on') }}">Record</a></li>
-            {% else %}
-            <li><a href="{{ url_for('camera', state='off') }}">Stop</a></li>
-            {% endif %}
-        {% else %}
-        {% endif %}
-      </ul>
      <!--  <form class="navbar-form navbar-right" role="search">
         <div class="form-group">
           <input type="text" class="form-control" placeholder="Search">

@@ -11,21 +11,13 @@
       <div class="table-responsive">
         <table class="table table-hover">
           <tr>
-            <td>Class Name</td>
+            <td>Investigation Question</td>
             <td>Scheduled Recordings</td>
-            <td>Roster</td>
-            <td>Lesson Plans</td>
-            <td>Student Work</td>
-            <td></td>
             <td></td>
           </tr>
           {% for investigation in investigations %}
             <tr>
                 <td>{{ investigation.question }}</td>
-                <td>placeholder</td>
-                <td>placeholder</td>
-                <td>placeholder</td>
-                <td>placeholder</td>
                 <td>
                     <a href="{{ url_for('recordings', investigation_id=investigation.id) }}">Schedule</a>
                 </td>
