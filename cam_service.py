@@ -81,5 +81,5 @@ if refresh_state:
         starttime_obj = datetime.strptime(filename_date, '%Y-%m-%d_%H-%M-%S')
         endtime_obj = datetime.fromtimestamp(os.path.getctime(filename_with_path))
 
-        schedule_matches = video_matches(Schedule, starttime_obj, endtime_obj)
-        marker_matches = video_matches(Marker, date, day, start_time, end_time)
+        schedule_matches = video_matches(Schedule, filename, filename_with_path, starttime_obj, endtime_obj)
+        marker_matches = video_matches(Marker, filename, filename_with_path, starttime_obj, endtime_obj)
