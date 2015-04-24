@@ -19,7 +19,7 @@ if refresh_state:
     def video_matches(db_model, filename, filename_with_path, vid_starttime_obj, vid_endtime_obj):
         #get the relevant information for the video
         vid_date = datetime.date(starttime_obj)
-        vid_day = date.weekday()
+        vid_day = vid_date.weekday()
         vid_start_time = datetime.time(vid_starttime_obj)
         vid_end_time = datetime.time(vid_endtime_obj)
         #find the matches in the db
