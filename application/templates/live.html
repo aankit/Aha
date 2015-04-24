@@ -31,20 +31,26 @@
   <script src="/static/lib/videojs-contrib-hls-0.12.0/src/bin-utils.js"></script>
 {% endblock %}
 
-  <video id="live"
-         class="video-js vjs-default-skin embed-responsive-item"
-         height="250"
-         width="300"
-         controls
-         preload>
-    <source
-       src="http://aha.local/hls/index.m3u8"
-       type="application/x-mpegURL" />
-  </video>
+  <div id="vidContainer">
+
   
   <script>
     window.onload = function () {
       if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+        vc = document.getElementByID("vidContainer");
+        vc.innerHTML = "<iframe src='/hls/index.m3u8'></iframe>"
+        
+      } else {
+        vc.innerHTML = "  <video id='live'
+         class='video-js vjs-default-skin embed-responsive-item'
+         height='250'
+         width='300'
+         controls
+         preload>
+          <source
+             src='http://aha.local/hls/index.m3u8'
+             type='application/x-mpegURL' />
+        </video>"
         videojs.options.flash.swf = '/static/lib/video-js/video-js.swf';
             // initialize the player
         var player = videojs("live");
