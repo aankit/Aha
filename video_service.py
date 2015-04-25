@@ -17,6 +17,7 @@ for model in [Schedule, Marker]:
             investigation_id = "markers"  # markers don't initially have an investigation id
 
         media_path = app.config['MEDIA_DIR'] + '/' + investigation_id + '/' + str(result.id) + '/' + string_date
-        vid_files = os.listdir(media_path)
-        if len(vid_files) > 1:
-            ffmpeg('-f', 'concat', '-i', 'vidlist.txt')
+        if os.path.isdir(media_path):
+            vid_files = os.listdir(media_path)
+            if len(vid_files) > 1 and os.path.isfile(media_path + '/' + 'vidlist.txt'):
+                ffmpeg('-f', 'concat', '-i', 'vidlist.txt')
