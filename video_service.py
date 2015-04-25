@@ -2,6 +2,7 @@
 
 from sh import ffmpeg
 import os
+import glob
 from datetime import datetime, timedelta
 from application.models import Schedule, Marker
 from application import media_dir
@@ -28,8 +29,13 @@ for date in [today_string, yest_string]:
             if os.path.isdir(media_path):
                 vid_files = os.listdir(media_path)
                 print vid_files
-                if len(vid_files) > 1 and os.path.isfile(media_path + '/' + 'vidlist.txt'):
-                    print "getting ready to concat with ffmpeg"
-                    ffmpeg('-f', 'concat', '-i', media_path + '/' + 'vidlist.txt',
+                if len(vid_files) > 1 and os.path.isfile(media_path + '/vidlist.txt'):
+                    print "concating with ffmpeg"
+                    ffmpeg('-f', 'concat', '-i', media_path + '/vidlist.txt',
                            '-c:v', 'copy', '-c:a', 'copy', '-bsf:a', 'aac_adtstoasc',
                            media_path + '/' + 'final.mp4')
+                    #get rid of old files
+                    if datetime.now() > datetime.combine(date.today(), result.end_time) + timedelta(minutes=15):
+                        os.remove(media_path+'/vidlist.txt')
+                        for vid in glob.glob(media_path+'/*.ts'):
+                            os.remove(vid)
