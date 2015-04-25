@@ -74,7 +74,7 @@ if refresh_state:
             if not os.path.isfile(media_path+'/'+'vidlist.txt'):
                 touch(media_path+'/'+'vidlist.txt')
             with open(media_path+'/'+'vidlist.txt', 'a') as vidlist:
-                vidlist.write(filename)
+                vidlist.write('file ' + "'" + media_path + '/' + filename + "'")
                 vidlist.write('\n')
         return 0
 
