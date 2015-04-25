@@ -9,7 +9,7 @@ refresh_state = control.record_refresh()
 if refresh_state:
     from application import db, media_dir
     from application.models import Schedule, Marker
-    from datetime import datetime, date
+    from datetime import datetime
     import os
     from sh import ffmpeg, mkdir, touch
 
@@ -32,7 +32,8 @@ if refresh_state:
             .filter(
                 ((db_model.start_time <= vid_start_time) & (db_model.end_time > vid_start_time)) |
                 ((db_model.start_time < vid_end_time) & (db_model.end_time >= vid_end_time)) |
-                ((db_model.start_time >= vid_start_time) & (db_model.end_time <= vid_end_time))
+                ((db_model.start_time >= vid_start_time) & (db_model.end_time <= vid_end_time)) |
+                ((db_model.start_time < vid_start_time) & (db_model.end_time > vid_end_time))
             ).all()
 
         for match in matches:
