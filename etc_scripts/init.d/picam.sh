@@ -115,6 +115,30 @@ do_start()
       exit 1
     fi
 
+    # Create SD card archive and set permission
+    if [ ! -d $PICAM_DIR/archive ]; then
+      echo "creating $PICAM_DIR/archive directory"
+      mkdir -p $PICAM_DIR/archive
+    fi
+    if [ -d $PICAM_DIR/archive ]; then
+      chown -R $UGID $PICAM_DIR/archive
+    else
+      echo "Error: failed to create $PICAM_DIR/archive"
+      exit 1
+    fi
+    
+    #make symlink from RAM to SD card archive and set permission
+    if [ ! -h $RAM_DIR/rec/archive ]; then
+      echo "creating $PICAM_DIR/archive directory"
+      ln -s $PICAM_DIR/archive $RAM_DIR/rec/archive
+    fi
+    if [ -h $RAM_DIR/rec/archive ]; then
+      chown -R $UGID $RAM_DIR/rec/archive
+    else
+      echo "Error: failed to create $RAM_DIR/rec"
+      exit 1
+    fi
+
     if [ "$ENABLE_HLS" = "true" ]; then
       if [ ! -d $HLS_DIR ]; then
         echo "creating $HLS_DIR directory"
