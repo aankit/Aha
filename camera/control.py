@@ -91,8 +91,7 @@ def get_recording(file_list_index=0, full_path=False):
         return filename
 
 
-def remove_recording(file_list_index=0):
-    recording = get_recording(file_list_index, full_path=True)
+def remove_recording(recording):
     os.remove(recording)
     print "removed: %s" % (recording)
 
