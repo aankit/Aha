@@ -58,6 +58,8 @@ if refresh_state:
             media_path = media_dir + '/' + investigation_id + '/' + str(match.id) + '/' + vid_string_date
             if not os.path.isdir(media_path):
                 mkdir(media_path)
+            print "successfully made %s" % (media_path)
+            print "getting ready to run ffmpeg -ss %s -i %s -to %s -c copy -avoid_negative_ts 1 %s / %s" % (ffmpeg_start, filename_with_path, ffmpeg_duration, media_path, filename)
             #now cut the vid and save it in the media directory, run it as a background to keep this moving
             cut_process = ffmpeg('-ss', ffmpeg_start,
                                  '-i', filename_with_path,
@@ -72,6 +74,7 @@ if refresh_state:
             with open(media_path+'/'+'vidlist.txt', 'a') as vidlist:
                 vidlist.write(filename)
         return 0
+
     #get the file that start 30 minutes ago and ended 15 minutes ago, its the second one
     file_index = 1
     filename, filename_with_path = control.get_recording(file_index, full_path=True)
