@@ -14,19 +14,23 @@ yest_string = datetime.strftime(datetime.now() - timedelta(days=1), '%Y_%m_%d')
 print today_string
 print yest_string
 
-for model in [Schedule, Marker]:
-    for result in model.query.all():
-        print result
-        try:
-            investigation_id = str(result.investigation.id)
-        except:
-            investigation_id = "markers"  # markers don't initially have an investigation id
+for date in [today_string, yest_string]:
+    for model in [Schedule, Marker]:
+        for result in model.query.all():
+            print result
+            try:
+                investigation_id = str(result.investigation.id)
+            except:
+                investigation_id = "markers"  # markers don't initially have an investigation id
 
-        media_path = media_dir + '/' + investigation_id + '/' + str(result.id) + '/' + yest_string
-        print media_path
-        if os.path.isdir(media_path):
-            vid_files = os.listdir(media_path)
-            print vid_files
-            if len(vid_files) > 1 and os.path.isfile(media_path + '/' + 'vidlist.txt'):
-                print "getting ready to concat with ffmpeg"
-                ffmpeg('-f', 'concat', '-i', 'vidlist.txt', '-c:v', 'copy', '-c:a', 'copy', '-bsf:a', 'aac_adtstoasc', 'final.mp4')
+            media_path = media_dir + '/' + investigation_id + '/' + str(result.id) + '/' + date
+            print media_path
+            if os.path.isdir(media_path):
+                vid_files = os.listdir(media_path)
+                print vid_files
+                if len(vid_files) > 1 and os.path.isfile(media_path + '/' + 'vidlist.txt'):
+                    print "getting ready to concat with ffmpeg"
+                    ffmpeg('-f', 'concat', '-i', 'vidlist.txt',
+                           '-c:v', 'copy', '-c:a', 'copy',
+                           '-bsf:a', 'aac_adtstoasc',
+                           media_path + '/' + 'final.mp4')
