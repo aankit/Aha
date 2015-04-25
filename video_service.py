@@ -30,7 +30,6 @@ for date in [today_string, yest_string]:
                 print vid_files
                 if len(vid_files) > 1 and os.path.isfile(media_path + '/' + 'vidlist.txt'):
                     print "getting ready to concat with ffmpeg"
-                    ffmpeg('-f', 'concat', '-i', 'vidlist.txt',
-                           '-c:v', 'copy', '-c:a', 'copy',
-                           '-bsf:a', 'aac_adtstoasc',
+                    ffmpeg('-f', 'concat', '-i', media_path + '/' + 'vidlist.txt',
+                           '-c:v', 'copy', '-c:a', 'copy', '-bsf:a', 'aac_adtstoasc',
                            media_path + '/' + 'final.mp4')
