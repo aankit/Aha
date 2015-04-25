@@ -128,15 +128,11 @@ do_start()
     fi
     
     #make symlink from RAM to SD card archive and set permission
-    if [ ! -h $RAM_DIR/rec/archive ]; then
-      echo "creating $PICAM_DIR/archive directory"
-      ln -s $PICAM_DIR/archive $RAM_DIR/rec/archive
-    fi
-    if [ -h $RAM_DIR/rec/archive ]; then
-      chown -R $UGID $RAM_DIR/rec/archive
-    else
-      echo "Error: failed to create $RAM_DIR/rec"
-      exit 1
+    if [ -d $RAM_DIR/rec/archive ]; then
+       rm -r $RAM_DIR/rec/archive 
+       echo "$PICAM_DIR/rec/archive directory removed"
+       ln -s $PICAM_DIR/archive $RAM_DIR/rec/archive
+       echo "replaced with symlink to $PICAM_DIR/archive"
     fi
 
     if [ "$ENABLE_HLS" = "true" ]; then
