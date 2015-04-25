@@ -13,6 +13,7 @@ app.session_interface = session_interface()
 
 db = SQLAlchemy(app)
 api_manager = APIManager(app, flask_sqlalchemy_db=db)
+media_dir = app.config["MEDIA_DIR"]
 
 handler = RotatingFileHandler(app.config['LOG_FILE'], maxBytes=10000, backupCount=1)
 handler.setLevel(logging.INFO)

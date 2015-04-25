@@ -2,13 +2,12 @@
 
 from camera import control
 
-
 #refresh happens...
 refresh_state = control.record_refresh()
 
 #if we had a refresh let's go ahead with some file evaluation
 if refresh_state:
-    from application import app, db
+    from application import db, media_dir
     from application.models import Schedule, Marker
     from datetime import datetime, date
     import os
@@ -56,7 +55,7 @@ if refresh_state:
             except:
                 investigation_id = "markers"  # markers don't initially have an investigation id
             #since these are just snippets of files, I'm saving them to a place where they can be combined later
-            media_path = app.config['MEDIA_DIR'] + '/' + investigation_id + '/' + str(match.id) + '/' + vid_string_date
+            media_path = media_dir + '/' + investigation_id + '/' + str(match.id) + '/' + vid_string_date
             if not os.path.isdir(media_path):
                 mkdir(media_path)
             #now cut the vid and save it in the media directory, run it as a background to keep this moving
