@@ -16,6 +16,7 @@
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
 DESC="picam"
 NAME="picam"
+RAM_DIR="/run/shm"
 PICAM_DIR="/home/pi/picam"
 PICAM_COMMAND="$PICAM_DIR/picam"
 UGID="pi:pi"
@@ -79,38 +80,38 @@ do_start()
 {
   if [ $START_PICAM = "true" ]; then
     # Create hooks dir and set permission
-    if [ ! -d $PICAM_DIR/hooks ]; then
-      echo "creating $PICAM_DIR/hooks directory"
-      mkdir -p $PICAM_DIR/hooks
+    if [ ! -d $RAM_DIR/hooks ]; then
+      echo "creating $RAM_DIR/hooks directory"
+      mkdir -p $RAM_DIR/hooks
     fi
-    if [ -d $PICAM_DIR/hooks ]; then
-      chown -R $UGID $PICAM_DIR/hooks
+    if [ -d $RAM_DIR/hooks ]; then
+      chown -R $UGID $RAM_DIR/hooks
     else
-      echo "Error: failed to create $PICAM_DIR/hooks"
+      echo "Error: failed to create $RAM_DIR/hooks"
       exit 1
     fi
 
     # Create state dir and set permission
-    if [ ! -d $PICAM_DIR/state ]; then
-      echo "creating $PICAM_DIR/state directory"
-      mkdir -p $PICAM_DIR/state
+    if [ ! -d $RAM_DIR/state ]; then
+      echo "creating $RAM_DIR/state directory"
+      mkdir -p $RAM_DIR/state
     fi
-    if [ -d $PICAM_DIR/state ]; then
-      chown -R $UGID $PICAM_DIR/state
+    if [ -d $RAM_DIR/state ]; then
+      chown -R $UGID $RAM_DIR/state
     else
-      echo "Error: failed to create $PICAM_DIR/state"
+      echo "Error: failed to create $RAM_DIR/state"
       exit 1
     fi
 
     # Create rec dir and set permission
-    if [ ! -d $PICAM_DIR/rec ]; then
-      echo "creating $PICAM_DIR/rec directory"
-      mkdir -p $PICAM_DIR/rec
+    if [ ! -d $RAM_DIR/rec ]; then
+      echo "creating $RAM_DIR/rec directory"
+      mkdir -p $RAM_DIR/rec
     fi
-    if [ -d $PICAM_DIR/rec ]; then
-      chown -R $UGID $PICAM_DIR/rec
+    if [ -d $RAM_DIR/rec ]; then
+      chown -R $UGID $RAM_DIR/rec
     else
-      echo "Error: failed to create $PICAM_DIR/rec"
+      echo "Error: failed to create $RAM_DIR/rec"
       exit 1
     fi
 
