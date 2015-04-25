@@ -35,11 +35,11 @@
 
   </div>
       <video id='live'
-         class='video-js vjs-default-skin '
+         class='video-js vjs-default-skin'
          controls
          preload>
-          <source src='/hls/index.m3u8'>
-        </video>
+        <source src='/hls/index.m3u8' type="application/x-mpegURL">
+      </video>
   
   <script>
     window.onload = function () {
