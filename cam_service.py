@@ -62,18 +62,18 @@ if refresh_state:
             print "successfully made %s" % (media_path)
             print "getting ready to run ffmpeg -ss %s -i %s -to %s -c copy -avoid_negative_ts 1 %s / %s" % (ffmpeg_start, filename_with_path, ffmpeg_duration, media_path, filename)
             #now cut the vid and save it in the media directory, run it as a background to keep this moving
-            cut_process = ffmpeg('-ss', ffmpeg_start,
-                                 '-i', filename_with_path,
-                                 '-to', ffmpeg_duration,
-                                 '-c', 'copy',
-                                 '-avoid_negative_ts', '1',
-                                 media_path+'/'+filename,
-                                 _bg=True)
+            ffmpeg('-ss', ffmpeg_start,
+                   '-i', filename_with_path,
+                   '-to', ffmpeg_duration,
+                   '-c', 'copy',
+                   '-avoid_negative_ts', '1',
+                   media_path+'/'+filename)
             #now we need to create or append to the directory's concat text file for ffmpeg later on
             if not os.path.isfile(media_path+'/'+'vidlist.txt'):
                 touch(media_path+'/'+'vidlist.txt')
             with open(media_path+'/'+'vidlist.txt', 'a') as vidlist:
                 vidlist.write(filename)
+                vidlist.write('\n')
         return 0
 
     #get the file that start 30 minutes ago and ended 15 minutes ago, its the second one
@@ -89,3 +89,5 @@ if refresh_state:
         schedule_matches = video_matches(Schedule, filename, filename_with_path, starttime_obj, endtime_obj)
         marker_matches = video_matches(Marker, filename, filename_with_path, starttime_obj, endtime_obj)
         control.remove_recording(filename_with_path)
+    else:
+        print "nothing found"
