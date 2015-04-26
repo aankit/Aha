@@ -17,13 +17,14 @@ def process_media(media_path):
         if len(vid_files) > 1 and os.path.isfile(media_path + '/vidlist.txt'):
             print media_path
             concatenate(final_filename, media_path)
-            thumbnail(final_filename, thumbnail)
+            make_thumbnail(final_filename, thumbnail)
         elif len(vid_files) == 1:
             print media_path
             transcode(vid_files[0], final_filename, media_path)
+            make_thumbnail(final_filename, thumbnail)
 
 
-def thumbnail(final_filename, thumbnail):
+def make_thumbnail(final_filename, thumbnail):
     #save thumbnail
     if os.path.isfile(thumbnail):
         os.remove(thumbnail)
