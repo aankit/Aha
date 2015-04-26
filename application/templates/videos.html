@@ -1,11 +1,29 @@
 {% extends "layout.html" %}
  
+{% block head %}
+    <style>
+        .row-fluid{
+            white-space: nowrap;
+        }
+        .row-fluid .col-lg-3{
+            display: inline-block;
+        }   
+    </style>
+    <script>
+    //here we need to load the data
+    //set the defaults
+    //then we build the links for the media based on defaults
+    //show thumbnails + date, investgation question with links to view page
+    </script>
+
+{% endblock %}
+
 {% block content %}
 
-<div class="row">
-    <div class=".col-xs-6 .col-sm-4">
-        <a href="{{ video_path }}"><img src="{{ thumbnail_path }}"></a>
+    <div class="row">
+        <div class=".col-xs-6 .col-sm-4">
+        </div>
     </div>
-</div>
+
 
 {% endblock %}
