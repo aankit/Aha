@@ -1,11 +1,57 @@
 {% extends "layout.html" %}
  
+{% block head %}
+    <style>
+        .row-fluid{
+            white-space: nowrap;
+        }
+        .row-fluid .col-lg-3{
+            display: inline-block;
+        }   
+    </style>
+    <script>
+    function show(vidtype){
+        if(vidtype === "invesitgations"){
+            document.getElementByID("invesitgations").style.display = 'block';
+            document.getElementByID("conjectures").style.display = 'none';
+            document.getElementByID("markers").style.display = 'none';
+
+        } else if (vidtype === "conjectures"){
+            document.getElementByID("conjectures").style.display = 'block';
+            document.getElementByID("invesitgations").style.display = 'none';
+            document.getElementByID("markers").style.display = 'none';
+        } else if (vidtype === "markers"){
+            document.getElementByID("markers").style.display = 'block';
+            document.getElementByID("invesitgations").style.display = 'none';
+            document.getElementByID("conjectures").style.display = 'none';
+        }
+
+
+    }
+
+    //here we need to load invesitgations, conjectures, and markers
+
+    //for each investigation
+    //set the defaults
+    //then we build the links for the media based on defaults
+    //show thumbnails + date, investgation question with links to view page
+    </script>
+
+{% endblock %}
+
 {% block content %}
 
-<div class="row">
-    <div class=".col-xs-6 .col-sm-4">
-        <a href="{{ video_path }}"><img src="{{ thumbnail_path }}"></a>
-    </div>
+<div class="btn-group" role="group" aria-label="...">
+  <button type="button" id="investigations"class="btn btn-default" onClick="show('investigations')">Investigations</button>
+  <button type="button" id="conjectures" class="btn btn-default" onClick="show('conjectures')">Conjectures</button>
+  <button type="button" id="markers" class="btn btn-default" onClick="show('markers')">Markers</button>
 </div>
+
+<div id="investigations"></div>
+
+<div id="conjectures"></div>
+
+<div id="markers"></div> 
+
 
 {% endblock %}
