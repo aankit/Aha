@@ -15,11 +15,11 @@ def process_media(media_path):
         final_filename = media_path + '/final.mp4'
         thumbnail = media_path + '/thumbnail.jpg'
         if len(vid_files) > 1 and os.path.isfile(media_path + '/vidlist.txt'):
-            print media_path
+            # print media_path
             concatenate(final_filename, media_path)
             make_thumbnail(final_filename, thumbnail)
         elif len(vid_files) == 1:
-            print media_path
+            # print media_path
             transcode(vid_files[0], final_filename, media_path)
             make_thumbnail(final_filename, thumbnail)
 
@@ -64,5 +64,4 @@ for date_string in [today_string, yest_string]:
                 media_path = "/".join([media_dir, str(result.investigation.id), str(result.id), date_string])
             except:
                 media_path = "/".join([media_dir, "markers", str(result.id)])
-            print media_path
             process_media(media_path)

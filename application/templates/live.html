@@ -1,9 +1,11 @@
 {% extends "layout.html" %}
- 
+{% set active_page = "live" %}
 {% block content %}
 
 {% block javascript %}
-
+  <!--P5 for the Pan-Tilt Control -->
+  <script src="/static/lib/p5/p5.js" type="text/javascript"></script>
+  <script src="/static/lib/p5/p5.dom.js" type="text/javascript"></script>
 
   <!-- Media Sources plugin -->
   <script src="/static/lib/videojs-contrib-media-sources-0.3.1/src/videojs-media-sources.js"></script>
@@ -37,7 +39,8 @@
       <video id='live'
          class='video-js vjs-default-skin'
          controls
-         preload>
+         preload
+         muted>
         <source src='/hls/index.m3u8' type="application/x-mpegURL">
       </video>
   </div>

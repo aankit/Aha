@@ -32,6 +32,7 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
+          {% set active_page = active_page|default('index') -%}
           {% if 'email' in session %}
           <li><a href="{{ url_for('home') }}">Home</a></li>
           <li><a href="{{ url_for('investigation') }}">Investigate</a></li>
