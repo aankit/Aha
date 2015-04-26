@@ -28,12 +28,12 @@ for date in [today_string, yest_string]:
             media_path = media_dir + '/' + investigation_id + '/' + str(result.id) + '/' + date
             print media_path
             if os.path.isdir(media_path):
-                vid_files = os.listdir(media_path)
+                vid_files = glob.glob(media_path+'/*.ts')
                 print vid_files
                 if len(vid_files) > 1 and os.path.isfile(media_path + '/vidlist.txt'):
                     print "concating with ffmpeg"
                     final_filename = media_path + '/final.mp4'
-                    thumbnail = media_path + '/thumbnail.mp4'
+                    thumbnail = media_path + '/thumbnail.jpg'
                     if os.path.isfile(final_filename):
                         os.remove(final_filename)
                     if os.path.isfile(thumbnail):
@@ -41,11 +41,13 @@ for date in [today_string, yest_string]:
                     ffmpeg('-f', 'concat', '-i', media_path + '/vidlist.txt',
                            '-c:v', 'copy', '-c:a', 'copy', '-bsf:a', 'aac_adtstoasc', final_filename)
                     #save thumbnail
-                    random_time = "%02d" % (random.randint(0, 30))
+                    random_time = str(random.randint(0,30)).zfill(2)
                     ffmpeg('-ss', '00:00:%s' % (random_time), "-i", final_filename,
-                           'frames:v', '1', thumbnail)
+                           '-frames:v', '1', thumbnail)
                     #get rid of old files
-                    if datetime.now() > datetime.combine(date.today(), result.end_time) + timedelta(minutes=15):
+                    right_now = datetime.time(datetime.now())
+                    fifteen_after = datetime.time(datetime.combine(date.today(), result.end_time) + timedelta(minutes=15))
+                    if right_now > fifteen_after or right_now < result.end_time:
                         os.remove(media_path+'/vidlist.txt')
                         for vid in glob.glob(media_path+'/*.ts'):
                             os.remove(vid)
