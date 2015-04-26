@@ -53,9 +53,9 @@ if refresh_state:
             #check to see if media path exists or make it
             media_path = media_dir
             try:
-                media_path += "/".join[str(match.investigation.id), str(match.id), vid_string_date]
+                media_path += "/".join([str(match.investigation.id), str(match.id), vid_string_date])
             except:
-                media_path += "/".join["markers", str(match.id)]
+                media_path += "/".join(["markers", str(match.id)])
             #since these are just snippets of files, I'm saving them to a place where they can be combined later
             # for path_index in range(1, len(media_path_dirs)):
             #     media_path = "/".join(media_path_dirs[0:path_index])

@@ -60,7 +60,7 @@ for date in [today_string, yest_string]:
         for result in model.query.all():
             media_path = media_dir
             try:
-                media_path += "/".join[str(result.investigation.id), str(result.id), date]
+                media_path += "/".join([str(result.investigation.id), str(result.id), date])
             except:
-                media_path += "/".join["markers", str(result.id)]
+                media_path += "/".join(["markers", str(result.id)])
             process_media(media_path)
