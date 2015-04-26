@@ -8,46 +8,58 @@ from datetime import datetime, timedelta
 from application.models import Schedule, Marker
 from application import media_dir
 
-#let's get a list of files in each media subdirectory, if there is more than one, combine them
-#using the vidlist.txt
+
+def process_media(media_path):
+    if os.path.isdir(media_path):
+        vid_files = glob.glob(media_path+'/*.ts')
+        final_filename = media_path + '/final.mp4'
+        thumbnail = media_path + '/thumbnail.jpg'
+        if len(vid_files) > 1 and os.path.isfile(media_path + '/vidlist.txt'):
+            concatenate(final_filename, media_path)
+            thumbnail(final_filename, thumbnail)
+        elif len(vid_files) == 1:
+            transcode(vid_files[0], final_filename, media_path)
+
+
+def thumbnail(final_filename, thumbnail):
+    #save thumbnail
+    if os.path.isfile(thumbnail):
+        os.remove(thumbnail)
+    random_time = str(random.randint(0, 30)).zfill(2)
+    ffmpeg('-ss', '00:00:%s' % (random_time), "-i", final_filename,
+           '-frames:v', '1', thumbnail)
+
+
+def concatenate(final_filename, media_path):
+    if os.path.isfile(final_filename):
+        os.remove(final_filename)
+    ffmpeg('-f', 'concat', '-i', media_path + '/vidlist.txt',
+           '-c:v', 'copy', '-c:a', 'copy', '-bsf:a', 'aac_adtstoasc', final_filename)
+    #get rid of old files
+    right_now = datetime.time(datetime.now())
+    fifteen_after = datetime.time(datetime.combine(date.today(), result.end_time) + timedelta(minutes=15))
+    if right_now > fifteen_after or right_now < result.end_time:
+        os.remove(media_path+'/vidlist.txt')
+        for vid in glob.glob(media_path+'/*.ts'):
+            os.remove(vid)
+
+
+def transcode(ts_filename, final_filename, media_path):
+    if os.path.isfile(final_filename):
+        os.remove(final_filename)
+    ffmpeg('-i', ts_filename, '-c:v', 'copy', '-c:a', 'copy', '-bsf:a', 'aac_adtstoasc', final_filename)
+    os.remove(ts_filename)
+
 
 today_string = datetime.strftime(datetime.now(), '%Y_%m_%d')
 yest_string = datetime.strftime(datetime.now() - timedelta(days=1), '%Y_%m_%d')
-print today_string
-print yest_string
 
 for date in [today_string, yest_string]:
     for model in [Schedule, Marker]:
         for result in model.query.all():
-            print result
             try:
                 investigation_id = str(result.investigation.id)
             except:
                 investigation_id = "markers"  # markers don't initially have an investigation id
-
             media_path = media_dir + '/' + investigation_id + '/' + str(result.id) + '/' + date
-            print media_path
-            if os.path.isdir(media_path):
-                vid_files = glob.glob(media_path+'/*.ts')
-                print vid_files
-                if len(vid_files) > 1 and os.path.isfile(media_path + '/vidlist.txt'):
-                    print "concating with ffmpeg"
-                    final_filename = media_path + '/final.mp4'
-                    thumbnail = media_path + '/thumbnail.jpg'
-                    if os.path.isfile(final_filename):
-                        os.remove(final_filename)
-                    if os.path.isfile(thumbnail):
-                        os.remove(thumbnail)
-                    ffmpeg('-f', 'concat', '-i', media_path + '/vidlist.txt',
-                           '-c:v', 'copy', '-c:a', 'copy', '-bsf:a', 'aac_adtstoasc', final_filename)
-                    #save thumbnail
-                    random_time = str(random.randint(0,30)).zfill(2)
-                    ffmpeg('-ss', '00:00:%s' % (random_time), "-i", final_filename,
-                           '-frames:v', '1', thumbnail)
-                    #get rid of old files
-                    right_now = datetime.time(datetime.now())
-                    fifteen_after = datetime.time(datetime.combine(date.today(), result.end_time) + timedelta(minutes=15))
-                    if right_now > fifteen_after or right_now < result.end_time:
-                        os.remove(media_path+'/vidlist.txt')
-                        for vid in glob.glob(media_path+'/*.ts'):
-                            os.remove(vid)
+            process_media(media_path)
