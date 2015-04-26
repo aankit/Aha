@@ -4,21 +4,22 @@ from sh import ffmpeg
 import os
 import glob
 import random
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from application.models import Schedule, Marker
 from application import media_dir
 
 
 def process_media(media_path):
     if os.path.isdir(media_path):
-        print media_path
         vid_files = glob.glob(media_path+'/*.ts')
         final_filename = media_path + '/final.mp4'
         thumbnail = media_path + '/thumbnail.jpg'
         if len(vid_files) > 1 and os.path.isfile(media_path + '/vidlist.txt'):
+            print media_path
             concatenate(final_filename, media_path)
             thumbnail(final_filename, thumbnail)
         elif len(vid_files) == 1:
+            print media_path
             transcode(vid_files[0], final_filename, media_path)
 
 
@@ -55,11 +56,11 @@ def transcode(ts_filename, final_filename, media_path):
 today_string = datetime.strftime(datetime.now(), '%Y_%m_%d')
 yest_string = datetime.strftime(datetime.now() - timedelta(days=1), '%Y_%m_%d')
 
-for date in [today_string, yest_string]:
+for date_string in [today_string, yest_string]:
     for model in [Schedule, Marker]:
         for result in model.query.all():
             try:
-                media_path = "/".join([media_dir, str(result.investigation.id), str(result.id), date])
+                media_path = "/".join([media_dir, str(result.investigation.id), str(result.id), date_string])
             except:
                 media_path = "/".join([media_dir, "markers", str(result.id)])
             print media_path
