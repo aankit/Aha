@@ -11,6 +11,7 @@ from application import media_dir
 
 def process_media(media_path):
     if os.path.isdir(media_path):
+        print media_path
         vid_files = glob.glob(media_path+'/*.ts')
         final_filename = media_path + '/final.mp4'
         thumbnail = media_path + '/thumbnail.jpg'
@@ -62,4 +63,5 @@ for date in [today_string, yest_string]:
             except:
                 investigation_id = "markers"  # markers don't initially have an investigation id
             media_path = media_dir + '/' + investigation_id + '/' + str(result.id) + '/' + date
+            print media_path
             process_media(media_path)
