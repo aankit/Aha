@@ -63,4 +63,5 @@ for date in [today_string, yest_string]:
                 media_path += "/".join([str(result.investigation.id), str(result.id), date])
             except:
                 media_path += "/".join(["markers", str(result.id)])
+            print media_path
             process_media(media_path)
