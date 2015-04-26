@@ -15,4 +15,26 @@
 <div id="markers"></div> 
 
 
+{% block javascript %}
+<script>
+    function show(vidtype){
+        if(vidtype === "invesitgations"){
+            document.getElementByID("invesitgations").style.display = 'block';
+            document.getElementByID("conjectures").style.display = 'none';
+            document.getElementByID("markers").style.display = 'none';
+
+        } else if (vidtype === "conjectures"){
+            document.getElementByID("conjectures").style.display = 'block';
+            document.getElementByID("invesitgations").style.display = 'none';
+            document.getElementByID("markers").style.display = 'none';
+        } else if (vidtype === "markers"){
+            document.getElementByID("markers").style.display = 'block';
+            document.getElementByID("invesitgations").style.display = 'none';
+            document.getElementByID("conjectures").style.display = 'none';
+        }
+    }
+</script>
+{% endblock %}
+
+
 {% endblock %}
