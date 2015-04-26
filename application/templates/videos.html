@@ -1,5 +1,33 @@
 {% extends "layout.html" %}
 
+{% block head %}
+{{ super() }}
+<script>
+    function show(vidtype){
+        if(vidtype === "invesitgations"){
+            document.getElementById("invesitgations").style.display = 'block';
+            document.getElementById("conjectures").style.display = 'none';
+            document.getElementById("markers").style.display = 'none';
+
+        } else if (vidtype === "conjectures"){
+            document.getElementById("conjectures").style.display = 'block';
+            document.getElementById("invesitgations").style.display = 'none';
+            document.getElementById("markers").style.display = 'none';
+        } else if (vidtype === "markers"){
+            document.getElementById("markers").style.display = 'block';
+            document.getElementById("invesitgations").style.display = 'none';
+            document.getElementById("conjectures").style.display = 'none';
+        }
+    }
+</script>
+<style>
+#investigations {display: block;}
+#conjectures {display: none;}
+#markers {display: none;}
+</style>
+{% endblock %}
+
+
 {% block content %}
 
 <div class="btn-group" role="group" aria-label="...">
@@ -15,26 +43,7 @@
 <div id="markers">Markers</div> 
 
 
-{% block javascript %}
-<script>
-    function show(vidtype){
-        if(vidtype === "invesitgations"){
-            document.getElementByID("invesitgations").style.display = 'block';
-            document.getElementByID("conjectures").style.display = 'none';
-            document.getElementByID("markers").style.display = 'none';
 
-        } else if (vidtype === "conjectures"){
-            document.getElementByID("conjectures").style.display = 'block';
-            document.getElementByID("invesitgations").style.display = 'none';
-            document.getElementByID("markers").style.display = 'none';
-        } else if (vidtype === "markers"){
-            document.getElementByID("markers").style.display = 'block';
-            document.getElementByID("invesitgations").style.display = 'none';
-            document.getElementByID("conjectures").style.display = 'none';
-        }
-    }
-</script>
-{% endblock %}
 
 
 {% endblock %}
