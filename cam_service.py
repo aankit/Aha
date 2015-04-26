@@ -51,16 +51,17 @@ if refresh_state:
             #get the video duration, cut_end - cut start to use in ffmpeg -ss function
             ffmpeg_duration = str(cut_end_time - cut_start_time)
             #check to see if media path exists or make it
+            media_path = media_dir
             try:
-                investigation_id = str(match.investigation.id)
+                media_path += "/".join[str(match.investigation.id), str(match.id), vid_string_date]
             except:
-                investigation_id = "markers"  # markers don't initially have an investigation id
+                media_path += "/".join["markers", str(match.id)]
             #since these are just snippets of files, I'm saving them to a place where they can be combined later
-            media_path_dirs = [media_dir, investigation_id, str(match.id), vid_string_date]
-            for path_index in range(1, len(media_path_dirs)):
-                media_path = "/".join(media_path_dirs[0:path_index])
-                if not os.path.isdir(media_path):
-                    mkdir(media_path)
+            # for path_index in range(1, len(media_path_dirs)):
+            #     media_path = "/".join(media_path_dirs[0:path_index])
+            #     if not os.path.isdir(media_path):
+            #         mkdir(media_path)
+            mkdir('-p', media_path)
             print "successfully made %s" % (media_path)
             print "getting ready to run ffmpeg -ss %s -i %s -to %s -c copy -avoid_negative_ts 1 %s / %s" % (ffmpeg_start, filename_with_path, ffmpeg_duration, media_path, filename)
             #now cut the vid and save it in the media directory, run it as a background to keep this moving
