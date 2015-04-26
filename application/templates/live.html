@@ -44,19 +44,15 @@
   <script>
     window.onload = function () {
 
-      // if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-      //   console.log("mobile"); 
-      // } else {
-      // }
       videojs.options.flash.swf = '/static/lib/video-js/video-js.swf';
-            // initialize the player
+              // initialize the player
       videojs("live").ready(function(){
-        var player = this;
+          var player = this;
 
-      player.play(); 
+        player.play(); 
 
+      };
     }
-  }
 
   </script>
 
