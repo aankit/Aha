@@ -46,6 +46,8 @@ if refresh_state:
             #get the clock timestamps of the start and end time that we need from this particular video
             cut_start_time = match_starttime_obj if start_time_diff.seconds < 15*60 else vid_starttime_obj
             cut_end_time = vid_endtime_obj if end_time_diff.seconds < 15*60 else match_endtime_obj
+            if cut_end_time < cut_start_time:
+                continue
             #get the initial video time to cut from to use in ffmpeg -ss function
             ffmpeg_start = str(cut_start_time - vid_starttime_obj)
             #get the video duration, cut_end - cut start to use in ffmpeg -ss function
