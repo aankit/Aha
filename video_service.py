@@ -3,6 +3,7 @@
 from sh import ffmpeg
 import os
 import glob
+import random
 from datetime import datetime, timedelta
 from application.models import Schedule, Marker
 from application import media_dir
@@ -34,6 +35,10 @@ for date in [today_string, yest_string]:
                     ffmpeg('-f', 'concat', '-i', media_path + '/vidlist.txt',
                            '-c:v', 'copy', '-c:a', 'copy', '-bsf:a', 'aac_adtstoasc',
                            media_path + '/' + 'final.mp4')
+                    #save thumbnail
+                    random_time = "%02d" % (random.randint(0, 30))
+                    ffmpeg('-ss', '00:00:%s' %(random_time), "-i", media_path+'/final.mp4',
+                           'frames:v', '1', media_path+'/thumbnail.jpg')
                     #get rid of old files
                     if datetime.now() > datetime.combine(date.today(), result.end_time) + timedelta(minutes=15):
                         os.remove(media_path+'/vidlist.txt')
