@@ -82,7 +82,8 @@ if refresh_state:
     #get the file that start 30 minutes ago and ended 15 minutes ago, its the second one
     file_index = 1
     filename, filename_with_path = control.get_recording(file_index, full_path=True)
-    if filename:
+    while filename is not None:
+        print filename
         #get the filename minus '.ts' since it is the date and time of the vid
         filename_date = filename[:-3]
         #get date, start and end time to see if we should save it.
@@ -92,5 +93,6 @@ if refresh_state:
         schedule_matches = video_matches(Schedule, filename, filename_with_path, starttime_obj, endtime_obj)
         marker_matches = video_matches(Marker, filename, filename_with_path, starttime_obj, endtime_obj)
         control.remove_recording(filename_with_path)
-    else:
-        print "nothing found"
+        file_index += 1
+        filename, filename_with_path = control.get_recording(file_index, full_path=True)
+
