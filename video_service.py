@@ -58,10 +58,9 @@ yest_string = datetime.strftime(datetime.now() - timedelta(days=1), '%Y_%m_%d')
 for date in [today_string, yest_string]:
     for model in [Schedule, Marker]:
         for result in model.query.all():
-            media_path = media_dir
             try:
-                media_path += "/".join([str(result.investigation.id), str(result.id), date])
+                media_path = "/".join([media_dir, str(result.investigation.id), str(result.id), date])
             except:
-                media_path += "/".join(["markers", str(result.id)])
+                media_path = "/".join([media_dir, "markers", str(result.id)])
             print media_path
             process_media(media_path)
