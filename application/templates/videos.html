@@ -18,6 +18,10 @@
             document.getElementById("conjectures").style.display = 'none';
         }
     }
+
+    function show_videos(){
+        console.log("videos loaded!");
+    };
 </script>
 <style>
 /*#investigations {display: block;}
@@ -43,9 +47,6 @@
 
 
 <script>
-    function show_videos(){
-        console.log("videos loaded!");
-    };
     
     $("button").on("click", function(e){
         var id_name = $(this).attr('id');
