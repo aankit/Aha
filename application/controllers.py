@@ -236,6 +236,7 @@ def videos():
 def video(vid):
     #print vid_type
     print vid
+    return vid
     # video = Video.query.filter_by(id=vid).first()
     # if vid_type == 'stub':
     #     return render_template("video_stub.html", video=video)
