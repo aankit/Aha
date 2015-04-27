@@ -4,7 +4,7 @@
 {{ super() }}
 <script>
     $(document).ready(function() {
-        var start_filter = "{{ investigation_id }}"
+        var start_filter ={{ investigation_id|safe }};
         console.log(start_filter);
         retrieve_data();
     });

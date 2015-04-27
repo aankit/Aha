@@ -5,6 +5,7 @@ from application import app, api_manager
 from application.forms import SignupForm, SigninForm, ScheduleForm, InvestigationForm
 from camera import control
 import sh
+import json
 
 for model_name in app.config['API_MODELS']:
     model_class = app.config['API_MODELS'][model_name]
@@ -223,8 +224,9 @@ def recording():
 @app.route('/videos')
 def videos():
     investigation_id = request.args.get("investigation_id")
+    print investigation_id;
     if investigation_id:
-        return render_template("videos.html", investigation_id=investigation_id)
+        return render_template("videos.html", investigation_id=json.dumps(investigation_id))
     else:
         return render_template("videos.html")
 
