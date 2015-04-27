@@ -224,7 +224,7 @@ def recording():
 def videos():
     investigation_id = request.args.get("investigation_id")
     if investigation_id:
-        return render_template("videos.html" investigation_id=investigation_id)
+        return render_template("videos.html", investigation_id=investigation_id)
     else:
         return render_template("videos.html")
 
