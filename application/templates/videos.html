@@ -35,7 +35,7 @@
   <button type="button" class="btn btn-default" id='markers'>Markers</button>
 </div>
 
-<div id="videos"></div>
+<div id="videos" onload="show_videos()"></div>
 
 <!-- <div id="conjectures">Conjectures</div>
 
@@ -43,10 +43,10 @@
 
 
 <script>
-    $("#videos").on("load", function(e){
+    function show_videos(){
         console.log("videos loaded!");
-    });
-    console.log("this is getting called");
+    };
+    
     $("button").on("click", function(e){
         var id_name = $(this).attr('id');
         console.log(id_name);
