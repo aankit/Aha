@@ -12,22 +12,23 @@
 {% block content %}
 
 <div class="btn-group" role="group" aria-label="...">
-  <button type="button" class="btn btn-default" id='investigation'>Investigations</button>
-  <button type="button" class="btn btn-default" id='conjecture'>Conjectures</button>
-  <button type="button" class="btn btn-default" id='marker'>Markers</button>
+  <button type="button" class="filter btn btn-default" id='investigation'>Investigations</button>
+  <button type="button" class="filter btn btn-default" id='conjecture'>Conjectures</button>
+  <button type="button" class="filter btn btn-default" id='marker'>Markers</button>
 </div>
 
 <div id="videos"></div>
 
 
 <script>
-    $("#investigation").on("click", function(e){
+    $(".filter").on("click", function(e){
         var id_name = $(this).attr('id');
         retrieve_data(id_name);
     });
     
-    function retrieve_data(endpoint){
+    function retrieve_data(endpoint, data){
         endpoint = typeof endpoint !== 'undefined' ? endpoint : 'investigation';
+        data = typeof data !== 'undefined' ? data : '';
         url = "/api/" + endpoint;
         var req = new XMLHttpRequest();
         req.open("GET", url);
@@ -42,7 +43,7 @@
                 // $('#videos').text(JSON.stringify(responseJson));
             }
         }
-        req.send();
+        req.send(data);
     }
 
     function get_filter(){
@@ -53,11 +54,13 @@
     function get_video_html(data){
         console.log(data.objects);
         for (obj in data.objects){
+           
            if ( data.objects[obj].hasOwnProperty('question') ) {
                 console.log(data.objects[obj].question);
                 for (recording in data.objects[obj].schedule){
                     console.log(data.objects[obj].schedule[recording]);
                 }
+
            }
            if ( data.objects[obj].hasOwnProperty('conjecture') ) {
                 console.log(data.objects[obj].conjecture);
