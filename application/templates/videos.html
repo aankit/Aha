@@ -34,9 +34,9 @@
 {% block content %}
 
 <div class="btn-group" role="group" aria-label="...">
-  <button type="button" class="btn btn-default" id='investigations'>Investigations</button>
-  <button type="button" class="btn btn-default" id='conjectures'>Conjectures</button>
-  <button type="button" class="btn btn-default" id='markers'>Markers</button>
+  <button type="button" class="btn btn-default" id='investigation'>Investigations</button>
+  <button type="button" class="btn btn-default" id='conjecture'>Conjectures</button>
+  <button type="button" class="btn btn-default" id='marker'>Markers</button>
 </div>
 
 <div id="videos" onload="show_videos()"></div>
@@ -48,8 +48,20 @@
 
 <script>
     $(document).ready(function() {
+        get_data('schedule');
+    });
+    $("button").on("click", function(e){
+        var id_name = $(this).attr('id');
+        console.log(id_name);
+        vid_div = document.getElementById("videos");
+        vid_div.innerHTML=id_name;
+
+
+    });
+    function get_data(endpoint){
+        url = "/api/" + endpoint;
         var req = new XMLHttpRequest();
-        req.open("GET", "/api/schedule");
+        req.open("GET", url);
         req.setRequestHeader("Content-type", "application/json");
         req.onreadystatechange = function() {
               // if you got a good request:
@@ -61,16 +73,8 @@
             }
         }
         req.send();
-    });
-    $("button").on("click", function(e){
-        var id_name = $(this).attr('id');
-        console.log(id_name);
-        vid_div = document.getElementById("videos");
-        vid_div.innerHTML=id_name;
 
-
-    });
-    
+    }
 </script>
 
 
