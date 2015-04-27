@@ -14,7 +14,17 @@ conjectures = db.Table('conjecture_investigation',
                                  db.ForeignKey('investigation.id'),
                                  nullable=False))
 
-schedule_videos = db.Table('schedule_video',
+markers = db.Table('investigation_markers',
+                   db.Column('investigation_id',
+                             db.Integer,
+                             db.ForeignKey('investigation.id'),
+                             nullable=False),
+                   db.Column('marker_id',
+                             db.Integer,
+                             db.ForeignKey('marker.id'),
+                             nullable=False))
+
+schedule_videos = db.Table('schedule_videos',
                            db.Column('schedule_id',
                                      db.Integer,
                                      db.ForeignKey('schedule.id'),
@@ -24,7 +34,7 @@ schedule_videos = db.Table('schedule_video',
                                      db.ForeignKey('video.id'),
                                      nullable=False))
 
-marker_videos = db.Table('marker_video',
+marker_videos = db.Table('marker_videos',
                          db.Column('marker_id',
                                    db.Integer,
                                    db.ForeignKey('marker.id'),
@@ -65,6 +75,12 @@ class Investigation(db.Model):
     filepath = db.Column(db.String(50))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = db.relationship('User', backref='investigations')
+    conjectures = db.relationship('Conjecture',
+                                  backref=db.backref('investigations', lazy='dynamic'),
+                                  secondary=conjectures)
+    markers = db.relationship('Marker',
+                              backref=db.backref('investigations', lazy='dynamic'),
+                              secondary=markers)
 
     def __init__(self, question, user_id):
         self.question = question.capitalize()
@@ -79,9 +95,6 @@ class Conjecture(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     conjecture = db.Column(db.String(140))
     commentary = db.Column(db.Text)
-    investigations = db.relationship('Investigation',
-                                     backref=db.backref('conjectures', lazy='dynamic'),
-                                     secondary=conjectures)
 
     def __repr__(self):
         return '<Conjecture %r>' % self.conjecture
@@ -90,10 +103,8 @@ class Conjecture(db.Model):
 class Video(db.Model):
     __tablename__ = 'video'
     id = db.Column(db.Integer, primary_key=True)
-    filename = db.Column(db.String(25))
+    media_path = db.Column(db.String(25))
     date = db.Column(db.Date)
-    start_time = db.Column(postgresql.TIME())  # this is an actual time!
-    end_time = db.Column(postgresql.TIME())
 
     def __repr__(self):
         return '<Video %s>' % (self.filename)

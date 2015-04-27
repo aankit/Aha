@@ -5,8 +5,8 @@ import os
 import glob
 import random
 from datetime import datetime, timedelta, date
-from application.models import Schedule, Marker
-from application import media_dir
+from application.models import Schedule, Marker, Video
+from application import media_dir, db
 
 
 def process_media(media_path):
@@ -38,10 +38,21 @@ def concatenate(final_filename, media_path):
         os.remove(final_filename)
     ffmpeg('-f', 'concat', '-i', media_path + '/vidlist.txt',
            '-c:v', 'copy', '-c:a', 'copy', '-bsf:a', 'aac_adtstoasc', final_filename)
-    #get rid of old files
+
+
+def complete_video_build(media_path, result):
     right_now = datetime.time(datetime.now())
     fifteen_after = datetime.time(datetime.combine(date.today(), result.end_time) + timedelta(minutes=15))
     if right_now > fifteen_after or right_now < result.end_time:
+        #oh hello, we are going to add that this video has bee made!
+        video_obj = Video(media_path=media_path, date=datetime.today())
+        db.session.add(video_obj)
+        result.videos.append(video_obj)
+        try:
+            db.session.commit()
+        except:
+            print "committing to DB didn't work"
+        #get rid of old files
         os.remove(media_path+'/vidlist.txt')
         for vid in glob.glob(media_path+'/*.ts'):
             os.remove(vid)
@@ -51,7 +62,6 @@ def transcode(ts_filename, final_filename, media_path):
     if os.path.isfile(final_filename):
         os.remove(final_filename)
     ffmpeg('-i', ts_filename, '-c:v', 'copy', '-c:a', 'copy', '-bsf:a', 'aac_adtstoasc', final_filename)
-    os.remove(ts_filename)
 
 
 today_string = datetime.strftime(datetime.now(), '%Y_%m_%d')
@@ -65,3 +75,4 @@ for date_string in [today_string, yest_string]:
             except:
                 media_path = "/".join([media_dir, "markers", str(result.id)])
             process_media(media_path)
+            complete_video_build(media_path, result)
