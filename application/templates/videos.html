@@ -48,11 +48,14 @@
     function get_video_html(data){
 
         for (obj in data.objects){
-           if ( data.objects[obj].hasOwnProperty('question')) {
+           if ( data.objects[obj].hasOwnProperty('question') ) {
                 console.log(data.objects[obj].question);
                 for (recording in data.objects[obj].schedule){
                     console.log(data.objects[obj].schedule[recording]);
                 }
+           }
+           if ( data.objects[obj].hasOwnProperty('conjecture') ) {
+                console.log(data.objects[obj].conjecture);
            }
         }
     }
