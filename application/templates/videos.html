@@ -46,7 +46,7 @@
     }
 
     function get_video_html(data){
-
+        console.log(data.objects);
         for (obj in data.objects){
            if ( data.objects[obj].hasOwnProperty('question') ) {
                 console.log(data.objects[obj].question);
@@ -56,6 +56,9 @@
            }
            if ( data.objects[obj].hasOwnProperty('conjecture') ) {
                 console.log(data.objects[obj].conjecture);
+           }
+           if ( data.objects[obj].hasOwnProperty('timestamp') ) {
+                console.log(data.objects[obj].timestamp);
            }
         }
     }
