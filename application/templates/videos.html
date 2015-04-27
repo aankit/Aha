@@ -2,50 +2,8 @@
 
 {% block head %}
 {{ super() }}
-<script>
-    function show(vidtype){
-        if(vidtype === "investigations"){
-            document.getElementById("investigations").style.display = 'block';
-            document.getElementById("conjectures").style.display = 'none';
-            document.getElementById("markers").style.display = 'none';
-        } else if (vidtype === "conjectures"){
-            document.getElementById("conjectures").style.display = 'block';
-            document.getElementById("investigations").style.display = 'none';
-            document.getElementById("markers").style.display = 'none';
-        } else if (vidtype === "markers"){
-            document.getElementById("markers").style.display = 'block';
-            document.getElementById("investigations").style.display = 'none';
-            document.getElementById("conjectures").style.display = 'none';
-        }
-    }
-    console.log("bleh")
-    function show_videos(){
-        console.log("videos loaded!");
-    };
-</script>
-<style>
-/*#investigations {display: block;}
-#conjectures {display: none;}
-#markers {display: none;}*/
-</style>
+
 {% endblock %}
-
-
-{% block content %}
-
-<div class="btn-group" role="group" aria-label="...">
-  <button type="button" class="btn btn-default" id='investigation'>Investigations</button>
-  <button type="button" class="btn btn-default" id='conjecture'>Conjectures</button>
-  <button type="button" class="btn btn-default" id='marker'>Markers</button>
-</div>
-
-<div id="videos" onload="show_videos()"></div>
-
-<!-- <div id="conjectures">Conjectures</div>
-
-<div id="markers">Markers</div>  -->
-
-
 <script>
     $(document).ready(function() {
         update_video('schedule');
@@ -74,6 +32,52 @@
         req.send();
 
     }
+</script>
+
+
+{% block content %}
+
+<div class="btn-group" role="group" aria-label="...">
+  <button type="button" class="btn btn-default" id='investigation'>Investigations</button>
+  <button type="button" class="btn btn-default" id='conjecture'>Conjectures</button>
+  <button type="button" class="btn btn-default" id='marker'>Markers</button>
+</div>
+
+<div id="videos" onload="show_videos()"></div>
+
+<!-- <div id="conjectures">Conjectures</div>
+
+<div id="markers">Markers</div>  -->
+
+
+<script>
+    // $(document).ready(function() {
+    //     update_video('schedule');
+    // });
+    // $("button").on("click", function(e){
+    //     var id_name = $(this).attr('id');
+    //     // console.log(id_name);
+    //     // vid_div = document.getElementById("videos");
+    //     // vid_div.innerHTML=id_name;
+    //     update_video(id_name);
+    // });
+    // function update_video(endpoint){
+    //     url = "/api/" + endpoint;
+    //     var req = new XMLHttpRequest();
+    //     req.open("GET", url);
+    //     req.setRequestHeader("Content-type", "application/json");
+    //     req.onreadystatechange = function() {
+    //           // if you got a good request:
+    //           if(req.readyState == 4 && req.status == 200) {
+    //             // the response is a JSON object. Parse it:
+    //             responseJson = JSON.parse(req.responseText);
+    //             $('#videos').text(JSON.stringify(responseJson));
+    //             console.log(responseJson);
+    //         }
+    //     }
+    //     req.send();
+
+    // }
 </script>
 
 

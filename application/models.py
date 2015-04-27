@@ -45,6 +45,17 @@ marker_videos = db.Table('marker_videos',
                                    nullable=False))
 
 
+conjecture_videos = db.Table('conjecture_videos',
+                             db.Column('conjecture_id',
+                                       db.Integer,
+                                       db.ForeignKey('conjecture.id'),
+                                       nullable=False),
+                             db.Column('video_id',
+                                       db.Integer,
+                                       db.ForeignKey('video.id'),
+                                       nullable=False))
+
+
 class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
@@ -95,6 +106,8 @@ class Conjecture(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     conjecture = db.Column(db.String(140))
     commentary = db.Column(db.Text)
+    videos = db.relationship('Video', backref=db.backref('conjectures', lazy='dynamic'),
+                             secondary=conjecture_videos)
 
     def __repr__(self):
         return '<Conjecture %r>' % self.conjecture
