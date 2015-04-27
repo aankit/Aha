@@ -38,7 +38,6 @@
                 // the response is a JSON object. Parse it:
                 responseJson = JSON.parse(req.responseText);
                 get_video_html(responseJson);
-                
 
                 // $('#videos').text(JSON.stringify(responseJson));
             }
@@ -46,8 +45,10 @@
         req.send();
     }
 
-    function get_video_html(){
-        console.log(responseJson);
+    function get_video_html(data){
+        for (obj in data){
+            console.log(data[obj]);
+        }
     }
 
 </script>
