@@ -60,8 +60,7 @@
                 console.log(responseJson);
             }
         }
-
-        
+        req.send();
     });
     $("button").on("click", function(e){
         var id_name = $(this).attr('id');
