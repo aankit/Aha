@@ -48,7 +48,18 @@
 
 <script>
     $(document).ready(function() {
+        $.get({
+            url: '/api/schedule'
+            type: 'GET',
+            success:function( data ) {
+                $( "#videos" ).text( JSON.stringify(data) );
+            error: function( data ) {
+                alert(data);
+            }
+        });
+
         $('#videos').text('investigations');
+
     });
     $("button").on("click", function(e){
         var id_name = $(this).attr('id');
