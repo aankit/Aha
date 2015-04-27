@@ -8,7 +8,6 @@
             document.getElementById("investigations").style.display = 'block';
             document.getElementById("conjectures").style.display = 'none';
             document.getElementById("markers").style.display = 'none';
-
         } else if (vidtype === "conjectures"){
             document.getElementById("conjectures").style.display = 'block';
             document.getElementById("investigations").style.display = 'none';
@@ -31,16 +30,16 @@
 {% block content %}
 
 <div class="btn-group" role="group" aria-label="...">
-  <button type="button" class="btn btn-default" onClick="show('investigations')">Investigations</button>
-  <button type="button" class="btn btn-default" onClick="show('conjectures')">Conjectures</button>
-  <button type="button" class="btn btn-default" onClick="show('markers')">Markers</button>
+  <button type="button" class="btn btn-default" id='investigations'>Investigations</button>
+  <button type="button" class="btn btn-default" id='conjectures'>Conjectures</button>
+  <button type="button" class="btn btn-default" id='markers'>Markers</button>
 </div>
 
-<div id="investigations">Investigations</div>
+<div id="videos"></div>
 
-<div id="conjectures">Conjectures</div>
+<!-- <div id="conjectures">Conjectures</div>
 
-<div id="markers">Markers</div> 
+<div id="markers">Markers</div>  -->
 
 
 <script>
