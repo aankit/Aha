@@ -49,10 +49,11 @@
 <script>
     $(document).ready(function() {
         $.get({
-            url: '/api/schedule'
+            url: '/api/schedule',
             type: 'GET',
             success:function( data ) {
                 $( "#videos" ).text( JSON.stringify(data) );
+            },
             error: function( data ) {
                 alert(data);
             }
