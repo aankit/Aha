@@ -232,9 +232,9 @@ def videos():
     return render_template("videos.html")
 
 
-@app.route('/video/<vid_type>/<int:vid>', method=['GET', 'POST'])
-def video(vid_type, vid):
-    print vid_type
+@app.route('/video/<int:vid>', method=['GET', 'POST'])
+def video(vid):
+    #print vid_type
     print vid
     # video = Video.query.filter_by(id=vid).first()
     # if vid_type == 'stub':
