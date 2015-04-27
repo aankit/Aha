@@ -92,6 +92,8 @@ class Investigation(db.Model):
     markers = db.relationship('Marker',
                               backref=db.backref('investigations', lazy='dynamic'),
                               secondary=markers)
+    schedule_id = db.Column(db.Integer, db.ForeignKey('schedule.id'))
+    schedule = db.relationship('Schedule', backref='investigation')
 
     def __init__(self, question, user_id):
         self.question = question.capitalize()
@@ -132,8 +134,6 @@ class Schedule(db.Model):
     day = db.Column(db.Integer)
     start_time = db.Column(postgresql.TIME())
     end_time = db.Column(postgresql.TIME())
-    investigation_id = db.Column(db.Integer, db.ForeignKey('investigation.id'))
-    investigation = db.relationship('Investigation', backref='schedule')
     videos = db.relationship('Video', backref=db.backref('schedules', lazy='dynamic'),
                              secondary=schedule_videos)
 

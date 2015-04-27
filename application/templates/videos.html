@@ -21,7 +21,7 @@
 
 
 <script>
-    $("button").on("click", function(e){
+    $("#investigation").on("click", function(e){
         var id_name = $(this).attr('id');
         retrieve_data(id_name);
     });
@@ -45,6 +45,11 @@
         req.send();
     }
 
+    function get_filter(){
+
+    }
+
+
     function get_video_html(data){
         console.log(data.objects);
         for (obj in data.objects){
@@ -56,6 +61,7 @@
            }
            if ( data.objects[obj].hasOwnProperty('conjecture') ) {
                 console.log(data.objects[obj].conjecture);
+                //
            }
            if ( data.objects[obj].hasOwnProperty('timestamp') ) {
                 console.log(data.objects[obj].timestamp);
