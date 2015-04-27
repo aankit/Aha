@@ -83,13 +83,6 @@ def signout():
     return redirect(url_for('home'))
 
 
-@app.route('/settings')
-def settings():
-    if 'email' not in session:
-        return redirect(url_for('signin'))
-    # here we can configure timezone, teacher observation rubric for scraping
-
-
 @app.route('/capture')
 def capture():
     return render_template("mobile_editor.html")
@@ -227,9 +220,18 @@ def recording():
             return render_template("error.html", error="Couldn't get data for this recording")
 
 
-@app.route('/videos', methods=['GET', 'POST'])
+@app.route('/videos')
 def videos():
     return render_template("videos.html")
+
+
+@app.route('/video/<format>/<int:vid>')
+def video(format, vid):
+    video = Video.query.all(id=vid).all()
+    if format == "stub":
+        return render_template("video_stub.html", video=video)
+    else:
+        return render_template("video.html", video=video)
 
 
 @app.route('/logo')
