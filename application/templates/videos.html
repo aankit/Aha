@@ -17,7 +17,7 @@
   <button type="button" class="filter btn btn-default" id='marker'>Markers</button>
 </div>
 
-<div id="videos"></div>
+<div class="container-fluid" id="videos"></div>
 
 
 <script>
@@ -59,19 +59,20 @@
            obj = data.objects[obj_index]
            
            if ( obj.hasOwnProperty('question') ) {
-                console.log(obj.id);
-                div_id = JSON.stringify(obj.id);
-                $("#videos").append("<div id='"+div_id+"'></div>");
-                $("#"+div_id).append("<h4>"+obj.question+"</h4>");
-                for (recording in obj.schedule){
-                    console.log(obj.schedule[recording]);
-                    for (var i=0; i<schedule[recording].videos.length; i++) {
-                        var stub_url = "/video/stub/"+recording.videos[i].id;
-                        $("#videos").load(stub_url, function(){
-                            alert("load was performed.");
-                        });
-                    }
-                }
+               console.log(obj.id);
+               div_id = "investigation"+JSON.stringify(obj.id);
+               create_thumbnail_div(div_id);
+               //$("#videos").append("<div id='"+div_id+"'></div>");
+                //$("#"+div_id).append("<h4>"+obj.question+"</h4>");
+                //for (recording in obj.schedule){
+                //    console.log(obj.schedule[recording]);
+                //    for (var i = 0; i < obj.schedule[recording].videos.length; i++) {
+                //        var stub_url = "/video/stub/"+recording.videos[i].id;
+                //        $("#videos").load(stub_url, function(){
+                //            alert("load was performed.");
+                //        });
+                //    }
+                //}
            }
 
            if ( obj.hasOwnProperty('conjecture') ) {
@@ -84,6 +85,11 @@
                 }
            }
         }
+    }
+
+    function create_thumbnail_div(div_id){
+        $("#videos").append('<div class="row" id="'+div_id+'"></div>');
+        $("#"+div_id).append("<h4>"+obj.question+"</h4>");
     }
 
 </script>
