@@ -223,12 +223,9 @@ def recording():
 
 @app.route('/videos')
 def videos():
-    investigation_id = request.args.get("investigation_id")
-    print investigation_id;
-    if investigation_id:
-        return render_template("videos.html", investigation_id=json.dumps(investigation_id))
-    else:
-        return render_template("videos.html")
+    obj_type = request.args.get("obj_type") if request.args.get("obj_type") else None
+    obj_id = request.args.get("obj_id") if request.args.get("obj_id") else None
+    return render_template("videos.html", obj_type=json.dumps(obj_type), obj_id=json.dumps(obj_id))
 
 
 @app.route('/video/<format>/<int:vid>')
