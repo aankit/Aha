@@ -234,11 +234,13 @@ def videos():
 
 @app.route('/video/<vid_type>/<int:vid>', method=['GET', 'POST'])
 def video(vid_type, vid):
-    video = Video.query.filter_by(id=vid).first()
-    if vid_type == 'stub':
-        return render_template("video_stub.html", video=video)
-    else:
-        return render_template("video.html", video=video)
+    print vid_type
+    print vid
+    # video = Video.query.filter_by(id=vid).first()
+    # if vid_type == 'stub':
+    #     return render_template("video_stub.html", video=video)
+    # else:
+    #     return render_template("video.html", video=video)
 
 
 @app.route('/logo')
