@@ -46,14 +46,16 @@
     }
 
     function get_video_html(data){
-        console.log(data.objects);
-        if ( data.objects.question !== undefined ){
-            console.log(data.objects.question)
-        }
+        // console.log(data.objects.question);
+        // if ( data.objects.question !== undefined ){
+        //     console.log(data.objects.question)
+        // }
 
-        //for (obj in data.objects){
-        //    data.objects[obj].question;
-        //}
+        for (obj in data.objects){
+           if ( data.objects[obj].question ) {
+                console.log("questions");
+           }
+        }
     }
 
 </script>
