@@ -38,7 +38,7 @@
             if(req.readyState == 4 && req.status == 200) {
                 // the response is a JSON object. Parse it:
                 responseJson = JSON.parse(req.responseText);
-                get_video_html(responseJson);
+                display(responseJson);
 
                 // $('#videos').text(JSON.stringify(responseJson));
             }
@@ -51,25 +51,27 @@
     }
 
 
-    function get_video_html(data){
-        console.log(data.objects);
+    function display(data){
+        var display_objects = [];
+        //build the display objects in the for loop
+        //we can sort on the data objects attributes - date, day, time?
         for (obj_index in data.objects){
            obj = data.objects[obj_index]
            
            if ( obj.hasOwnProperty('question') ) {
-                $('#videos').html("<h4>"+obj.question+"</h4>");
-                console.log(obj.question);
+                console.log(obj.id);
+                div_id = JSON.stringify(obj.id);
+                $("#videos").append("<div id='"+div_id+"'></div>");
+                $("#"+div_id).append("<h4>"+obj.question+"</h4>");
                 for (recording in obj.schedule){
                     console.log(obj.schedule[recording]);
+                    for (var i=0; i<schedule[recording].videos.length; i++) {
+                        var stub_url = "/video/stub/"+recording.videos[i].id;
+                        $("#videos").load(stub_url, function(){
+                            alert("load was performed.");
+                        });
+                    }
                 }
-                for (video in obj.videos) {
-                    var stub_url = "/video/stub/"+video;
-                    //url = '/';
-                    $('#videos').load(stub_url, function(){
-                     alert("load was performed.");
-                    });
-                }
-
            }
 
            if ( obj.hasOwnProperty('conjecture') ) {
@@ -77,7 +79,9 @@
                 //
            }
            if ( obj.hasOwnProperty('timestamp') ) {
-                console.log(obj.timestamp);
+                for (video in obj.videos){
+
+                }
            }
         }
     }
