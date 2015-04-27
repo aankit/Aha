@@ -6,30 +6,6 @@
     $(document).ready(function() {
         update_video('schedule');
     });
-    $("button").on("click", function(e){
-        var id_name = $(this).attr('id');
-        // console.log(id_name);
-        // vid_div = document.getElementById("videos");
-        // vid_div.innerHTML=id_name;
-        update_video(id_name);
-    });
-    function update_video(endpoint){
-        url = "/api/" + endpoint;
-        var req = new XMLHttpRequest();
-        req.open("GET", url);
-        req.setRequestHeader("Content-type", "application/json");
-        req.onreadystatechange = function() {
-              // if you got a good request:
-              if(req.readyState == 4 && req.status == 200) {
-                // the response is a JSON object. Parse it:
-                responseJson = JSON.parse(req.responseText);
-                $('#videos').text(JSON.stringify(responseJson));
-                console.log(responseJson);
-            }
-        }
-        req.send();
-
-    }
 </script>
 {% endblock %}
 
@@ -54,30 +30,30 @@
     // $(document).ready(function() {
     //     update_video('schedule');
     // });
-    // $("button").on("click", function(e){
-    //     var id_name = $(this).attr('id');
-    //     // console.log(id_name);
-    //     // vid_div = document.getElementById("videos");
-    //     // vid_div.innerHTML=id_name;
-    //     update_video(id_name);
-    // });
-    // function update_video(endpoint){
-    //     url = "/api/" + endpoint;
-    //     var req = new XMLHttpRequest();
-    //     req.open("GET", url);
-    //     req.setRequestHeader("Content-type", "application/json");
-    //     req.onreadystatechange = function() {
-    //           // if you got a good request:
-    //           if(req.readyState == 4 && req.status == 200) {
-    //             // the response is a JSON object. Parse it:
-    //             responseJson = JSON.parse(req.responseText);
-    //             $('#videos').text(JSON.stringify(responseJson));
-    //             console.log(responseJson);
-    //         }
-    //     }
-    //     req.send();
+    $("button").on("click", function(e){
+        var id_name = $(this).attr('id');
+        // console.log(id_name);
+        // vid_div = document.getElementById("videos");
+        // vid_div.innerHTML=id_name;
+        update_video(id_name);
+    });
+    function update_video(endpoint){
+        url = "/api/" + endpoint;
+        var req = new XMLHttpRequest();
+        req.open("GET", url);
+        req.setRequestHeader("Content-type", "application/json");
+        req.onreadystatechange = function() {
+              // if you got a good request:
+              if(req.readyState == 4 && req.status == 200) {
+                // the response is a JSON object. Parse it:
+                responseJson = JSON.parse(req.responseText);
+                $('#videos').text(JSON.stringify(responseJson));
+                console.log(responseJson);
+            }
+        }
+        req.send();
 
-    // }
+    }
 </script>
 
 
