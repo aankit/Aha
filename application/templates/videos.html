@@ -53,24 +53,31 @@
 
     function get_video_html(data){
         console.log(data.objects);
-        for (obj in data.objects){
+        for (obj_index in data.objects){
+           obj = data.objects[obj_index]
            
-           if ( data.objects[obj].hasOwnProperty('question') ) {
-                console.log(data.objects[obj].question);
-                for (recording in data.objects[obj].schedule){
-                    console.log(data.objects[obj].schedule[recording]);
+           if ( obj.hasOwnProperty('question') ) {
+                $('#videos').html("<h4>"+obj.question+"</h4>");
+                console.log(obj.question);
+                for (recording in obj.schedule){
+                    console.log(obj.schedule[recording]);
                 }
-                for (video in data.objects[obj].videos) 
-                    // url = "/video/stub/"+video;
-                    url = '/';
-                    $('#videos').load(url);
+                for (video in obj.videos) {
+                    var stub_url = "/video/stub/"+video;
+                    //url = '/';
+                    $('#videos').load(stub_url, function(){
+                     alert("load was performed.");
+                    });
+                }
+
            }
-           if ( data.objects[obj].hasOwnProperty('conjecture') ) {
-                console.log(data.objects[obj].conjecture);
+
+           if ( obj.hasOwnProperty('conjecture') ) {
+                console.log(obj.conjecture);
                 //
            }
-           if ( data.objects[obj].hasOwnProperty('timestamp') ) {
-                console.log(data.objects[obj].timestamp);
+           if ( obj.hasOwnProperty('timestamp') ) {
+                console.log(obj.timestamp);
            }
         }
     }
