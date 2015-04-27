@@ -19,7 +19,7 @@
             <tr>
                 <td>{{ investigation.question }}</td>
                 <td>
-                    <a href="{{ url_for('videos', investigation_id=investigation.id) }}">Videos</a>
+                    <a href="{{ url_for('videos', obj_id=investigation.id, obj_type='investigation') }}">Videos</a>
                 </td>
                 <td>
                     <a href="{{ url_for('recordings', investigation_id=investigation.id) }}">Schedule</a>
