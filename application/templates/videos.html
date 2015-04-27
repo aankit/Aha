@@ -3,7 +3,7 @@
 {% block head %}
 {{ super() }}
 <script>
-    var start_filter = {{ investigation_id|safe }};
+    // var start_filter = {{ investigation_id|safe }};
     $(document).ready(function() {   
         console.log(start_filter);
         retrieve_data();
@@ -21,6 +21,7 @@
 
 
 <script>
+    var start_filter = {{ investigation_id|safe }};
     $(".filter").on("click", function(e){
         var id_name = $(this).attr('id');
         retrieve_data(id_name);
