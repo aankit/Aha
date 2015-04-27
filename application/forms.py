@@ -76,7 +76,7 @@ class InvestigationForm(Form):
 
         investigation = Investigation.query.filter_by(user_id=user_id, question=self.question.data.capitalize()).first()
         if investigation:
-            self.name.errors.append("You already asked that question, find it or ask another.")
+            self.question.errors.append("You already asked that question, find it or ask another.")
             return False
         else:
             return True
