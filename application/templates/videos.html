@@ -3,8 +3,8 @@
 {% block head %}
 {{ super() }}
 <script>
-    $(document).ready(function() {
-        var start_filter ={{ investigation_id|safe }};
+    var start_filter = {{ investigation_id|safe }};
+    $(document).ready(function() {   
         console.log(start_filter);
         retrieve_data();
     });
