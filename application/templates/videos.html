@@ -42,7 +42,15 @@
 
 <div id="markers">Markers</div> 
 
+{% block javascript %}
+<script>
+    $("div").on("load", function(e){
+        var id_name = $(this).attr('id');
+    });
 
+
+
+{% endblock %}
 
 
 
