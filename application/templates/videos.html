@@ -43,6 +43,9 @@
 
 
 <script>
+    $("#videos").on("load", function(e){
+        console.log("videos loaded!");
+    });
     console.log("this is getting called");
     $("button").on("click", function(e){
         var id_name = $(this).attr('id');
@@ -52,6 +55,7 @@
 
 
     });
+    
 </script>
 
 
