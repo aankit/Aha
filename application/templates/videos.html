@@ -2,13 +2,13 @@
 
 {% block head %}
 {{ super() }}
-<meta id="start-filter" data-default="{{investigation_id}}">
+<meta id="start-filter" data-default="{{ investigation_id }}">
 <script>
-    $(document).ready(function() {
-        var start_filter = $('#start-filter').data()
-        console.log(start_filter); 
-        retrieve_data();
-    });
+    // $(document).ready(function() {
+    //     var start_filter = $('#start-filter').data()
+    //     console.log(start_filter);
+    //     retrieve_data();
+    // });
 </script>
 {% endblock %}
 
@@ -20,10 +20,16 @@
   <button type="button" class="filter btn btn-default" id='marker'>Markers</button>
 </div>
 
-<div class="container-fluid" id="videos"></div>
+<div class="container-fluid" id="videos" data-default="{{ investigation_id }}"></div>
 
 
 <script>
+    $(document).ready(function() {
+        var start_filter = $('#start-filter').data()
+        console.log(start_filter);
+        retrieve_data();
+    });
+
     $(".filter").on("click", function(e){
         var id_name = $(this).attr('id');
         retrieve_data(id_name);
