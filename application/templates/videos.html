@@ -60,7 +60,10 @@
                 for (recording in data.objects[obj].schedule){
                     console.log(data.objects[obj].schedule[recording]);
                 }
-
+                for (video in data.objects[obj].videos) 
+                    // url = "/video/stub/"+video;
+                    url = '/';
+                    $('#videos').load(url);
            }
            if ( data.objects[obj].hasOwnProperty('conjecture') ) {
                 console.log(data.objects[obj].conjecture);

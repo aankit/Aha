@@ -146,6 +146,7 @@ def investigation():
             if commit_to_db("Deleted %s" % (investigation.question)):
                 user = User.query.filter_by(email=session['email']).first()
                 sh.rm('-rf', ('/').join([str(user.media_url), str(investigation_id)]))
+        #return list of investigations
         investigations = Investigation.query.filter_by(user_id=session['id']).all()
         return render_template('investigation.html', investigations=investigations, form=form)
 
@@ -229,6 +230,15 @@ def recording():
 @app.route('/videos', methods=['GET', 'POST'])
 def videos():
     return render_template("videos.html")
+
+
+@app.route('/video/<vid_type>/<int:vid>', method=['GET', 'POST'])
+def video(vid_type, vid):
+    video = Video.query.filter_by(id=vid).first()
+    if vid_type == 'stub':
+        return render_template("video_stub.html", video=video)
+    else:
+        return render_template("video.html", video=video)
 
 
 @app.route('/logo')

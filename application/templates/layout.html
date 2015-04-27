@@ -38,7 +38,7 @@
           {% if 'email' in session %}
           <li><a href="{{ url_for('home') }}">Home</a></li>
           <li><a href="{{ url_for('investigation') }}">Investigate</a></li>
-          <li><a href="{{ url_for('capture') }}">Real-Time Capture</a></li>
+          <li><a href="{{ url_for('capture') }}">Capture</a></li>
           <li><a href="{{ url_for('camera', state='live') }}">Live View</a></li>
           <li><a href="{{ url_for('signout') }}">Sign Out</a></li>
             {% if g.cam_state=='off' %}
