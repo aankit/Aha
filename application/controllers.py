@@ -36,7 +36,7 @@ def home():
     if user is None:
         return redirect(url_for('signup'))
     else:
-        return render_template('home.html', user=user)
+        return redirect(url_for('investigation'))
 
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -222,12 +222,16 @@ def recording():
 
 @app.route('/videos')
 def videos():
-    return render_template("videos.html")
+    investigation_id = request.args.get("investigation_id")
+    if investigation_id:
+        return render_template("videos.html" investigation_id=investigation_id)
+    else:
+        return render_template("videos.html")
 
 
 @app.route('/video/<format>/<int:vid>')
 def video(format, vid):
-    video = Video.query.all(id=vid).all()
+    video = Video.query.filter_by(id=vid).all()
     if format == "stub":
         return render_template("video_stub.html", video=video)
     else:

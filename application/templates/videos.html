@@ -1,9 +1,11 @@
 {% extends "layout.html" %}
-
+<meta id="start-filter" data-default="{{investigation_id}}">
 {% block head %}
 {{ super() }}
 <script>
     $(document).ready(function() {
+        var start_filter = $('#start-filter').data()
+        console.log(start_filter); 
         retrieve_data();
     });
 </script>
@@ -59,11 +61,10 @@
            obj = data.objects[obj_index]
            
            if ( obj.hasOwnProperty('question') ) {
-               console.log(obj.id);
-               div_id = "investigation"+JSON.stringify(obj.id);
-               create_thumbnail_div(div_id);
-               //$("#videos").append("<div id='"+div_id+"'></div>");
-                //$("#"+div_id).append("<h4>"+obj.question+"</h4>");
+                console.log(obj.id);
+                div_id = "investigation"+JSON.stringify(obj.id);
+                create_thumbnail_div(div_id);
+
                 //for (recording in obj.schedule){
                 //    console.log(obj.schedule[recording]);
                 //    for (var i = 0; i < obj.schedule[recording].videos.length; i++) {
