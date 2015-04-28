@@ -54,8 +54,8 @@
       retrieve_data("schedule", filter, function(){
         if (req.readyState==4 && req.status==200){
           var schedule = JSON.parse(req.responseText);
-          for( var i in schedules.objects ){
-            var schedule_obj = schedules.objects[i];
+          for( var i in schedule.objects ){
+            var schedule_obj = schedule.objects[i];
             for (var j=0; j<schedule_obj.videos.length; j++){
               var video = schedule_obj.videos[i]
               var thumbnail_src = video.media_path+"/thumbnail";
