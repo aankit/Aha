@@ -22,6 +22,7 @@
 <div class="container-fluid" id="videos"></div>
 
 <script>
+    var req;
     function display_investigation(filter){
       retrieve_data("investigation", filter, function(){
         if (req.readyState==4 && req.status==200){
@@ -75,7 +76,7 @@
         filter = typeof filter !== 'undefined' ? filter : '';
         //not sending filter yet
         url = "/api/" + endpoint;
-        var req = new XMLHttpRequest();
+        req = new XMLHttpRequest();
         req.open("GET", url);
         req.setRequestHeader("Content-type", "application/json");
         req.onreadystatechange = success_func;
