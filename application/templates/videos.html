@@ -24,6 +24,7 @@
 
 <script>
     $(".filter").on("click", function(e){
+        $( "#videos").empty();
         var id_name = $(this).attr('id');
         retrieve_data(id_name);
     });
@@ -64,16 +65,15 @@
                 console.log(obj.id);
                 div_id = "investigation"+JSON.stringify(obj.id);
                 create_thumbnail_div(div_id);
-
-                //for (recording in obj.schedule){
-                //    console.log(obj.schedule[recording]);
-                //    for (var i = 0; i < obj.schedule[recording].videos.length; i++) {
-                //        var stub_url = "/video/stub/"+recording.videos[i].id;
-                //        $("#videos").load(stub_url, function(){
-                //            alert("load was performed.");
-                //        });
-                //    }
-                //}
+                for (recording in obj.schedule){
+                   console.log(obj.schedule[recording]);
+                   // for (var i = 0; i < obj.schedule[recording].videos.length; i++) {
+                   //     var stub_url = "/video/stub/"+recording.videos[i].id;
+                   //     $("#videos").load(stub_url, function(){
+                   //         alert("load was performed.");
+                   //     });
+                   // }
+                }
            }
 
            if ( obj.hasOwnProperty('conjecture') ) {
