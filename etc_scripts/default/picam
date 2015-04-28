@@ -27,10 +27,10 @@ VIDEO_HEIGHT=720
 VIDEO_ROTATION=0
 
 ## flip image horizontally
-VIDEO_HORIZONTAL_FLIP=false
+VIDEO_HORIZONTAL_FLIP=true
 
 ## flip image vertically
-VIDEO_VERTICAL_FLIP=false
+VIDEO_VERTICAL_FLIP=true
 
 ## video stream bitrate in bits/s
 VIDEO_BITRATE=2000000
@@ -51,7 +51,7 @@ ALSADEV="hw:0,0"
 ENABLE_AUDIO=true
 
 ## enable HTTP Live Streaming (HLS)
-ENABLE_HLS=false
+ENABLE_HLS=true
 
 ## directory to output HLS files
 HLS_DIR="/run/shm/hls"
