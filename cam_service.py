@@ -35,7 +35,7 @@ if refresh_state:
                 ((db_model.start_time >= vid_start_time) & (db_model.end_time <= vid_end_time)) |
                 ((db_model.start_time < vid_start_time) & (db_model.end_time > vid_end_time))
             ).all()
-
+        print matches
         for match in matches:
             vid_string_date = datetime.strftime(vid_date, '%Y_%m_%d')
             #does the vid start or end come after match start or end respectively?
