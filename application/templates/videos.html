@@ -57,7 +57,7 @@
           for( var i in schedule.objects ){
             var schedule_obj = schedule.objects[i];
             for (var j=0; j<schedule_obj.videos.length; j++){
-              var video = schedule_obj.videos[i];
+              var video = schedule_obj.videos[j];
               var thumbnail_src = video.media_path+"/thumbnail.jpg";
               var target = video.media_path+"/final.mp4";
               // var target = "/video/?vid="+video.id+"&investigation_id="+filter[0]["val"]
@@ -87,7 +87,7 @@
             pretty_time = moment(marker.timestamp).format("MM/DD hh:MM a")
             create_thumbnail_div(div_id, pretty_time);
             for(var j=0;j<marker.videos.length;j++){
-              var video = marker.videos[i];
+              var video = marker.videos[j];
               var thumbnail_src = video.media_path+"/thumbnail.jpg";
               var target = video.media_path+"/final.mp4";
               display_thumbnail(div_id, thumbnail_src, target);
