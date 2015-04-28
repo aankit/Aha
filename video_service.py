@@ -54,7 +54,8 @@ def transcode(ts_filename, final_filename, media_path):
 def complete_video_build(media_path, result):
     right_now = datetime.time(datetime.now())
     fifteen_after = datetime.time(datetime.combine(date.today(), result.end_time) + timedelta(minutes=15))
-    if right_now > fifteen_after or right_now < result.end_time:
+    fifteen_before = datetime.time(datetime.combine(date.today(), result.start_time) + timedelta(minutes=15))
+    if right_now > fifteen_after or right_now < fifteen_before:
         #oh hello, we are going to add that this video has bee made!
         private_path = '/var/www/Aha'
         public_media_path = media_path[len(private_path):]
