@@ -119,7 +119,8 @@
     }
 
     function create_thumbnail_div(div_id, heading){
-        $("#videos").append('<div class="row" id="'+div_id+'"></div>');
+        $("#videos").append("<div class=row></div>")
+        $("#videos").append('<div class="col-sm-6 col-md-4" id="'+div_id+'"></div>');
         $("#"+div_id).append("<h4>"+heading+"</h4>");
     }
 
