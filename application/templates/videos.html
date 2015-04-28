@@ -6,7 +6,8 @@
     $(document).ready(function() {
         var start_type = {{ obj_type|safe }};
         var start_filter = {{ obj_id|safe }};
-        retrieve_data(start_type, start_filter);
+        //retrieve_data(start_type, start_filter);
+        retrieve_data();
     });
 </script>
 {% endblock %}
@@ -19,6 +20,7 @@
   <button type="button" class="filter btn btn-default" id='marker'>Markers</button>
 </div>
 
+<div class="container-fluid" id="videos"></div>
 
 <script>
     $(".filter").on("click", function(e){
