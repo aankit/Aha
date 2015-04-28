@@ -33,7 +33,7 @@ function display_schedule(parent_div, filter){
       for( var i in schedule.objects ){
         var schedule_obj = schedule.objects[i];
         for (var j=0; j<schedule_obj.videos.length; j++){
-          var video = schedule_obj.videos[i]
+          var video = schedule_obj.videos[i];
           var thumbnail_src = video.media_path+"/thumbnail.jpg";
           var target = video.media_oath+"/final.jpg";
           // var target = "/video/?vid="+video.id+"&investigation_id="+filter[0]["val"]

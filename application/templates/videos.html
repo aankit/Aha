@@ -2,7 +2,6 @@
 
 {% block head %}
 {{ super() }}
-<!-- <script src="/static/js/videos.js"></script> -->
 <script>
     $(document).ready(function() {
         var start_type = {{ obj_type|safe }};
@@ -21,7 +20,6 @@
 </div>
 <hr>
 <div class="container-fluid" id="videos"></div>
-
 
 <script>
     var req;
@@ -59,8 +57,11 @@
           for( var i in schedule.objects ){
             var schedule_obj = schedule.objects[i];
             for (var j=0; j<schedule_obj.videos.length; j++){
-              var video = schedule_obj.videos[i]
-              display_thumbnail(parent_div, video);
+              var video = schedule_obj.videos[i];
+              var thumbnail_src = video.media_path+"/thumbnail.jpg";
+              var target = video.media_oath+"/final.jpg";
+              // var target = "/video/?vid="+video.id+"&investigation_id="+filter[0]["val"]
+              display_thumbnail(parent_div, thumbnail_src, target);
             }
           }
         }
@@ -87,7 +88,9 @@
             create_thumbnail_div(div_id, pretty_time);
             for(var j=0;j<marker.videos.length;j++){
               var video = marker.videos[i];
-              display_thumbnail(div_id, video);
+              var thumbnail_src = video.media_path+"/thumbnail.jpg";
+              var target = video.media_path+"/final.jpg";
+              display_thumbnail(div_id, thumbnail_src, target);
             }
           }
         }
@@ -113,9 +116,7 @@
         $("#"+div_id).append("<h4>"+heading+"</h4>");
     }
 
-    function display_thumbnail(parent_div, video){
-        var thumbnail_src = video.media_path+"/thumbnail.jpg";
-        var target = "/video/?vid="+video.id+"&investigation_id="+filter[0]["val"]
+    function display_thumbnail(parent_div, thumbnail_src, target){
         $("#"+parent_div).append("<div class='thumbnail'><a href=" + 
           target + "><img src='" + thumbnail_src + "' alt='No Video Found.''></a>")
     }
