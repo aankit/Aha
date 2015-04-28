@@ -23,7 +23,7 @@
 
 <script>
     var req;
-    function display_investigation(filter){
+    function display_investigations(filter){
       retrieve_data("investigation", filter, function(){
         if (req.readyState==4 && req.status==200){
           data = JSON.parse(req.responseText);
@@ -36,7 +36,7 @@
       });
     }
 
-    function display_conjecture(filter){
+    function display_conjectures(filter){
       retrieve_data("conjecture", filter, function(){
         if (req.readyState==4 && req.status==200){
           data = JSON.parse(req.responseText);
@@ -44,36 +44,31 @@
       });
     }
 
-    function display_marker(filter){
+    function display_markers(filter){
+      //filters are powerful for ordering, filtering, grouping content
       retrieve_data("marker", filter, function(){
         if (req.readyState==4 && req.status==200){
           data = JSON.parse(req.responseText);
           for(i in data.objects){
             obj = data.objects[i];
             div_id = JSON.stringify(obj.id);
-            create_thumbnail_div(div_id, obj.timestamp);
+            pretty_time = moment(obj.timestamp).format("MM/DD hh:MM a")
+            create_thumbnail_div(div_id, pretty_time);
           }
         }
       });
     }
 
     var filter_types = {
-      "investigation": display_investigation,
-      "conjecture": display_conjecture,
-      "marker": display_marker
+      "investigation": display_investigations,
+      "conjecture": display_conjectures,
+      "marker": display_markers
     };
 
     $(".filter").on("click", function(e){
         $( "#videos").empty();
         var id_name = $(this).attr('id');
-        if(id_name === "investigation"){
-          display_investigation();
-        }
-        else if (id_name === "conjecture"){
-          display_conjecture();
-        } else if (id_name === "marker"){
-          display_marker();
-        }
+        filter_types[id_name]()
     });
     
     function retrieve_data(endpoint, filter, success_func){
