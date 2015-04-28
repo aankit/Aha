@@ -67,7 +67,12 @@
         $( "#videos").empty();
         var id_name = $(this).attr('id');
         if(id_name === "investigation"){
-          display_investigation
+          display_investigation();
+        }
+        else if (id_name === "conjecture"){
+          display_conjecture();
+        } else if (id_name === "marker"){
+          display_marker();
         }
     });
     
