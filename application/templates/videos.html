@@ -23,35 +23,62 @@
 <div class="container-fluid" id="videos"></div>
 
 <script>
+    function display_investigation(filter){
+      retrieve_data("investigation", filter, function(){
+        if (req.readyState==4 && req.status==200){
+          data = JSON.parse(req.responseText);
+          for(i in data.objects){
+            obj = data.objects[i];
+            div_id = JSON.stringify(obj.id);
+            create_thumbnail_div(div_id, obj.question);
+          }
+        }
+      });
+    }
+
+    function display_conjecture(){
+      retrieve_data("conjecture", filter, function(){
+        if (req.readyState==4 && req.status==200){
+          data = JSON.parse(req.responseText);
+        }
+      });
+    }
+
+    function display_marker(){
+      retrieve_data("marker", filter, function(){
+        if (req.readyState==4 && req.status==200){
+          data = JSON.parse(req.responseText);
+          for(i in data.objects){
+            obj = data.objects[i];
+            div_id = JSON.stringify(obj.id);
+            create_thumbnail_div(div_id, obj.timestamp);
+        }
+      });
+    }
+
+    var filter_types = {
+      "investigation": display_investigation,
+      "conjecture": display_conjecture,
+      "marker": display_marker
+    };
+
     $(".filter").on("click", function(e){
         $( "#videos").empty();
         var id_name = $(this).attr('id');
-        retrieve_data(id_name);
+        if(id_name === "investigation"){
+
+        }
     });
     
-    function retrieve_data(endpoint, data){
+    function retrieve_data(endpoint, filter, success_func){
         endpoint = typeof endpoint !== 'undefined' ? endpoint : 'investigation';
-        data = typeof data !== 'undefined' ? data : '';
+        filter = typeof filter !== 'undefined' ? data : '';
         url = "/api/" + endpoint;
         var req = new XMLHttpRequest();
         req.open("GET", url);
         req.setRequestHeader("Content-type", "application/json");
-        req.onreadystatechange = function() {
-            // if you got a good request:
-            if(req.readyState == 4 && req.status == 200) {
-                // the response is a JSON object. Parse it:
-                responseJson = JSON.parse(req.responseText);
-                console.log(responseJson);
-                display(responseJson);
-
-                // $('#videos').text(JSON.stringify(responseJson));
-            }
-        }
-        req.send(data);
-    }
-
-    function get_filter(){
-
+        req.onreadystatechange = success_func;
+        req.send(filter);
     }
 
 
@@ -89,9 +116,9 @@
         }
     }
 
-    function create_thumbnail_div(div_id){
+    function create_thumbnail_div(div_id, heading){
         $("#videos").append('<div class="row" id="'+div_id+'"></div>');
-        $("#"+div_id).append("<h4>"+obj.question+"</h4>");
+        $("#"+div_id).append("<h4>"+heading+"</h4>");
     }
 
 </script>
