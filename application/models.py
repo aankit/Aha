@@ -121,7 +121,7 @@ class Video(db.Model):
     date = db.Column(db.Date)
 
     def __repr__(self):
-        return '<Video %s>' % (self.filename)
+        return '<Video %s>' % (self.media_path)
 
 
 class Schedule(db.Model):

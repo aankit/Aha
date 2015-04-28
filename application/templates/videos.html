@@ -41,6 +41,7 @@
             if(req.readyState == 4 && req.status == 200) {
                 // the response is a JSON object. Parse it:
                 responseJson = JSON.parse(req.responseText);
+                console.log(responseJson);
                 display(responseJson);
 
                 // $('#videos').text(JSON.stringify(responseJson));
