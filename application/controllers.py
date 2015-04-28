@@ -225,7 +225,6 @@ def recording():
 def videos():
     obj_type = request.args.get("obj_type") if request.args.get("obj_type") else None
     obj_id = request.args.get("obj_id") if request.args.get("obj_id") else None
-    print obj_type
     return render_template("videos.html", obj_type=json.dumps(obj_type), obj_id=json.dumps(obj_id))
 
 
