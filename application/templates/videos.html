@@ -2,6 +2,7 @@
 
 {% block head %}
 {{ super() }}
+<script src="/static/js/videos.js"></script>
 <script>
     $(document).ready(function() {
         var start_type = {{ obj_type|safe }};
@@ -21,7 +22,8 @@
 <hr>
 <div class="container-fluid" id="videos"></div>
 
-<script src="/static/js/videos.js">
+
+<script>
     // var req;
     // var filter_types = {
     //   "investigation": display_investigations,

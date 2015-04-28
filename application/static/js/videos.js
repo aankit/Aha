@@ -8,7 +8,7 @@ var filter_types = {
 $(".filter").on("click", function(e){
     $( "#videos").empty();
     var id_name = $(this).attr('id');
-    filter_types[id_name]()
+    filter_types[id_name]();
 });
 
 function display_investigations(filter){
