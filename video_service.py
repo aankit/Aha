@@ -56,7 +56,9 @@ def complete_video_build(media_path, result):
     fifteen_after = datetime.time(datetime.combine(date.today(), result.end_time) + timedelta(minutes=15))
     if right_now > fifteen_after or right_now < result.end_time:
         #oh hello, we are going to add that this video has bee made!
-        video_obj = Video(media_path=media_path, date=datetime.today())
+        private_path = '/var/www/Aha'
+        public_media_path = media_path[len(private_path):]
+        video_obj = Video(media_path=public_media_path, date=datetime.today())
         db.session.add(video_obj)
         result.videos.append(video_obj)
         try:
