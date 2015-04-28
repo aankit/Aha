@@ -117,7 +117,7 @@ class Conjecture(db.Model):
 class Video(db.Model):
     __tablename__ = 'video'
     id = db.Column(db.Integer, primary_key=True)
-    media_path = db.Column(db.String(25))
+    media_path = db.Column(db.String(50))
     date = db.Column(db.Date)
 
     def __repr__(self):
