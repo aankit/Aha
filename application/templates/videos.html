@@ -72,7 +72,7 @@
     
     function retrieve_data(endpoint, filter, success_func){
         endpoint = typeof endpoint !== 'undefined' ? endpoint : 'investigation';
-        filter = typeof filter !== 'undefined' ? data : '';
+        filter = typeof filter !== 'undefined' ? filter : '';
         //not sending filter yet
         url = "/api/" + endpoint;
         var req = new XMLHttpRequest();
