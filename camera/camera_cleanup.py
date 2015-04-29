@@ -1,4 +1,4 @@
-from camera import control, settings
+import control, settings
 from datetime import datetime
 import os
 from application import media_dir

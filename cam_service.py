@@ -93,6 +93,6 @@ if refresh_state:
 
         schedule_matches = video_matches(Schedule, filename, filename_with_path, starttime_obj, endtime_obj)
         marker_matches = video_matches(Marker, filename, filename_with_path, starttime_obj, endtime_obj)
-        control.remove_recording(filename_with_path)
+        #control.remove_recording(filename_with_path)
         file_index += 1
         filename, filename_with_path = control.get_recording(file_index, full_path=True)
