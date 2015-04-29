@@ -27,7 +27,7 @@ VIDEO_HEIGHT=720
 VIDEO_ROTATION=0
 
 ## flip image horizontally
-VIDEO_HORIZONTAL_FLIP=true
+VIDEO_HORIZONTAL_FLIP=false
 
 ## flip image vertically
 VIDEO_VERTICAL_FLIP=true
