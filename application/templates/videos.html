@@ -84,7 +84,7 @@
           for(i in markers.objects){
             marker = markers.objects[i];
             div_id = JSON.stringify(marker.id);
-            pretty_time = moment(marker.timestamp).format("MM/DD hh:MM a")
+            pretty_time = moment(marker.timestamp).format("MM/DD hh:mm a")
             create_thumbnail_div(div_id, pretty_time);
             for(var j=0;j<marker.videos.length;j++){
               var video = marker.videos[j];
