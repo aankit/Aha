@@ -52,10 +52,12 @@ def transcode(ts_filename, final_filename, media_path):
 
 
 def complete_video_build(media_path, result):
-    right_now = datetime.time(datetime.now())
+    ts_files = [f for f in glob.glob(media_path+'/*.ts')]
+    sorted_ts_files = sorted(ts_files, key=os.path.getctime, reverse=True)
+    latest_datetime = datetime.strptime(sorted_ts_files[0][len(media_path)+1:-3],'%Y-%m-%d_%H-%M-%S')
     fifteen_after = datetime.time(datetime.combine(date.today(), result.end_time) + timedelta(minutes=15))
     fifteen_before = datetime.time(datetime.combine(date.today(), result.start_time) + timedelta(minutes=15))
-    if right_now > fifteen_after or right_now < fifteen_before:
+    if latest_datetime < fifteen_before or latest_datetime > fifteen_after:
         #oh hello, we are going to add that this video has bee made!
         private_path = '/var/www/Aha'
         public_media_path = media_path[len(private_path):]
