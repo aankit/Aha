@@ -39,8 +39,12 @@ var displayVideos = {
   },
   // onPageReady: function()
 
+  penis: function(x){
+    console.log(x);
+  }
+
   display_investigations: function(filter){
-    console.log("penis");
+    this.penis("fuck");
     // this.retrieve_data("investigation", filter, function(){
     //   if (req.readyState==4 && req.status==200){
     //     var investigations = JSON.parse(req.responseText);
