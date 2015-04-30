@@ -40,21 +40,22 @@ var displayVideos = {
   // onPageReady: function()
 
   display_investigations: function(filter){
-    this.retrieve_data("investigation", filter, function(){
-      if (req.readyState==4 && req.status==200){
-        var investigations = JSON.parse(req.responseText);
-        for( var i in investigations.objects ){
-          var investigation_obj = investigations.objects[i];
-          var investigation_div = document.createElement("div");
-          var div_id = JSON.stringify(investigation_obj.id);
-          investigation_div.setAttribute("id", div_id);
-          investigation_dib.setAttribute("class", "row");
-          // create_thumbnail_div(div_id, investigation_obj.question);
-          var schedule_filter = [{"name": "id", "op": "eq", "val": investigation_obj.id}];
-          this.display_schedule(investigation_div, schedule_filter);
-        }
-      }
-    });
+    console.log("penis");
+    // this.retrieve_data("investigation", filter, function(){
+    //   if (req.readyState==4 && req.status==200){
+    //     var investigations = JSON.parse(req.responseText);
+    //     for( var i in investigations.objects ){
+    //       var investigation_obj = investigations.objects[i];
+    //       var investigation_div = document.createElement("div");
+    //       var div_id = JSON.stringify(investigation_obj.id);
+    //       investigation_div.setAttribute("id", div_id);
+    //       investigation_dib.setAttribute("class", "row");
+    //       // create_thumbnail_div(div_id, investigation_obj.question);
+    //       var schedule_filter = [{"name": "id", "op": "eq", "val": investigation_obj.id}];
+    //       this.display_schedule(investigation_div, schedule_filter);
+    //     }
+    //   }
+    // });
   },
 
   display_schedule: function(investigation_div, filter){
