@@ -2,11 +2,14 @@
 
 {% block head %}
 {{ super() }}
-<script src="/static/js/videos.js">
-    
+<script type="text/javascript" src="/static/js/videos.js"></script>
+<script>    
+    var start_type = {{ obj_type|safe }};
+    var start_filter = {{ obj_id|safe }};
+    displayVideos.initialize(start_type, start_filter)
     // $(document).ready(function() {
-    //     var start_type = {{ obj_type|safe }};
-    //     var start_filter = {{ obj_id|safe }};
+        // var start_type = {{ obj_type|safe }};
+        // var start_filter = {{ obj_id|safe }};
     //     filter_types[start_type](start_filter)
     // });
 </script>
