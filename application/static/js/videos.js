@@ -39,27 +39,22 @@ var displayVideos = {
   },
   // onPageReady: function()
 
-  penis: function(x){
-    console.log(x);
-  }
-
   display_investigations: function(filter){
-    this.penis("fuck");
-    // this.retrieve_data("investigation", filter, function(){
-    //   if (req.readyState==4 && req.status==200){
-    //     var investigations = JSON.parse(req.responseText);
-    //     for( var i in investigations.objects ){
-    //       var investigation_obj = investigations.objects[i];
-    //       var investigation_div = document.createElement("div");
-    //       var div_id = JSON.stringify(investigation_obj.id);
-    //       investigation_div.setAttribute("id", div_id);
-    //       investigation_dib.setAttribute("class", "row");
-    //       // create_thumbnail_div(div_id, investigation_obj.question);
-    //       var schedule_filter = [{"name": "id", "op": "eq", "val": investigation_obj.id}];
-    //       this.display_schedule(investigation_div, schedule_filter);
-    //     }
-    //   }
-    // });
+     displayVideos.retrieve_data("investigation", filter, function(){
+       if (req.readyState==4 && req.status==200){
+         var investigations = JSON.parse(req.responseText);
+         for( var i in investigations.objects ){
+           var investigation_obj = investigations.objects[i];
+           var investigation_div = document.createElement("div");
+           var div_id = JSON.stringify(investigation_obj.id);
+           investigation_div.setAttribute("id", div_id);
+           investigation_div.setAttribute("class", "row");
+           // create_thumbnail_div(div_id, investigation_obj.question);
+           var schedule_filter = [{"name": "id", "op": "eq", "val": investigation_obj.id}];
+           displayVideos.display_schedule(investigation_div, schedule_filter);
+         }
+       }
+     });
   },
 
   display_schedule: function(investigation_div, filter){
@@ -68,22 +63,26 @@ var displayVideos = {
         var schedule = JSON.parse(req.responseText);
         for( var i in schedule.objects ){
           var schedule_obj = schedule.objects[i];
-          for (var j=0; j<schedule_obj.videos.length; j++){
-            var video_obj = schedule_obj.videos[i];
-            var target = video_obj.media_oath+"/final.jpg";
+          for (var j=0; j < schedule_obj.videos.length; j++){
+            var video_obj = schedule_obj.videos[j];
+            var target = video_obj.media_path+"/final.mp4";
             var thumbnail_src = video_obj.media_path+"/thumbnail.jpg";
             // var target = "/video/?vid="+video.id+"&investigation_id="+filter[0]["val"]
+            var thumbnail_container = document.createElement("div");
+            thumbnail_container.setAttribute("class", "col-sm-6 col-md-4");
             var video_thumbnail = document.createElement("div");
             var div_id = JSON.stringify(video_obj.id);
             video_thumbnail.setAttribute("id", div_id);
-            video_thumbnail.setAttribute("class", "col-sm-6 col-md-4");
-            investigation_div.appendChild(video_thumbnail);
+            video_thumbnail.setAttribute("class", "thumbnail");
             var a = document.createElement("a");
             var thumbnail_img = document.createElement("img");
             thumbnail_img.src = thumbnail_src;
-            a.appendChild(video_thumbnail);
+            a.appendChild(thumbnail_img);
             a.href = target;
             video_thumbnail.appendChild(a);
+            thumbnail_container.appendChild(video_thumbnail);
+            investigation_div.appendChild(thumbnail_container);
+            displayVideos.videos.appendChild(investigation_div);
           }
         }
       }
