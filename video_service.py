@@ -68,7 +68,7 @@ def complete_video_build(media_path, result):
         sorted_ts_files = sorted(ts_files, key=os.path.getctime, reverse=True)
         latest_datetime = datetime.strptime(sorted_ts_files[0][len(media_path)+1:-3], '%Y-%m-%d_%H-%M-%S')
         fifteen_after = datetime.combine(date.today(), result.end_time) + timedelta(minutes=15)
-        fifteen_before = datetime.combine(date.today(), result.start_time) + timedelta(minutes=15)
+        fifteen_before = datetime.combine(date.today(), result.start_time) - timedelta(minutes=15)
         if latest_datetime < fifteen_before or latest_datetime > fifteen_after:
             try:
                 os.remove(media_path+'/vidlist.txt')
