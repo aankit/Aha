@@ -14,13 +14,13 @@ def process_media(media_path):
         vid_files = glob.glob(media_path+'/*.ts')
         final_filename = media_path + '/final.mp4'
         thumbnail = media_path + '/thumbnail.jpg'
-        make_thumbnail(final_filename, thumbnail)
         if len(vid_files) > 1 and os.path.isfile(media_path + '/vidlist.txt'):
             # print media_path
             concatenate(final_filename, media_path)
         elif len(vid_files) == 1:
             # print media_path
             transcode(vid_files[0], final_filename, media_path)
+        make_thumbnail(final_filename, thumbnail)
         commit_to_db()
 
 
@@ -49,7 +49,7 @@ def commit_to_db(media_path):
     #oh hello, we are going to add that this video has bee made!
     private_path = '/var/www/Aha'
     public_media_path = media_path[len(private_path):]
-    video_obj = Video.query.filter_by(media_path=public_media_path, date=date.today()).first()
+    video_obj = Video.query.filter_by(media_path=public_media_path).first()
     if not video_obj:
         new_video_obj = Video(media_path=public_media_path, date=datetime.today())
         db.session.add(new_video_obj)
