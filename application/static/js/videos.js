@@ -5,6 +5,12 @@ var filter_types = {
   "marker": display_markers
 };
 
+$(document).ready(function() {
+    var start_type = {{ obj_type|safe }};
+    var start_filter = {{ obj_id|safe }};
+    filter_types[start_type](start_filter)
+});
+
 $(".filter").on("click", function(e){
     $( "#videos").empty();
     var id_name = $(this).attr('id');
