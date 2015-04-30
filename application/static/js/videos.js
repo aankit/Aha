@@ -26,6 +26,17 @@ var displayVideos = {
     this.marker.addEventListener("click", this.display_markers);
   },
 
+  retrieve_data: function(endpoint, filter, callback_func){
+      endpoint = typeof endpoint !== 'undefined' ? endpoint : 'investigation';
+      filter = typeof filter !== 'undefined' ? filter : '';
+      //not sending filter yet
+      url = "/api/" + endpoint;
+      req = new XMLHttpRequest();
+      req.open("GET", url);
+      req.setRequestHeader("Content-type", "application/json");
+      req.onreadystatechange = callback_func;
+      req.send();
+  },
   // onPageReady: function()
 
   display_investigations: function(filter){
@@ -102,18 +113,6 @@ var displayVideos = {
         }
       }
     });
-  },
-
-  retrieve_data: function(endpoint, filter, callback_func){
-      endpoint = typeof endpoint !== 'undefined' ? endpoint : 'investigation';
-      filter = typeof filter !== 'undefined' ? filter : '';
-      //not sending filter yet
-      url = "/api/" + endpoint;
-      req = new XMLHttpRequest();
-      req.open("GET", url);
-      req.setRequestHeader("Content-type", "application/json");
-      req.onreadystatechange = callback_func;
-      req.send();
   }
 
 };
