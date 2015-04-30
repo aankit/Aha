@@ -6,28 +6,30 @@ var displayVideos = {
   conjecture: document.getElementById("conjecture"),
   marker: document.getElementById("marker"),
 
-  filter_types: {
-    "investigation": display_investigations,
-    "conjecture": display_conjectures,
-    "marker": display_markers
-  },
+//  filter_types: {
+//    "investigation": display_investigations,
+//    "conjecture": display_conjectures,
+//    "marker": display_markers
+//  },
 
   initialize: function(requestedObj, requestedObjId){
-    filter_types(requestedObj)(requestedObjId);
+    //filter_types(requestedObj)(requestedObjId);
+    console.log(requestedObj);
+    console.log(requestedObjId);
     this.bindEvents();
   },
 
   bindEvents: function(){
     // document.addEventListener("onload", this.onPageReady);
-    investigation.addEventListener("click", this.display_investigations);
-    conjecture.addEventListener("click", this.display_conjectures);
-    marker.addEventListener("click", this.display_markers);
+    this.investigation.addEventListener("click", this.display_investigations);
+    this.conjecture.addEventListener("click", this.display_conjectures);
+    this.marker.addEventListener("click", this.display_markers);
   },
 
   // onPageReady: function()
 
   display_investigations: function(filter){
-    retrieve_data("investigation", filter, function(){
+    this.retrieve_data("investigation", filter, function(){
       if (req.readyState==4 && req.status==200){
         var investigations = JSON.parse(req.responseText);
         for( var i in investigations.objects ){
@@ -38,7 +40,7 @@ var displayVideos = {
           investigation_dib.setAttribute("class", "row");
           // create_thumbnail_div(div_id, investigation_obj.question);
           var schedule_filter = [{"name": "id", "op": "eq", "val": investigation_obj.id}];
-          display_schedule(investigation_div, schedule_filter);
+          this.display_schedule(investigation_div, schedule_filter);
         }
       }
     });
@@ -73,7 +75,7 @@ var displayVideos = {
   },
 
   display_conjectures: function(filter){
-    retrieve_data("conjecture", filter, function(){
+    this.retrieve_data("conjecture", filter, function(){
       if (req.readyState==4 && req.status==200){
         data = JSON.parse(req.responseText);
       }
@@ -82,20 +84,20 @@ var displayVideos = {
 
   display_markers: function(filter){
     //filters are powerful for ordering, filtering, grouping content
-    retrieve_data("marker", filter, function(){
+    this.retrieve_data("marker", filter, function(){
       if (req.readyState==4 && req.status==200){
         markers = JSON.parse(req.responseText);
         for(var i in markers.objects){
           var marker = markers.objects[i];
           var div_id = JSON.stringify(marker.id);
           var pretty_time = moment(marker.timestamp).format("MM/DD hh:MM a");
-          create_thumbnail_div(div_id, pretty_time);
+          //create_thumbnail_div(div_id, pretty_time);
           for(var j=0;j<marker.videos.length;j++){
             var video = marker.videos[i];
             var thumbnail_src = video.media_path+"/thumbnail.jpg";
             var target = video.media_path+"/final.jpg";
             // var target = "/video/?vid="+video.id+"&marker_id="+marker.id
-            display_thumbnail(div_id, thumbnail_src, target);
+            //display_thumbnail(div_id, thumbnail_src, target);
           }
         }
       }
