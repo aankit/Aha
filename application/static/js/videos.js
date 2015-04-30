@@ -47,7 +47,7 @@ var displayVideos = {
   },
 
   display_schedule: function(investigation_div, filter){
-    retrieve_data("schedule", filter, function(){
+    this.retrieve_data("schedule", filter, function(){
       if (req.readyState==4 && req.status==200){
         var schedule = JSON.parse(req.responseText);
         for( var i in schedule.objects ){
@@ -115,4 +115,5 @@ var displayVideos = {
       req.onreadystatechange = callback_func;
       req.send();
   }
+
 };
