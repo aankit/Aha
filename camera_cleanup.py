@@ -9,6 +9,6 @@ for filepath in control.get_all_recordings():
     filename = filepath[len(settings.ARCHIVE_RECORDING_PATH)+1:-3]
     starttime_obj = datetime.strptime(filename, '%Y-%m-%d_%H-%M-%S')
     time_diff = datetime.now() - starttime_obj
-    if time_diff.seconds >= 15*60:
+    if time_diff.seconds >= 16*60:
         os.remove(filepath)
         print "removed: %s" % (filepath)

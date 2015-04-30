@@ -88,6 +88,5 @@ for date_string in [today_string, yest_string]:
                 media_path = "/".join([media_dir, str(result.investigation.id), str(result.id), date_string])
             except:
                 media_path = "/".join([media_dir, "markers", str(result.id)])
-            process_state = process_media(media_path)
-            if process_state > 2:
-                complete_video_build(media_path, result)
+            process_media(media_path)
+            complete_video_build(media_path, result)
