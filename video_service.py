@@ -21,7 +21,7 @@ def process_media(media_path):
             # print media_path
             transcode(vid_files[0], final_filename, media_path)
         make_thumbnail(final_filename, thumbnail)
-        commit_to_db()
+        commit_to_db(media_path)
 
 
 def concatenate(final_filename, media_path):
@@ -56,7 +56,7 @@ def commit_to_db(media_path):
         result.videos.append(new_video_obj)
         try:
             db.session.commit()
-            print "video added to DB"
+            print "video added to DB %s" % (media_path)
         except:
             db.session.rollback()
             print "committing to DB didn't work."
