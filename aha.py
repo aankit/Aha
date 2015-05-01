@@ -24,8 +24,15 @@ def stage_file(filename):
     mv(filename, application.settings.MEDIA_DIR + '/staging')
 
 
+def sort_videos(filename):
+    starttime_obj, endtime_obj = get_file_timestamps(filename)
+    return starttime_obj
+
+
 def get_staged_files():
-    return glob.glob(application.settings.STAGING_DIR+"/*.ts")
+    staged_files = glob.glob(application.settings.STAGING_DIR+"/*.ts")
+    sorted_staged_files = sorted(staged_files, key=sort_videos)
+    return sorted_staged_files
 
 
 def check_purge_state(filename):
