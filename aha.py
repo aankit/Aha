@@ -8,6 +8,7 @@ from application.models import Schedule, Marker, Video
 from sh import mv, ffmpeg, mkdir, touch
 from datetime import datetime, timedelta
 import os
+import glob
 import random
 
 
@@ -24,7 +25,7 @@ def stage_file(filename):
 
 
 def get_staged_files():
-    return os.listdir(application.settings.STAGING_DIR)
+    return glob.glob(application.settings.STAGING_DIR+"/*.ts")
 
 
 def check_purge_state(filename):
