@@ -90,7 +90,7 @@ def get_media_path(filename, match):
         media_path = "/".join([media_dir, str(match.investigation.id), str(match.id), vid_string_date])
     except:
         media_path = "/".join([media_dir, "markers", str(match.id)])
-    if not os.isdir(media_path):
+    if not os.path.isdir(media_path):
         mkdir('-p', media_path)
         print "successfully made %s" % (media_path)
         commit_to_db(media_path, match)
