@@ -92,8 +92,8 @@ def get_media_path(filename, match):
         media_path = "/".join([media_dir, "markers", str(match.id)])
     if not os.isdir(media_path):
         mkdir('-p', media_path)
-        commit_to_db(media_path, match)
         print "successfully made %s" % (media_path)
+        commit_to_db(media_path, match)
     else:
         print "path exists: %s" % (media_path)
     return media_path
@@ -125,13 +125,16 @@ def get_relative_cut(filename, match):
 
 def cut_file(filename, media_path, ffmpeg_start, ffmpeg_duration):
     filename_minus_path = remove_path(filename)
+    media_filename = media_path+'/'+filename_minus_path
+    print filename
+    print media_filename
     #now cut the vid and save it in the media directory, run it as a background to keep this moving
     ffmpeg('-ss', ffmpeg_start,
            '-i', filename,
            '-to', ffmpeg_duration,
            '-c', 'copy',
            '-avoid_negative_ts', '1',
-           media_path+'/'+filename_minus_path)
+           media_filename)
     #now we need to create or append to the directory's concat text file for ffmpeg later on
     if not os.path.isfile(media_path+'/'+'vidlist.txt'):
         touch(media_path+'/'+'vidlist.txt')
