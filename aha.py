@@ -49,6 +49,10 @@ def get_last_recorded():
     return camera.control.get_recording(1, full_path=True)
 
 
+def get_all_recorded():
+    return camera.control.get_all_recordings()
+
+
 def get_file_matches(filename):
     matches = []
     for db_model in [Schedule, Marker]:
