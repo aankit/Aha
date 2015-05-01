@@ -124,11 +124,10 @@ def get_relative_cut(filename, match):
 
 #cut recorded/staged file into media path
 
-def cut_file(filename, media_path, ffmpeg_start, ffmpeg_duration):
-    filename_minus_path = remove_path(filename)
-    media_filename = media_path+'/'+filename_minus_path
-    print filename
-    print media_filename
+def cut_file(filename, match):
+    media_path = get_media_path(filename, match)
+    media_filename = media_path + '/' + remove_path(filename)
+    ffmpeg_start, ffmpeg_duration = get_relative_cut(filename, match)
     #now cut the vid and save it in the media directory, run it as a background to keep this moving
     ffmpeg('-ss', ffmpeg_start,
            '-i', filename,
