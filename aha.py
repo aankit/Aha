@@ -178,12 +178,14 @@ def commit_to_db(media_path, match):
         except:
             db.session.rollback()
             print "committing to DB didn't work."
+    else:
+        print "media path already in db"
 
 #video utility functions
 
 
-def remove_path(filename):
-    return filename[-22:]  # this works only because of the file date structure
+def remove_path(fname):
+    return fname[-22:]  # this works only because of the file date structure
 
 
 def get_file_timestamps(filename):
