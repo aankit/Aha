@@ -5,6 +5,7 @@ while True:
         gap_total, num_files = aha.check_consecutive(media_path)
         video_duration = aha.check_duration(media_path)
         duration_diff = db_duration - video_duration
+        print "this is the gap total: %d" % (gap_total)
         if gap_total < 4 * num_files:
             print "concatenating %s" % (media_path)
             if aha.build_ready(media_path):

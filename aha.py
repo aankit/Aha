@@ -113,12 +113,12 @@ def get_media_paths():
                 duration = end_time - start_time
                 for video in result.videos:
                     if glob.glob(application.settings.APPLICATION_DIR+video.media_path+'/*.ts'):
-                        media_paths.append((video.media_path, duration.seconds))
+                        media_paths.append((application.settings.APPLICATION_DIR+video.media_path, duration.seconds))
     return media_paths
 
 
 def check_duration(media_path):
-    filenames = glob.glob(application.settings.APPLICATION_DIR+media_path+'/*.ts')
+    filenames = glob.glob(media_path+'/*.ts')
     sorted_filenames = sorted(filenames, key=sort_videos)
     first_file = sorted_filenames[0]
     last_file = sorted_filenames[-1]
@@ -137,7 +137,7 @@ def check_file_duration(filename):
 
 
 def check_consecutive(media_path):
-    filenames = glob.glob(application.settings.APPLICATION_DIR+media_path+'/*.ts')
+    filenames = glob.glob(media_path+'/*.ts')
     sorted_filenames = sorted(filenames, key=sort_videos)
     gaps = 0
     for index in range(1, len(sorted_filenames)):
