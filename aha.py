@@ -105,11 +105,13 @@ def get_media_paths():
         #collect media paths to return
         for result in db_model.query.all():
             if result.videos:
+                print result
                 end_time = datetime.combine(datetime.today(), result.end_time)
                 start_time = datetime.combine(datetime.today(), result.start_time)
                 duration = end_time - start_time
                 for video in result.videos:
-                    if glob(video.media_path+'/*.ts'):
+                    print application.settings.APPLICATION_DIR+video.media_path
+                    if glob.glob(application.settings.APPLICATION_DIR+video.media_path+'/*.ts'):
                         media_paths.append((video.media_path, duration))
     return media_paths
 
