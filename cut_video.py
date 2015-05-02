@@ -11,4 +11,4 @@ while True:
                 aha.cut_file(media_path, filename, match)
         if aha.check_purge_state(filename) is True:
             os.remove(filename)
-            print "removed %s" % (filename)
+            # print "removed %s" % (filename)

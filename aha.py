@@ -151,8 +151,6 @@ def check_consecutive(media_path):
 def clean_build_media(media_path):
     ts_files = glob.glob(application.settings.APPLICATION_DIR+media_path+'/*.ts')
     txt_files = glob.glob(application.settings.APPLICATION_DIR+media_path+'/*.txt')
-    print ts_files
-    print txt_files
     for ts_file in ts_files:
         os.remove(ts_file)
     for txt_file in txt_files:
@@ -258,12 +256,12 @@ def commit_to_db(media_path, match):
         match.videos.append(new_video_obj)
         try:
             db.session.commit()
-            print "video added to DB %s" % (media_path)
+            # print "video added to DB %s" % (media_path)
         except:
             db.session.rollback()
-            print "committing to DB didn't work."
-    else:
-        print "media path already in db"
+            # print "committing to DB didn't work."
+    # else:
+    #     print "media path already in db"
 
 #video utility functions
 
