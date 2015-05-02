@@ -84,7 +84,7 @@ def get_db_matches(filename):
     return matches
 
 
-def make_media_path(filename, match):
+def get_media_path(filename, match):
     vid_starttime_obj, vid_endtime_obj = get_file_timestamps(filename)
     vid_date = datetime.date(vid_starttime_obj)
     vid_string_date = datetime.strftime(vid_date, '%Y_%m_%d')
@@ -96,10 +96,9 @@ def make_media_path(filename, match):
         media_path = "/".join([media_dir, "markers", str(match.id)])
     if not os.path.isdir(media_path):
         mkdir('-p', media_path)
-        print "successfully made %s" % (media_path)
+        # print "successfully made %s" % (media_path)
         commit_to_db(media_path, match)
-    else:
-        print "path exists: %s" % (media_path)
+        # print "path exists: %s" % (media_path)
     return media_path
 
 
