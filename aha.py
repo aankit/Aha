@@ -214,7 +214,7 @@ def build_ready(media_path):
 
 def new_file_exists(media_path):
     video = media_path+'/video.mp4'
-    if os.isfile(video):
+    if os.path.isfile(video):
         video_duration = check_file_duration(video)
         files_duration = check_duration(media_path)
         if files_duration > video_duration:
