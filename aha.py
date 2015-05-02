@@ -5,7 +5,7 @@ import camera.control
 import application.settings
 from application import db
 from application.models import Schedule, Marker, Video
-from sh import mv, ffmpeg, mkdir, touch
+from sh import mv, ffmpeg, ffprobe, mkdir, touch
 from datetime import datetime, timedelta
 import os
 import glob
@@ -112,7 +112,7 @@ def get_media_paths():
                 for video in result.videos:
                     print application.settings.APPLICATION_DIR+video.media_path
                     if glob.glob(application.settings.APPLICATION_DIR+video.media_path+'/*.ts'):
-                        media_paths.append((video.media_path, duration))
+                        media_paths.append((video.media_path, duration.seconds))
     return media_paths
 
 
@@ -125,6 +125,13 @@ def check_duration(media_path):
     last_starttime_obj, last_endtime_obj = get_file_timestamps(last_file)
     duration = last_endtime_obj - first_starttime_obj
     return duration.seconds
+
+
+def check_file_duration(filename):
+    duration = ffprobe('-i', filename,
+                       '-show_format', '-v' 'quiet'
+                       '|' 'sed -n' "'s/duration=//p'")
+    return duration
 
 
 def check_consecutive(media_path):
