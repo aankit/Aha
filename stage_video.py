@@ -11,4 +11,5 @@ while True:
     elif aha.get_all_recorded():
         for recording in aha.get_all_recorded():
             aha.stage_file(recording)
-    time.sleep(aha.refesh_sleep())
+    sleep_time = aha.refresh_sleep()
+    time.sleep(sleep_time)

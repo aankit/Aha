@@ -19,7 +19,7 @@ def refresh_camera():
 
 
 def refresh_sleep():
-    return application.settings.VIDEO_CHUNK_LENGTH
+    return camera.settings.VIDEO_CHUNK_LENGTH
 
 #manage staging directory
 
