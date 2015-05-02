@@ -222,7 +222,7 @@ def sort_concat_file(media_path):
         read_data = vidlist.read()
     read_data = read_data.strip()
     concat_list = read_data.split('\n')
-    filenames = [f.split(" ")[0][1:-1] for f in concat_list]
+    filenames = [f.split(" ")[1][1:-1] for f in concat_list]
     sorted_filenames = sorted(filenames, key=sort_videos)
     sorted_concat_filename = media_path + '/sorted_vidlist.txt'
     for filename in sorted_filenames:
