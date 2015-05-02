@@ -5,7 +5,7 @@ import camera.control
 import application.settings
 from application import db
 from application.models import Schedule, Marker, Video
-from sh import mv, ffmpeg, ffprobe, mkdir, touch
+from sh import mv, ffmpeg, ffprobe, mkdir, touch, sed
 from datetime import datetime, timedelta
 import os
 import glob
@@ -128,9 +128,8 @@ def check_duration(media_path):
 
 
 def check_file_duration(filename):
-    duration = ffprobe('-i', filename,
-                       '-show_format', '-v', 'quiet',
-                       '|', 'sed', '-n', "'s/duration=//p'")
+    duration = sed('-n', "'s/duration=//p'", ffprobe('-i', filename,
+                   '-show_format', '-v', 'quiet'))
     return duration
 
 
