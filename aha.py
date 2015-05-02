@@ -42,14 +42,6 @@ def check_purge_state(filename):
         return True
 
 
-def get_media_paths():
-    media_paths = []
-    for db_model in [Schedule, Marker]:
-        model_media_paths = [video for result in db_model.query.all() if result.videos for video in result.videos]
-        media_paths += model_media_paths
-    return media_paths
-
-
 #manage recording directory
 
 
@@ -86,6 +78,14 @@ def get_file_matches(filename):
             ).all()
         matches += model_matches
     return matches
+
+
+def get_media_paths():
+    media_paths = []
+    for db_model in [Schedule, Marker]:
+        model_media_paths = [video.media_path for result in db_model.query.all() if result.videos for video in result.videos]
+        media_paths += model_media_paths
+    return media_paths
 
 
 def get_media_path(filename, match):
