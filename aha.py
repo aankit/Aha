@@ -109,12 +109,10 @@ def get_media_paths():
         #collect media paths to return
         for result in db_model.query.all():
             if result.videos:
-                print result
                 end_time = datetime.combine(datetime.today(), result.end_time)
                 start_time = datetime.combine(datetime.today(), result.start_time)
                 duration = end_time - start_time
                 for video in result.videos:
-                    print application.settings.APPLICATION_DIR+video.media_path
                     if glob.glob(application.settings.APPLICATION_DIR+video.media_path+'/*.ts'):
                         media_paths.append((video.media_path, duration.seconds))
     return media_paths
@@ -152,8 +150,8 @@ def check_consecutive(media_path):
 
 
 def clean_build_media(media_path):
-    ts_files = glob.glob(media_path+'/*.ts')
-    txt_files = glob.glob(media_path+'/*.txt')
+    ts_files = glob.glob(application.settings.APPLICATION_DIR+media_path+'/*.ts')
+    txt_files = glob.glob(application.settings.APPLICATION_DIR+media_path+'/*.txt')
     print ts_files
     print txt_files
     # for ts_file in ts_files:
