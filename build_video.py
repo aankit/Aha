@@ -6,7 +6,7 @@ while True:
         video_duration = aha.check_duration(media_path)
         duration_diff = db_duration - video_duration
 
-        if gaps < 15:
+        if gaps < 15.0:
             print "concatenating %s" % (media_path)
             if aha.build_ready(media_path):
                 aha.sort_concat_file(media_path)
@@ -15,8 +15,8 @@ while True:
         else:
             print gaps
 
-        if duration_diff <= 10:
-            print "cleaning %s" % (media_path)
-            aha.clean_build_media(media_path)
-        else:
-            print duration_diff
+        # if duration_diff <= 10:
+        #     print "cleaning %s" % (media_path)
+        #     aha.clean_build_media(media_path)
+        # else:
+        #     print duration_diff
