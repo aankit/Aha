@@ -110,10 +110,11 @@ def get_media_path(filename, match):
 def check_media_path(media_path):
     filenames = glob.glob(media_path+'/*.ts')
     sorted_filenames = sorted(filenames, key=sort_videos, reverse=True)
-    first_file = sorted_filenames[0]
-    last_file = sorted_filenames[-1]
-    print first_file
-    print last_file
+    print sorted_filenames
+    # first_file = sorted_filenames[0]
+    # last_file = sorted_filenames[-1]
+    # print first_file
+    # print last_file
 
 
 def get_relative_cut(filename, match):
