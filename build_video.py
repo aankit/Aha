@@ -15,4 +15,5 @@ for media_path, db_duration in aha.get_media_paths():
     if duration_diff <= 10:
         aha.clean_build_media(media_path)
     else:
+        print "here"
         print duration_diff
