@@ -156,6 +156,8 @@ def clean_build_media(media_path):
     for txt_file in txt_files:
         os.remove(txt_file)
 
+#cut recorded/staged file into media path
+
 
 def get_relative_cut(filename, match):
     vid_starttime_obj, vid_endtime_obj = get_file_timestamps(filename)
@@ -179,8 +181,6 @@ def get_relative_cut(filename, match):
     return start, duration
 
 
-#cut recorded/staged file into media path
-
 def cut_file(media_path, filename, match):
     media_filename = media_path + '/' + remove_path(filename)
     ffmpeg_start, ffmpeg_duration = get_relative_cut(filename, match)
@@ -194,6 +194,8 @@ def cut_file(media_path, filename, match):
     concat_filename = media_path+'/vidlist.txt'
     append_concat_file(concat_filename, media_filename)
 
+#manage media directories
+
 
 def append_concat_file(concat_filename, filename):
     #now we need to create or append to the directory's concat text file for ffmpeg later on
@@ -204,9 +206,6 @@ def append_concat_file(concat_filename, filename):
         vidlist.write('\n')
 
 
-#manage media directories
-
-
 def build_ready(media_path):
     concat_file = media_path+'/vidlist.txt'
     if concat_file:
@@ -215,7 +214,7 @@ def build_ready(media_path):
 
 def new_file_exists(media_path):
     video = media_path+'/video.mp4'
-    if video:
+    if os.isfile(video):
         video_duration = check_file_duration(video)
         files_duration = check_duration(media_path)
         if files_duration > video_duration:
@@ -276,8 +275,8 @@ def commit_to_db(media_path, match):
     # else:
     #     print "media path already in db"
 
-#video utility functions
 
+#utility functions
 
 def remove_path(fname):
     if len(fname) > 22:
