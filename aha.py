@@ -117,9 +117,14 @@ def get_media_paths():
     return media_paths
 
 
-def check_duration(media_path):
+def get_sorted_filenames(media_path):
     filenames = glob.glob(media_path+'/*.ts')
     sorted_filenames = sorted(filenames, key=sort_videos)
+    return sorted_filenames
+
+
+def check_duration(media_path):
+    sorted_filenames = get_sorted_filenames(media_path)
     first_file = sorted_filenames[0]
     last_file = sorted_filenames[-1]
     first_starttime_obj, first_endtime_obj = get_file_timestamps(first_file)
@@ -137,15 +142,14 @@ def check_file_duration(filename):
 
 
 def check_consecutive(media_path):
-    filenames = glob.glob(media_path+'/*.ts')
-    sorted_filenames = sorted(filenames, key=sort_videos)
+    sorted_filenames = get_sorted_filenames(media_path)
     gaps = 0
     for index in range(1, len(sorted_filenames)):
         first_starttime_obj, first_endtime_obj = get_file_timestamps(sorted_filenames[index-1])
         second_starttime_obj, second_endtime_obj = get_file_timestamps(sorted_filenames[index])
-        time_diff = first_endtime_obj - second_starttime_obj
+        time_diff = second_starttime_obj - first_endtime_obj
         gaps += time_diff.seconds
-    return gaps, len(filenames)
+    return gaps, len(sorted_filenames)
 
 
 def clean_build_media(media_path):
