@@ -153,11 +153,13 @@ def check_consecutive(media_path):
 
 def clean_build_media(media_path):
     ts_files = glob.glob(media_path+'/*.ts')
-    txt_files = glob.glob(media_path+'/*.ts')
-    for ts_file in ts_files:
-        os.remove(ts_file)
-    for txt_file in txt_files:
-        os.remove(txt_file)
+    txt_files = glob.glob(media_path+'/*.txt')
+    print ts_files
+    print txt_files
+    # for ts_file in ts_files:
+    #     os.remove(ts_file)
+    # for txt_file in txt_files:
+    #     os.remove(txt_file)
 
 
 def get_relative_cut(filename, match):
