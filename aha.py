@@ -107,6 +107,14 @@ def get_media_path(filename, match):
     return media_path
 
 
+# def check_consecutive(sorted_filenames):
+#     for index in range(1, len(sorted_filenames)):
+#         first_starttime_obj, first_endtime_obj = get_file_timestamps(sorted_filenames[index])
+#         second_starttime_obj, second_endtime_obj = get_file_timestamps(sorted_filenames[index-1])
+#         time_diff = second_endtime_obj - first_starttime_obj
+#         print time_diff
+
+
 def check_media_path(media_path):
     filenames = glob.glob(application.settings.APPLICATION_DIR+media_path+'/*.ts')
     sorted_filenames = sorted(filenames, key=sort_videos)
