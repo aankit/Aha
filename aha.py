@@ -45,7 +45,7 @@ def check_purge_state(filename):
 def get_media_paths():
     media_paths = []
     for db_model in [Schedule, Marker]:
-        model_media_paths = [result.videos for result in db_model.query.all() if result.videos]
+        model_media_paths = [video for result in db_model.query.all() if result.videos for video in result.videos]
         media_paths += model_media_paths
     return media_paths
 
