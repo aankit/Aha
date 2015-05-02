@@ -107,12 +107,12 @@ def get_media_path(filename, match):
     return media_path
 
 
-def check_consecutive(sorted_filenames):
-    for index in range(1, len(sorted_filenames)):
-        first_starttime_obj, first_endtime_obj = get_file_timestamps(sorted_filenames[index])
-        second_starttime_obj, second_endtime_obj = get_file_timestamps(sorted_filenames[index-1])
-        time_diff = second_endtime_obj - first_starttime_obj
-        print time_diff
+# def check_consecutive(sorted_filenames):
+#     for index in range(1, len(sorted_filenames)):
+#         first_starttime_obj, first_endtime_obj = get_file_timestamps(sorted_filenames[index])
+#         second_starttime_obj, second_endtime_obj = get_file_timestamps(sorted_filenames[index-1])
+#         time_diff = second_endtime_obj - first_starttime_obj
+#         print time_diff
 
 
 def check_media_path(media_path):
@@ -124,6 +124,7 @@ def check_media_path(media_path):
     last_starttime_obj, last_endtime_obj = get_file_timestamps(last_file)
     length = last_endtime_obj - first_starttime_obj
     print length
+
 
 def get_relative_cut(filename, match):
     vid_starttime_obj, vid_endtime_obj = get_file_timestamps(filename)
