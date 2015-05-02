@@ -53,7 +53,7 @@ def get_all_recorded():
     return camera.control.get_all_recordings()
 
 
-def get_file_matches(filename):
+def get_db_matches(filename):
     matches = []
     for db_model in [Schedule, Marker]:
         vid_starttime_obj, vid_endtime_obj = get_file_timestamps(filename)
@@ -107,9 +107,10 @@ def get_media_paths():
             if result.videos:
                 end_time = datetime.combine(datetime.today(), result.end_time)
                 start_time = datetime.combine(datetime.today(), result.start_time)
-                duration =  end_time - start_time 
+                duration = end_time - start_time
                 for video in result.videos:
-                    media_paths.append((video.media_path, duration))
+                    if glob(video.media_path+'/*.ts'):
+                        media_paths.append((video.media_path, duration))
     return media_paths
 
 
@@ -120,8 +121,8 @@ def check_duration(media_path):
     last_file = sorted_filenames[-1]
     first_starttime_obj, first_endtime_obj = get_file_timestamps(first_file)
     last_starttime_obj, last_endtime_obj = get_file_timestamps(last_file)
-    length = last_endtime_obj - first_starttime_obj
-    return length
+    duration = last_endtime_obj - first_starttime_obj
+    return duration.seconds
 
 
 def check_consecutive(media_path):
@@ -134,6 +135,15 @@ def check_consecutive(media_path):
         time_diff = second_starttime_obj - first_endtime_obj
         gaps += time_diff.seconds
     return gaps
+
+
+def clean_build_media(media_path):
+    ts_files = glob.glob(media_path+'/*.ts')
+    txt_files = glob.glob(media_path+'/*.ts')
+    for ts_file in ts_files:
+        os.remove(ts_file)
+    for txt_file in txt_files:
+        os.remove(txt_file)
 
 
 def get_relative_cut(filename, match):
@@ -160,8 +170,7 @@ def get_relative_cut(filename, match):
 
 #cut recorded/staged file into media path
 
-def cut_file(filename, match):
-    media_path = get_media_path(filename, match)
+def cut_file(media_path, filename, match):
     media_filename = media_path + '/' + remove_path(filename)
     ffmpeg_start, ffmpeg_duration = get_relative_cut(filename, match)
     #now cut the vid and save it in the media directory, run it as a background to keep this moving
@@ -171,21 +180,41 @@ def cut_file(filename, match):
            '-c', 'copy',
            '-avoid_negative_ts', '1',
            media_filename)
+    concat_filename = media_path+'/vidlist.txt'
+    append_concat_file(concat_filename, media_filename)
+
+
+def append_concat_file(concat_filename, filename):
     #now we need to create or append to the directory's concat text file for ffmpeg later on
-    if not os.path.isfile(media_path+'/'+'vidlist.txt'):
-        touch(media_path+'/'+'vidlist.txt')
-    with open(media_path+'/'+'vidlist.txt', 'a') as vidlist:
-        vidlist.write('file ' + "'" + media_path + '/' + filename + "'")
+    if not os.path.isfile(concat_filename):
+        touch(concat_filename)
+    with open(concat_filename, 'a') as vidlist:
+        vidlist.write('file ' + "'" + filename + "'")
         vidlist.write('\n')
 
 
 #manage media directories
 
+
+def sort_concat_file(media_path):
+    ''' this a bit of redundancy, its a check '''
+    filenames = []
+    with open(media_path+'/vidlist.txt', 'a') as vidlist:
+        read_data = vidlist.read()
+    read_data = read_data.strip()
+    concat_list = read_data.split('\n')
+    filenames = [f.split(" ")[0][1:-1] for f in concat_list]
+    sorted_filenames = sorted(filenames, key=sort_videos)
+    sorted_concat_filename = media_path + '/sorted_vidlist.txt'
+    for filename in sorted_filenames:
+        append_concat_file(sorted_concat_filename, filename)
+
+
 def concatenate(media_path):
     filename = media_path + "/video.mp4"
     if os.path.isfile(filename):
         os.remove(filename)
-    ffmpeg('-f', 'concat', '-i', media_path + '/vidlist.txt',
+    ffmpeg('-f', 'concat', '-i', media_path + '/sorted_vidlist.txt',
            '-c:v', 'copy', '-c:a', 'copy', '-bsf:a', 'aac_adtstoasc', filename)
 
 
@@ -221,7 +250,10 @@ def commit_to_db(media_path, match):
 
 
 def remove_path(fname):
-    return fname[-22:]  # this works only because of the file date structure
+    if len(fname) > 22:
+        return fname[-22:]  # this works only because of the file date structure
+    else:
+        return fname
 
 
 def get_file_timestamps(filename):
