@@ -31,7 +31,7 @@ def sort_videos(filename):
 
 def get_staged_files():
     staged_files = glob.glob(application.settings.STAGING_DIR+"/*.ts")
-    sorted_staged_files = sorted(staged_files, key=sort_videos)
+    sorted_staged_files = sorted(staged_files, key=sort_videos, reverse=True)
     return sorted_staged_files
 
 
@@ -105,6 +105,15 @@ def get_media_path(filename, match):
     else:
         print "path exists: %s" % (media_path)
     return media_path
+
+
+def check_media_path(media_path):
+    filenames = glob.glob(media_path+'/*.ts')
+    sorted_filenames = sorted(filenames, key=sort_videos, reverse=True)
+    first_file = sorted_filenames[0]
+    last_file = sorted_filenames[-1]
+    print first_file
+    print last_file
 
 
 def get_relative_cut(filename, match):
