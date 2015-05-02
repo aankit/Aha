@@ -108,20 +108,21 @@ def get_media_path(filename, match):
 
 
 def check_consecutive(sorted_filenames):
+    gaps = 0
     for index in range(1, len(sorted_filenames)):
-        print sorted_filenames[index-1]
-        print sorted_filenames[index]
         first_starttime_obj, first_endtime_obj = get_file_timestamps(sorted_filenames[index-1])
         second_starttime_obj, second_endtime_obj = get_file_timestamps(sorted_filenames[index])
-        print second_starttime_obj
-        print first_endtime_obj
         time_diff = second_starttime_obj - first_endtime_obj
-        print time_diff
+        gaps += time_diff.seconds
+    return gaps
 
 
 def check_media_path(media_path):
     filenames = glob.glob(application.settings.APPLICATION_DIR+media_path+'/*.ts')
     sorted_filenames = sorted(filenames, key=sort_videos)
+    time_gaps = check_consecutive(sorted_filenames)
+    if time_gaps > len(filenames)*5:
+        print time_gaps
     first_file = sorted_filenames[0]
     last_file = sorted_filenames[-1]
     first_starttime_obj, first_endtime_obj = get_file_timestamps(first_file)
