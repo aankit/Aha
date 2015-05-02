@@ -111,8 +111,8 @@ def check_consecutive(sorted_filenames):
     for index in range(1, len(sorted_filenames)):
         print sorted_filenames[index]
         print sorted_filenames[index-1]
-        first_starttime_obj, first_endtime_obj = get_file_timestamps(sorted_filenames[index])
-        second_starttime_obj, second_endtime_obj = get_file_timestamps(sorted_filenames[index-1])
+        first_starttime_obj, first_endtime_obj = get_file_timestamps(sorted_filenames[index-1])
+        second_starttime_obj, second_endtime_obj = get_file_timestamps(sorted_filenames[index])
         time_diff = second_starttime_obj - first_endtime_obj
         print time_diff
 
