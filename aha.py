@@ -80,15 +80,7 @@ def get_file_matches(filename):
     return matches
 
 
-def get_media_paths():
-    media_paths = []
-    for db_model in [Schedule, Marker]:
-        model_media_paths = [video.media_path for result in db_model.query.all() if result.videos for video in result.videos]
-        media_paths += model_media_paths
-    return media_paths
-
-
-def get_media_path(filename, match):
+def make_media_path(filename, match):
     vid_starttime_obj, vid_endtime_obj = get_file_timestamps(filename)
     vid_date = datetime.date(vid_starttime_obj)
     vid_string_date = datetime.strftime(vid_date, '%Y_%m_%d')
@@ -107,7 +99,34 @@ def get_media_path(filename, match):
     return media_path
 
 
-def check_consecutive(sorted_filenames):
+def get_media_paths():
+    media_paths = []
+    for db_model in [Schedule, Marker]:
+        #collect media paths to return
+        for result in db_model.query.all():
+            if result.videos:
+                end_time = datetime.combine(datetime.today(), result.end_time)
+                start_time = datetime.combine(datetime.today(), result.start_time)
+                duration =  end_time - start_time 
+                for video in result.videos:
+                    media_paths.append((video.media_path, duration))
+    return media_paths
+
+
+def check_duration(media_path):
+    filenames = glob.glob(application.settings.APPLICATION_DIR+media_path+'/*.ts')
+    sorted_filenames = sorted(filenames, key=sort_videos)
+    first_file = sorted_filenames[0]
+    last_file = sorted_filenames[-1]
+    first_starttime_obj, first_endtime_obj = get_file_timestamps(first_file)
+    last_starttime_obj, last_endtime_obj = get_file_timestamps(last_file)
+    length = last_endtime_obj - first_starttime_obj
+    return length
+
+
+def check_consecutive(media_path):
+    filenames = glob.glob(application.settings.APPLICATION_DIR+media_path+'/*.ts')
+    sorted_filenames = sorted(filenames, key=sort_videos)
     gaps = 0
     for index in range(1, len(sorted_filenames)):
         first_starttime_obj, first_endtime_obj = get_file_timestamps(sorted_filenames[index-1])
@@ -115,20 +134,6 @@ def check_consecutive(sorted_filenames):
         time_diff = second_starttime_obj - first_endtime_obj
         gaps += time_diff.seconds
     return gaps
-
-
-def check_media_path(media_path):
-    filenames = glob.glob(application.settings.APPLICATION_DIR+media_path+'/*.ts')
-    sorted_filenames = sorted(filenames, key=sort_videos)
-    time_gaps = check_consecutive(sorted_filenames)
-    if time_gaps > len(filenames)*5:
-        print time_gaps
-    first_file = sorted_filenames[0]
-    last_file = sorted_filenames[-1]
-    first_starttime_obj, first_endtime_obj = get_file_timestamps(first_file)
-    last_starttime_obj, last_endtime_obj = get_file_timestamps(last_file)
-    length = last_endtime_obj - first_starttime_obj
-    print length
 
 
 def get_relative_cut(filename, match):
