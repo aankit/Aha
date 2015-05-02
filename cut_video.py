@@ -1,5 +1,5 @@
-import aha
 import os
+import aha
 
 for filename in aha.get_staged_files():
     matches = aha.get_db_matches(filename)

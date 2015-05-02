@@ -18,7 +18,11 @@ def refresh_camera():
     return refresh_state
 
 
+def refresh_sleep():
+    return application.settings.VIDEO_CHUNK_LENGTH
+
 #manage staging directory
+
 
 def stage_file(filename):
     mv(filename, application.settings.MEDIA_DIR + '/staging')
@@ -132,7 +136,7 @@ def check_file_duration(filename):
     ffout = ffout.strip()
     ffout_list = ffout.split()
     duration = [output.split("=")[1] for output in ffout_list if "duration" in output][0]
-    return duration
+    return float(duration)
 
 
 def check_consecutive(media_path):
@@ -269,5 +273,6 @@ def remove_path(fname):
 def get_file_timestamps(filename):
     #get date, start and end time to see if we should save it.
     starttime_obj = datetime.strptime(remove_path(filename)[:-3], '%Y-%m-%d_%H-%M-%S')
-    endtime_obj = starttime_obj + timedelta(minutes=camera.settings.VIDEO_CHUNK_LENGTH)
+    duration = check_file_duration(filename)
+    endtime_obj = starttime_obj + timedelta(seconds=duration)
     return starttime_obj, endtime_obj

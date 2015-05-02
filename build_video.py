@@ -2,7 +2,6 @@ import aha
 
 for media_path, db_duration in aha.get_media_paths():
     gaps = aha.check_consecutive(media_path)
-
     video_duration = aha.check_duration(media_path)
     duration_diff = db_duration - video_duration
     if gaps < 15:
