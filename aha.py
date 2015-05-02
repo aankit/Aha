@@ -133,7 +133,7 @@ def check_duration(media_path):
     first_starttime_obj, first_endtime_obj = get_file_timestamps(first_file)
     last_starttime_obj, last_endtime_obj = get_file_timestamps(last_file)
     duration = last_endtime_obj - first_starttime_obj
-    logging.debug("%d between %s & %s" % (duration, first_file, last_file))
+    logging.debug("%d between %s & %s" % (duration.seconds, first_file, last_file))
     return duration.seconds
 
 
@@ -153,7 +153,7 @@ def check_consecutive(media_path):
         first_starttime_obj, first_endtime_obj = get_file_timestamps(sorted_filenames[index-1])
         second_starttime_obj, second_endtime_obj = get_file_timestamps(sorted_filenames[index])
         time_diff = second_starttime_obj - first_endtime_obj
-        logging.debug("%d: %d between %s & %s" % (index, time_diff, sorted_filenames[index], sorted_filenames[index-1]))
+        logging.debug("%d: %d between %s & %s" % (index, time_diff.seconds, sorted_filenames[index], sorted_filenames[index-1]))
         gaps += time_diff.seconds
     logging.debug("Total Gap: %d for %d" % (gaps, len(sorted_filenames)))
     return gaps, len(sorted_filenames)
@@ -233,7 +233,7 @@ def new_file_exists(media_path):
         else:
             return False
     else:
-        True
+        return True
 
 
 def sort_concat_file(media_path):
