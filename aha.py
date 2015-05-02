@@ -129,8 +129,8 @@ def check_duration(media_path):
 
 def check_file_duration(filename):
     duration = ffprobe('-i', filename,
-                       '-show_format', '-v' 'quiet'
-                       '|' 'sed -n' "'s/duration=//p'")
+                       '-show_format', '-v', 'quiet',
+                       '|', 'sed', '-n', "'s/duration=//p'")
     return duration
 
 
