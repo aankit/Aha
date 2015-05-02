@@ -143,9 +143,9 @@ def check_consecutive(media_path):
     for index in range(1, len(sorted_filenames)):
         first_starttime_obj, first_endtime_obj = get_file_timestamps(sorted_filenames[index-1])
         second_starttime_obj, second_endtime_obj = get_file_timestamps(sorted_filenames[index])
-        time_diff = second_starttime_obj - first_endtime_obj
+        time_diff = first_endtime_obj - second_starttime_obj
         gaps += time_diff.seconds
-    return gaps
+    return gaps, len(filenames)
 
 
 def clean_build_media(media_path):
