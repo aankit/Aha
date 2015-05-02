@@ -210,10 +210,16 @@ def append_concat_file(concat_filename, filename):
 #manage media directories
 
 
+def build_ready(media_path):
+    concat_file = media_path+'/vidlist.txt'
+    if concat_file:
+        return True
+
+
 def sort_concat_file(media_path):
     ''' this a bit of redundancy, its a check '''
-    filenames = []
-    with open(media_path+'/vidlist.txt', 'a') as vidlist:
+    concat_file = media_path+'/vidlist.txt'
+    with open(concat_file, 'a') as vidlist:
         read_data = vidlist.read()
     read_data = read_data.strip()
     concat_list = read_data.split('\n')

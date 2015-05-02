@@ -5,4 +5,5 @@ WTF_CSRF_ENABLED = True
 APPLICATION_DIR = '/var/www/Aha'
 MEDIA_DIR = APPLICATION_DIR+'/media'
 STAGING_DIR = MEDIA_DIR+'/staging'
+BUFFER = 9000
 LOG_FILE = 'application.log'
