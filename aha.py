@@ -218,7 +218,7 @@ def build_ready(media_path):
 def sort_concat_file(media_path):
     ''' this a bit of redundancy, its a check '''
     concat_file = media_path+'/vidlist.txt'
-    with open(concat_file, 'a') as vidlist:
+    with open(concat_file, 'r') as vidlist:
         read_data = vidlist.read()
     read_data = read_data.strip()
     concat_list = read_data.split('\n')
