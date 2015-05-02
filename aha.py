@@ -154,10 +154,10 @@ def clean_build_media(media_path):
     txt_files = glob.glob(application.settings.APPLICATION_DIR+media_path+'/*.txt')
     print ts_files
     print txt_files
-    # for ts_file in ts_files:
-    #     os.remove(ts_file)
-    # for txt_file in txt_files:
-    #     os.remove(txt_file)
+    for ts_file in ts_files:
+        os.remove(ts_file)
+    for txt_file in txt_files:
+        os.remove(txt_file)
 
 
 def get_relative_cut(filename, match):
