@@ -85,7 +85,7 @@ var displayVideos = {
         markers = JSON.parse(req.responseText);
         for(var i in markers.objects){
           var marker_obj = markers.objects[i];
-          marker_div = create_thumbnail_container(marker_obj);
+          marker_div = displayVideos.create_thumbnail_container(marker_obj);
           var pretty_time = moment(marker_obj.timestamp).format("MM/DD hh:MM a");
           //create_thumbnail_div(div_id, pretty_time);
           for(var j=0;j<marker_obj.videos.length;j++){
@@ -109,7 +109,7 @@ var displayVideos = {
 
 
   display_video_thumbnail: function(video_obj, container_div){
-      var target = video_obj.media_path+"/final.mp4";
+      var target = video_obj.media_path+"/video.mp4";
       var thumbnail_src = video_obj.media_path+"/thumbnail.jpg";
       // var target = "/video/?vid="+video.id+"&investigation_id="+filter[0]["val"]
       var thumbnail_container = document.createElement("div");
@@ -125,7 +125,7 @@ var displayVideos = {
       a.href = target;
       video_thumbnail.appendChild(a);
       thumbnail_container.appendChild(video_thumbnail);
-      investigation_div.appendChild(thumbnail_container);
+      container_div.appendChild(thumbnail_container);
       displayVideos.videos.appendChild(container_div);
   }
 
