@@ -45,7 +45,7 @@ def get_staged_files():
 def check_purge_state(filename):
     vid_starttime_obj, vid_endtime_obj = get_file_timestamps(filename)
     time_diff = datetime.now() - vid_endtime_obj
-    if time_diff.seconds >= 15*60:
+    if time_diff.seconds >= 16*60:
         return True
 
 
