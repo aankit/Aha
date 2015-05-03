@@ -244,6 +244,8 @@ def sort_concat_file(media_path):
     filenames = [f.split(" ")[1][1:-1] for f in concat_list]
     sorted_filenames = sorted(filenames, key=sort_videos)
     sorted_concat_filename = media_path + '/sorted_vidlist.txt'
+    if os.path.isfile(sorted_concat_filename):
+        os.remove(sorted_concat_filename)
     for filename in sorted_filenames:
         append_concat_file(sorted_concat_filename, filename)
 
