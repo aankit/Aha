@@ -231,7 +231,7 @@ def new_file_exists(media_path):
         else:
             return False
     else:
-        True
+        return True
 
 
 def sort_concat_file(media_path):
