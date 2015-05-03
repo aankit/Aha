@@ -64,6 +64,8 @@ def get_db_matches(filename):
     matches = []
     for db_model in [Schedule, Marker]:
         vid_starttime_obj, vid_endtime_obj = get_file_timestamps(filename)
+        if vid_endtime_obj.day > vid_starttime_obj.day:
+            continue
         vid_date = datetime.date(vid_starttime_obj)
         vid_day = vid_date.weekday()
         vid_start_time = datetime.time(vid_starttime_obj)
