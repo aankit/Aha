@@ -12,7 +12,7 @@ import glob
 import random
 import logging
 
-logging.basicConfig(filename='aha.log', level=logging.DEBUG)
+logging.basicConfig(filename='aha.log', level=logging.INFO)
 
 
 def refresh_camera():
@@ -128,13 +128,11 @@ def get_sorted_filenames(media_path):
 
 def check_duration(media_path):
     sorted_filenames = get_sorted_filenames(media_path)
-    first_file = sorted_filenames[0]
-    last_file = sorted_filenames[-1]
-    first_starttime_obj, first_endtime_obj = get_file_timestamps(first_file)
-    last_starttime_obj, last_endtime_obj = get_file_timestamps(last_file)
-    duration = last_endtime_obj - first_starttime_obj
-    logging.debug("%d between %s & %s" % (duration, first_file, last_file))
-    return duration.seconds
+    duration = 0
+    for filename in sorted_filenames:
+        duration += check_file_duration(filename)
+    logging.info("the cumulative duration of the ts filers is %d" % (duration))
+    return duration
 
 
 def check_file_duration(filename):
@@ -148,14 +146,14 @@ def check_file_duration(filename):
 def check_consecutive(media_path):
     sorted_filenames = get_sorted_filenames(media_path)
     gaps = 0
-    logging.debug("Media Path: %s" % (media_path))
+    logging.info("Media Path: %s" % (media_path))
     for index in range(1, len(sorted_filenames)):
         first_starttime_obj, first_endtime_obj = get_file_timestamps(sorted_filenames[index-1])
         second_starttime_obj, second_endtime_obj = get_file_timestamps(sorted_filenames[index])
         time_diff = second_starttime_obj - first_endtime_obj
-        logging.debug("%d: %d between %s & %s" % (index, time_diff, sorted_filenames[index], sorted_filenames[index-1]))
+        logging.info("%d: %d between %s & %s" % (index, time_diff, sorted_filenames[index], sorted_filenames[index-1]))
         gaps += time_diff.seconds
-    logging.debug("Total Gap: %d for %d" % (gaps, len(sorted_filenames)))
+    logging.info("Total Gap: %d for %d" % (gaps, len(sorted_filenames)))
     return gaps, len(sorted_filenames)
 
 
