@@ -151,7 +151,7 @@ def check_consecutive(media_path):
         first_starttime_obj, first_endtime_obj = get_file_timestamps(sorted_filenames[index-1])
         second_starttime_obj, second_endtime_obj = get_file_timestamps(sorted_filenames[index])
         time_diff = second_starttime_obj - first_endtime_obj
-        logging.info("%d: %d between %s & %s" % (index, time_diff, sorted_filenames[index], sorted_filenames[index-1]))
+        logging.info("%d: %d between %s & %s" % (index, time_diff.seconds, sorted_filenames[index], sorted_filenames[index-1]))
         gaps += time_diff.seconds
     logging.info("Total Gap: %d for %d" % (gaps, len(sorted_filenames)))
     return gaps, len(sorted_filenames)
