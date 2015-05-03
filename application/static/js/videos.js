@@ -13,10 +13,11 @@ var displayVideos = {
 //  },
 
   initialize: function(requestedObj, requestedObjId){
+    this.bindEvents();
     //filter_types(requestedObj)(requestedObjId);
     console.log(requestedObj);
     console.log(requestedObjId);
-    this.bindEvents();
+    
   },
 
   bindEvents: function(){
@@ -44,14 +45,11 @@ var displayVideos = {
        if (req.readyState==4 && req.status==200){
          var investigations = JSON.parse(req.responseText);
          for( var i in investigations.objects ){
-           var investigation_obj = investigations.objects[i];
-           var investigation_div = document.createElement("div");
-           var div_id = JSON.stringify(investigation_obj.id);
-           investigation_div.setAttribute("id", div_id);
-           investigation_div.setAttribute("class", "row");
-           // create_thumbnail_div(div_id, investigation_obj.question);
-           var schedule_filter = [{"name": "id", "op": "eq", "val": investigation_obj.id}];
-           displayVideos.display_schedule(investigation_div, schedule_filter);
+          var investigation_obj = investigations.objects[i];
+          investigation_div = create_thumbnail_container(investigation_obj)
+          // create_thumbnail_div(div_id, investigation_obj.question);
+          var schedule_filter = [{"name": "id", "op": "eq", "val": investigation_obj.id}];
+          displayVideos.display_schedule(investigation_div, schedule_filter);
          }
        }
      });
@@ -64,25 +62,8 @@ var displayVideos = {
         for( var i in schedule.objects ){
           var schedule_obj = schedule.objects[i];
           for (var j=0; j < schedule_obj.videos.length; j++){
-            var video_obj = schedule_obj.videos[j];
-            var target = video_obj.media_path+"/final.mp4";
-            var thumbnail_src = video_obj.media_path+"/thumbnail.jpg";
-            // var target = "/video/?vid="+video.id+"&investigation_id="+filter[0]["val"]
-            var thumbnail_container = document.createElement("div");
-            thumbnail_container.setAttribute("class", "col-sm-6 col-md-4");
-            var video_thumbnail = document.createElement("div");
-            var div_id = JSON.stringify(video_obj.id);
-            video_thumbnail.setAttribute("id", div_id);
-            video_thumbnail.setAttribute("class", "thumbnail");
-            var a = document.createElement("a");
-            var thumbnail_img = document.createElement("img");
-            thumbnail_img.src = thumbnail_src;
-            a.appendChild(thumbnail_img);
-            a.href = target;
-            video_thumbnail.appendChild(a);
-            thumbnail_container.appendChild(video_thumbnail);
-            investigation_div.appendChild(thumbnail_container);
-            displayVideos.videos.appendChild(investigation_div);
+            var video = schedule_obj.videos[j];
+            displayVideos.display_video_thumbnail(video, investigation_div);
           }
         }
       }
@@ -99,24 +80,53 @@ var displayVideos = {
 
   display_markers: function(filter){
     //filters are powerful for ordering, filtering, grouping content
-    this.retrieve_data("marker", filter, function(){
+    displayVideos.retrieve_data("marker", filter, function(){
       if (req.readyState==4 && req.status==200){
         markers = JSON.parse(req.responseText);
         for(var i in markers.objects){
-          var marker = markers.objects[i];
-          var div_id = JSON.stringify(marker.id);
-          var pretty_time = moment(marker.timestamp).format("MM/DD hh:MM a");
+          var marker_obj = markers.objects[i];
+          marker_div = create_thumbnail_container(marker_obj);
+          var pretty_time = moment(marker_obj.timestamp).format("MM/DD hh:MM a");
           //create_thumbnail_div(div_id, pretty_time);
-          for(var j=0;j<marker.videos.length;j++){
-            var video = marker.videos[i];
-            var thumbnail_src = video.media_path+"/thumbnail.jpg";
-            var target = video.media_path+"/final.jpg";
+          for(var j=0;j<marker_obj.videos.length;j++){
+            var video = marker_obj.videos[j];
+            displayVideos.display_video_thumbnail(video, marker_div);
             // var target = "/video/?vid="+video.id+"&marker_id="+marker.id
             //display_thumbnail(div_id, thumbnail_src, target);
           }
         }
       }
     });
+  },
+
+  create_thumbnail_container: function(container_obj){
+      var container_div = document.createElement("div");
+      var div_id = JSON.stringify(container_obj.id);
+      container_div.setAttribute("id", div_id);
+      container_div.setAttribute("class", "row");
+      return container_div;
+  },
+
+
+  display_video_thumbnail: function(video_obj, container_div){
+      var target = video_obj.media_path+"/final.mp4";
+      var thumbnail_src = video_obj.media_path+"/thumbnail.jpg";
+      // var target = "/video/?vid="+video.id+"&investigation_id="+filter[0]["val"]
+      var thumbnail_container = document.createElement("div");
+      thumbnail_container.setAttribute("class", "col-sm-6 col-md-4");
+      var video_thumbnail = document.createElement("div");
+      var div_id = JSON.stringify(video_obj.id);
+      video_thumbnail.setAttribute("id", div_id);
+      video_thumbnail.setAttribute("class", "thumbnail");
+      var a = document.createElement("a");
+      var thumbnail_img = document.createElement("img");
+      thumbnail_img.src = thumbnail_src;
+      a.appendChild(thumbnail_img);
+      a.href = target;
+      video_thumbnail.appendChild(a);
+      thumbnail_container.appendChild(video_thumbnail);
+      investigation_div.appendChild(thumbnail_container);
+      displayVideos.videos.appendChild(container_div);
   }
 
 };
