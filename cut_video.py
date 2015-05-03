@@ -7,7 +7,7 @@ while True:
         for match in matches:
             media_path = aha.get_media_path(filename, match)
             media_filename = media_path + '/' + aha.remove_path(filename)
-            if not os.path.isfile(media_filename):
+            if not os.path.isfile(media_filename) and os.path.isfile(media_path+'/complete'):
                 aha.cut_file(media_path, filename, match)
         if aha.check_purge_state(filename) is True:
             os.remove(filename)

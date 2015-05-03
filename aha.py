@@ -164,6 +164,7 @@ def clean_build_media(media_path):
         os.remove(ts_file)
     for txt_file in txt_files:
         os.remove(txt_file)
+    touch(media_path+'/complete')
 
 #cut recorded/staged file into media path
 
