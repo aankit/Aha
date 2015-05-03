@@ -226,7 +226,7 @@ def new_file_exists(media_path):
     if os.path.isfile(video):
         video_duration = check_file_duration(video)
         files_duration = check_duration(media_path)
-        if files_duration > video_duration:
+        if files_duration > video_duration+15:  # the +15 (seconds) is a margin of error, might be smaller
             return True
         else:
             return False
