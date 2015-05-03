@@ -11,7 +11,7 @@ while True:
             aha.sort_concat_file(media_path)
             aha.concatenate(media_path)
             aha.make_thumbnail(media_path)
-        if duration_diff <= 15:
+        if duration_diff <= 30:
             # print "cleaning %s" % (media_path)
             aha.clean_build_media(media_path)
         # else:
