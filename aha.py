@@ -133,7 +133,7 @@ def check_duration(media_path):
     duration = 0
     for filename in sorted_filenames:
         duration += check_file_duration(filename)
-    logging.info("the cumulative duration of the ts filers is %d" % (duration))
+    logging.info("the cumulative duration of the ts files: %d" % (duration))
     return duration
 
 
