@@ -85,6 +85,7 @@ var displayVideos = {
         markers = JSON.parse(req.responseText);
         for(var i in markers.objects){
           var marker_obj = markers.objects[i];
+          console.log(marker_obj);
           marker_div = displayVideos.create_thumbnail_container(marker_obj);
           var pretty_time = moment(marker_obj.timestamp).format("MM/DD hh:MM a");
           //create_thumbnail_div(div_id, pretty_time);

@@ -1,3 +1,5 @@
+#!/var/www/Aha/venv/bin/python
+
 import os
 import aha
 
