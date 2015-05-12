@@ -46,7 +46,7 @@ var displayVideos = {
          var investigations = JSON.parse(req.responseText);
          for( var i in investigations.objects ){
           var investigation_obj = investigations.objects[i];
-          investigation_div = create_thumbnail_container(investigation_obj)
+          investigation_div = displayVideos.create_thumbnail_container(investigation_obj);
           // create_thumbnail_div(div_id, investigation_obj.question);
           var schedule_filter = [{"name": "id", "op": "eq", "val": investigation_obj.id}];
           displayVideos.display_schedule(investigation_div, schedule_filter);

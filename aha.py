@@ -28,6 +28,7 @@ def refresh_sleep():
 
 
 def stage_file(filename):
+    logging.info("moving the %s" % (filename))
     mv(filename, application.settings.MEDIA_DIR + '/staging')
 
 

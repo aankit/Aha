@@ -36,8 +36,8 @@
       <ul class="nav navbar-nav">
           {% set active_page = active_page|default('index') -%}
           {% if 'email' in session %}
-          <li><a href="{{ url_for('home') }}">Home</a></li>
           <li><a href="{{ url_for('investigation') }}">Investigate</a></li>
+          <li><a href="{{ url_for('videos') }}">Videos</a></li>
           <li><a href="{{ url_for('capture') }}">Capture</a></li>
           <li><a href="{{ url_for('camera', state='live') }}">Live View</a></li>
           <li><a href="{{ url_for('signout') }}">Sign Out</a></li>
