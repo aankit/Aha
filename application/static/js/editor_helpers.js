@@ -1,4 +1,8 @@
 function bar(c, b){
+	//Text
+	text("Now", c.width/2-25, c.height/2);
+	text("+ 15 mins", c.width/2+25, 20);
+	text("- 15 mins", c.width/2+25, c.height-20);
 	//the slide
 	stroke(107,116,114);
 	strokeWeight(12.0);
