@@ -10,4 +10,4 @@ while True:
             aha.cut_file(demo_path, demo_filename, match)
             aha.make_thumbnail(demo_path)
             aha.transcode(demo_path)
-            os.remove(filename)
+        os.remove(filename)
