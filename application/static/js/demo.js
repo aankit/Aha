@@ -48,15 +48,14 @@ var videoMarker = {
     var day = ((moment(timestamp).day()-1>=0) ? moment(timestamp).day()-1 : 6);
     var start_time = null;
     var end_time = null;
-    if (delta<0){
-      end_time = timestamp;
-      start_time = end_time.subtract(10, 'seconds').format("YYYY-MM-DD HH:MM:SS");
+    if( delta > 0){
+      start_time = moment(timestamp).format("HH:mm:ss");
+      end_time = moment(timestamp).add(delta, 'seconds').format("HH:mm:ss");
+    } else if (delta < 0 ){
+      start_time = moment(timestamp).subtract(delta, 'seconds').format("HH:mm:ss");
+      end_time = moment(timestamp).format("HH:mm:ss");
     } else if (delta===0){
-      start_time = timestamp.subtract(5, 'seconds').format("YYYY-MM-DD HH:MM:SS");
-      end_time = start_time.add(10, 'seconds').format("YYYY-MM-DD HH:MM:SS");
-    } else if (delta>0){
-      start_time = timestamp;
-      end_time = start_time.add(10, 'seconds').format("YYYY-MM-DD HH:MM:SS");
+      start_time = moment(timestamp).subtract(delta, 'seconds').format("HH:mm:ss");
     } else{
       console.log("err...");
     }
