@@ -35,13 +35,13 @@ var videoMarker = {
     var start_time = null;
     var end_time = null;
     if (delta<0){
-      end_time = timestamp
+      end_time = timestamp;
       start_time = end_time.subtract(10, 'seconds').format("YYYY-MM-DD HH:MM:SS");
     } else if (delta===0){
       start_time = timestamp.subtract(5, 'seconds').format("YYYY-MM-DD HH:MM:SS");
       end_time = start_time.add(10, 'seconds').format("YYYY-MM-DD HH:MM:SS");
     } else if (delta>0){
-      start_time = timestamp()
+      start_time = timestamp;
       end_time = start_time.add(10, 'seconds').format("YYYY-MM-DD HH:MM:SS");
     } else{
       console.log("err...");
