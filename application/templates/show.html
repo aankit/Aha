@@ -1,66 +1,132 @@
 {% extends "layout.html" %}
-{% block content %}
+{% set active_page = "live" %}
+{% block head%}
+{{ super() }}
+<style>
+.arrow-up {
+width: 0; 
+height: 0; 
+border-left: 50px solid transparent;
+border-right: 50px solid transparent;
+        
+border-bottom: 50px solid black;
+}
 
-{% block javascript %}
-  <!--P5 for the Pan-Tilt Control -->
-  <script src="/static/lib/p5/p5.js" type="text/javascript"></script>
-  <script src="/static/lib/p5/p5.dom.js" type="text/javascript"></script>
+.arrow-down {
+width: 0; 
+height: 0; 
+border-left: 50px solid transparent;
+border-right: 50px solid transparent;
 
-  <!-- Media Sources plugin -->
-  <script src="/static/lib/videojs-contrib-media-sources-0.3.1/src/videojs-media-sources.js"></script>
+border-top: 50px solid #f00;
+}
 
-  <!-- HLS plugin -->
-  <script src="/static/lib/videojs-contrib-hls-0.12.0/src/videojs-hls.js"></script>
+.arrow-right {
+width: 0; 
+height: 0; 
+border-top: 50px solid transparent;
+border-bottom: 50px solid transparent;
+    
+    border-left: 50px solid green;
+}
 
-  <!-- segment handling -->
-  <script src="/static/lib/videojs-contrib-hls-0.12.0/src/xhr.js"></script>
-  <script src="/static/lib/videojs-contrib-hls-0.12.0/src/flv-tag.js"></script>
-  <script src="/static/lib/videojs-contrib-hls-0.12.0/src/stream.js"></script>
-  <script src="/static/lib/videojs-contrib-hls-0.12.0/src/exp-golomb.js"></script>
-  <script src="/static/lib/videojs-contrib-hls-0.12.0/src/h264-stream.js"></script>
-  <script src="/static/lib/videojs-contrib-hls-0.12.0/src/aac-stream.js"></script>
-  <script src="/static/lib/videojs-contrib-hls-0.12.0/src/metadata-stream.js"></script>
-  <script src="/static/lib/videojs-contrib-hls-0.12.0/src/segment-parser.js"></script>
+.arrow-left {
+width: 0; 
+height: 0; 
+border-top: 50px solid transparent;
+border-bottom: 50px solid transparent; 
+            
+border-right:50px solid blue; 
+}
 
-  <!-- m3u8 handling -->
-  <script src="/static/lib/videojs-contrib-hls-0.12.0/src/m3u8/m3u8-parser.js"></script>
-  <script src="/static/lib/videojs-contrib-hls-0.12.0/src/playlist-loader.js"></script>
-
-  <script src="/static/lib/pkcs7/dist/pkcs7.unpad.js"></script>
-  <script src="/static/lib/videojs-contrib-hls-0.12.0/src/decrypter.js"></script>
-
-  <script src="/static/lib/videojs-contrib-hls-0.12.0/src/bin-utils.js"></script>
+.arrow-blank {
+    width: 0;
+    height: 0;
+    border-top:50px solid transparent;
+    border-bottom: 50px solid transparent;
+    border-right:50px solid transparent;
+}
+.arrow-centerblank {
+    width: 0;
+    height: 0;
+    border-right:50px solid transparent;
+    border-left: 50px solid transparent;
+    border-top:50px solid transparent;
+}
+</style>
 {% endblock %}
 
-  <div id="vidContainer">
+{% block content %}
+{% block javascript %}
+<!--P5 for the Pan-Tilt Control -->
+<script src="/static/lib/p5/p5.js" type="text/javascript"></script>
+<script src="/static/lib/p5/p5.dom.js" type="text/javascript"></script>
+
+<!-- Media Sources plugin -->
+<script src="/static/lib/videojs-contrib-media-sources-0.3.1/src/videojs-media-sources.js"></script>
+
+<!-- HLS plugin -->
+<script src="/static/lib/videojs-contrib-hls-0.12.0/src/videojs-hls.js"></script>
+
+<!-- segment handling -->
+<script src="/static/lib/videojs-contrib-hls-0.12.0/src/xhr.js"></script>
+<script src="/static/lib/videojs-contrib-hls-0.12.0/src/flv-tag.js"></script>
+<script src="/static/lib/videojs-contrib-hls-0.12.0/src/stream.js"></script>
+<script src="/static/lib/videojs-contrib-hls-0.12.0/src/exp-golomb.js"></script>
+<script src="/static/lib/videojs-contrib-hls-0.12.0/src/h264-stream.js"></script>
+<script src="/static/lib/videojs-contrib-hls-0.12.0/src/aac-stream.js"></script>
+<script src="/static/lib/videojs-contrib-hls-0.12.0/src/metadata-stream.js"></script>
+<script src="/static/lib/videojs-contrib-hls-0.12.0/src/segment-parser.js"></script>
+
+<!-- m3u8 handling -->
+<script src="/static/lib/videojs-contrib-hls-0.12.0/src/m3u8/m3u8-parser.js"></script>
+<script src="/static/lib/videojs-contrib-hls-0.12.0/src/playlist-loader.js"></script>
+
+<script src="/static/lib/pkcs7/dist/pkcs7.unpad.js"></script>
+<script src="/static/lib/videojs-contrib-hls-0.12.0/src/decrypter.js"></script>
+
+<script src="/static/lib/videojs-contrib-hls-0.12.0/src/bin-utils.js"></script>
+{% endblock %}
+
+<div class="row">
+<div class="col-xs-12 col-sm-6 col-md-6">
 
 
-      <video id='live'
-         class='video-js vjs-default-skin'
-         muted
-         controls
-         preload
-         >
-        <source src='/hls/index.m3u8' type="application/x-mpegURL">
-      </video>
+<video id='live'
+class='video-js vjs-default-skin' width="400" height="225">
 
-      <div class="arrow-up"></div>
-      <div class="arrow-down"></div>
-      <div class="arrow-left"></div>
-      <div class="arrow-right"></div>
+<source src='/hls/index.m3u8' type="application/x-mpegURL">
+</video>
+</div>
+<div class="col-xs-12 col-sm-6 col-md-6">
+    <div class="row">
+        <div class="col-xs-4 col-sm-2 col-md-2 arrow-sideblank"> x </div>
+        <div class="col-xs-4 col-sm-2 col-md-2 arrow-up"></div>
+        <div class="col-xs-4 col-sm-2 col-md-2 arrow-sideblank"> y </div>
+    </div>
+    <div class="row">    
+        <div class="col-xs-4 col-sm-2 col-md-2 arrow-left"></div>
+        <div class="col-xs-4 col-sm-2 col-md-2 arrow-centerblank"></div>
+        <div class="col-xs-4 col-sm-2 col-md-2 arrow-right"></div>
+    </div>
+    <div class="row">
+        <div class="col-xs-4 col-sm-2 col-md-2 arrow-sideblank"></div>
+        <div class="col-xs-4 col-sm-2 col-md-2 arrow-down"></div>
+        <div class="col-xs-4 col-sm-2 col-md-2 arrow-sideblank"></div>
+    </div>
+</div>
+</div>
+<script>
+window.onload = function () {
 
-  </div>
-  <script>
-    window.onload = function () {
+videojs.options.flash.swf = '/static/lib/video-js/video-js.swf';
+// initialize the player
+videojs("live", { "controls": true, "autoplay": true, "muted": true }).ready(function(){
+var player = this;
+player.volume(0); 
+});
+}
 
-      videojs.options.flash.swf = '/static/lib/video-js/video-js.swf';
-              // initialize the player
-      videojs("live").ready(function(){
-        var player = this;
-        player.play(); 
-      });
-    }
-
-  </script>
+</script>
 
 {% endblock %}
