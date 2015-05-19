@@ -88,6 +88,7 @@ border-right:50px solid blue;
 <script src="/static/lib/videojs-contrib-hls-0.12.0/src/bin-utils.js"></script>
 {% endblock %}
 
+<<<<<<< HEAD
 <div class="row">
 <div class="col-xs-12 col-sm-6 col-md-6">
 
@@ -128,5 +129,34 @@ player.volume(0);
 }
 
 </script>
+=======
+  <div id="vidContainer">
+
+
+      <video id='live'
+         class='video-js vjs-default-skin'
+         muted
+         controls
+         preload
+         >
+        <source src='/hls/index.m3u8' type="application/x-mpegURL">
+      </video>
+
+
+
+  </div>
+  <script>
+    window.onload = function () {
+
+      videojs.options.flash.swf = '/static/lib/video-js/video-js.swf';
+              // initialize the player
+      videojs("live").ready(function(){
+        var player = this;
+        // player.play(); 
+      });
+    }
+
+  </script>
+>>>>>>> 1778510e9efd867e23d50b5aae9e69c2c6b10735
 
 {% endblock %}
