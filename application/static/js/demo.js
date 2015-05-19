@@ -44,6 +44,7 @@ var videoMarker = {
   mark_moment: function(e){
     var timestamp = moment();
     var delta = e.target.dataset.saveTime;
+    delta = parseInt(delta, 10);
     var date = moment().format("YYYY-MM-DD");
     var day = ((moment(timestamp).day()-1>=0) ? moment(timestamp).day()-1 : 6);
     var start_time = null;
