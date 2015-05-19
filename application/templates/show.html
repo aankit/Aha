@@ -2,6 +2,7 @@
 {% set active_page = "live" %}
 {% block head%}
 {{ super() }}
+<script src="/static/js/demo.js" type="text/javascript"></script>
 <style>
 .arrow-up {
 width: 0; 
@@ -99,21 +100,11 @@ class='video-js vjs-default-skin' width="400" height="225">
 </video>
 </div>
 <div class="col-xs-12 col-sm-6 col-md-6">
-    <div class="row">
-        <div class="col-xs-4 col-sm-2 col-md-2 arrow-sideblank"> x </div>
-        <div class="col-xs-4 col-sm-2 col-md-2 arrow-up"></div>
-        <div class="col-xs-4 col-sm-2 col-md-2 arrow-sideblank"> y </div>
-    </div>
-    <div class="row">    
-        <div class="col-xs-4 col-sm-2 col-md-2 arrow-left"></div>
-        <div class="col-xs-4 col-sm-2 col-md-2 arrow-centerblank"></div>
-        <div class="col-xs-4 col-sm-2 col-md-2 arrow-right"></div>
-    </div>
-    <div class="row">
-        <div class="col-xs-4 col-sm-2 col-md-2 arrow-sideblank"></div>
-        <div class="col-xs-4 col-sm-2 col-md-2 arrow-down"></div>
-        <div class="col-xs-4 col-sm-2 col-md-2 arrow-sideblank"></div>
-    </div>
+<div class="btn-group" role="group" aria-label="...">
+  <button type="button" class="filter btn btn-default" id='past' data-save-time="-10">Last 10 seconds</button>
+  <button type="button" class="filter btn btn-default" id='around' data-save-time="0">Last 5, Next 5</button>
+  <button type="button" class="filter btn btn-default" id='future' data-save-time="10">Next 10</button>
+</div>
 </div>
 </div>
 <script>
@@ -125,6 +116,8 @@ videojs("live", { "controls": true, "autoplay": true, "muted": true }).ready(fun
 var player = this;
 player.volume(0); 
 });
+
+
 }
 
 </script>
