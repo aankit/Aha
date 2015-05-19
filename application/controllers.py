@@ -88,6 +88,10 @@ def signout():
 def capture():
     return render_template("mobile_editor.html")
 
+@app.route('/demo')
+def demo():
+    return render_template("show.html")
+
 
 # need to transfer control of this to camera module
 @app.route('/camera')
