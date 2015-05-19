@@ -6,7 +6,7 @@ while True:
         matches = aha.get_db_matches(filename)
         for match in matches:
             demo_path = '/var/www/Aha/media/demo'
-            demo_filename = 'demo.ts'
+            demo_filename = demo_path + '/' + aha.remove_path(filename)
             aha.cut_file(demo_path, demo_filename, match)
             aha.make_thumbnail(demo_path)
             aha.transcode(demo_path)
