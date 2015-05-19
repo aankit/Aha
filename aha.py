@@ -254,10 +254,10 @@ def sort_concat_file(media_path):
         append_concat_file(sorted_concat_filename, filename)
 
 
-def transcode(media_path):
-    filename = media_path + "demo.mp4"
-    ffmpeg('-i', 'demo.ts' + '/demo.ts',
-           '-c:v', 'copy', '-c:a', 'copy', 'bsf:a', 'aac_adtstoasc', filename)
+def transcode(media_path, filename):
+    output_filename = media_path + "/video.mp4"
+    ffmpeg('-i', media_path + '/' + filename,
+            '-c:v', 'copy', '-c:a', 'copy', '-bsf:a', 'aac_adtstoasc', output_filename)
 
 
 def concatenate(media_path):
