@@ -53,7 +53,7 @@ var videoMarker = {
       start_time = moment(timestamp).format("HH:mm:ss");
       end_time = moment(timestamp).add(delta, 'seconds').format("HH:mm:ss");
     } else if (delta < 0 ){
-      start_time = moment(timestamp).subtract(delta, 'seconds').format("HH:mm:ss");
+      start_time = moment(timestamp).add(delta, 'seconds').format("HH:mm:ss");
       end_time = moment(timestamp).format("HH:mm:ss");
     } else if (delta===0){
       start_time = moment(timestamp).subtract(delta, 'seconds').format("HH:mm:ss");
