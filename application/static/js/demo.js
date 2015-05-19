@@ -27,9 +27,23 @@ var videoMarker = {
     this.future.addEventListener("click", this.mark_moment);
   },
 
+  addComplete: function(data){
+      console.log(data);
+      // url = "/api/marker";
+      // req = new XMLHttpRequest();
+      // req.open("GET", url);
+      // req.setRequestHeader("Content-type", "application/json");
+      // req.onreadystatechange =;
+      // req.send();
+  },
+
+  addFailed: function(data){
+    alert(data);
+  },
+
   mark_moment: function(e){
     var timestamp = moment();
-    var delta = e.target.dataset.savetime;
+    var delta = e.target.dataset.saveTime;
     var date = moment().format("YYYY-MM-DD");
     var day = ((moment(timestamp).day()-1>=0) ? moment(timestamp).day()-1 : 6);
     var start_time = null;
@@ -55,10 +69,10 @@ var videoMarker = {
     };
     // POST the data!!!
     var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
-    xmlhttp.addEventListener("load", addComplete, false);
-    xmlhttp.addEventListener("error", addFailed, false);
+    xmlhttp.addEventListener("load", videoMarker.addComplete, false);
+    xmlhttp.addEventListener("error", videoMarker.addFailed, false);
     xmlhttp.open("POST", "/api/marker", true);
     xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xmlhttp.send(JSON.stringify(data));
   }
-}
+};
