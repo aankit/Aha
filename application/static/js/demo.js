@@ -69,7 +69,7 @@ var videoMarker = {
     };
     // POST the data!!!
     var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
-    xmlhttp.addEventListener("load", videoMarker.addComplete, false);
+    req.onreadystatechange = videoMarker.addComplete;
     xmlhttp.addEventListener("error", videoMarker.addFailed, false);
     xmlhttp.open("POST", "/api/marker", true);
     xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
