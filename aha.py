@@ -139,10 +139,13 @@ def check_duration(media_path):
 
 
 def check_file_duration(filename):
-    ffout = ffprobe('-i', filename, '-show_format', '-v', 'quiet')
-    ffout = ffout.strip()
-    ffout_list = ffout.split()
-    duration = [output.split("=")[1] for output in ffout_list if "duration" in output][0]
+    try:
+        ffout = ffprobe('-i', filename, '-show_format', '-v', 'quiet')
+        ffout = ffout.strip()
+        ffout_list = ffout.split()
+        duration = [output.split("=")[1] for output in ffout_list if "duration" in output][0]
+    except:
+        duration = 0.0
     return float(duration)
 
 
@@ -258,6 +261,7 @@ def transcode(media_path, filename):
     output_filename = media_path + "/video.mp4"
     ffmpeg('-i', media_path + '/' + filename,
             '-c:v', 'copy', '-c:a', 'copy', '-bsf:a', 'aac_adtstoasc', output_filename)
+    os.remove(media_path + '/' + filename)
 
 
 def concatenate(media_path):

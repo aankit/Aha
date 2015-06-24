@@ -17,7 +17,7 @@ var displayVideos = {
     //filter_types(requestedObj)(requestedObjId);
     console.log(requestedObj);
     console.log(requestedObjId);
-    
+    this.display_investigations();
   },
 
   bindEvents: function(){
@@ -41,6 +41,7 @@ var displayVideos = {
   // onPageReady: function()
 
   display_investigations: function(filter){
+    $("videos").empty();
      displayVideos.retrieve_data("investigation", filter, function(){
        if (req.readyState==4 && req.status==200){
          var investigations = JSON.parse(req.responseText);

@@ -3,59 +3,12 @@
 {% block head%}
 {{ super() }}
 <style>
-.arrow-up {
-width: 0; 
-height: 0; 
-border-left: 50px solid transparent;
-border-right: 50px solid transparent;
-        
-border-bottom: 50px solid black;
-}
+    #live {
+        margin: 0 100px 0 0;
+    }
 
-.arrow-down {
-width: 0; 
-height: 0; 
-border-left: 50px solid transparent;
-border-right: 50px solid transparent;
-
-border-top: 50px solid #f00;
-}
-
-.arrow-right {
-width: 0; 
-height: 0; 
-border-top: 50px solid transparent;
-border-bottom: 50px solid transparent;
-    
-    border-left: 50px solid green;
-}
-
-.arrow-left {
-width: 0; 
-height: 0; 
-border-top: 50px solid transparent;
-border-bottom: 50px solid transparent; 
-            
-border-right:50px solid blue; 
-}
-
-.arrow-blank {
-    width: 0;
-    height: 0;
-    border-top:50px solid transparent;
-    border-bottom: 50px solid transparent;
-    border-right:50px solid transparent;
-}
-.arrow-centerblank {
-    width: 0;
-    height: 0;
-    border-right:50px solid transparent;
-    border-left: 50px solid transparent;
-    border-top:50px solid transparent;
-}
 </style>
 {% endblock %}
-
 {% block content %}
 {% block javascript %}
 <!--P5 for the Pan-Tilt Control -->
@@ -93,27 +46,16 @@ border-right:50px solid blue;
 
 
 <video id='live'
-class='video-js vjs-default-skin' width="400" height="225">
+class='video-js vjs-default-skin'>
 
 <source src='/hls/index.m3u8' type="application/x-mpegURL">
 </video>
 </div>
 <div class="col-xs-12 col-sm-6 col-md-6">
-    <div class="row">
-        <div class="col-xs-4 col-sm-2 col-md-2 arrow-sideblank"> x </div>
-        <div class="col-xs-4 col-sm-2 col-md-2 arrow-up"></div>
-        <div class="col-xs-4 col-sm-2 col-md-2 arrow-sideblank"> y </div>
-    </div>
-    <div class="row">    
-        <div class="col-xs-4 col-sm-2 col-md-2 arrow-left"></div>
-        <div class="col-xs-4 col-sm-2 col-md-2 arrow-centerblank"></div>
-        <div class="col-xs-4 col-sm-2 col-md-2 arrow-right"></div>
-    </div>
-    <div class="row">
-        <div class="col-xs-4 col-sm-2 col-md-2 arrow-sideblank"></div>
-        <div class="col-xs-4 col-sm-2 col-md-2 arrow-down"></div>
-        <div class="col-xs-4 col-sm-2 col-md-2 arrow-sideblank"></div>
-    </div>
+    <button class="btn btn-default">Left</button>
+    <button class="btn btn-default">Right</button>
+    <button class="btn btn-default">Up</button>
+    <button class="btn btn-default">Down</button>
 </div>
 </div>
 <script>
@@ -127,6 +69,23 @@ player.volume(0);
 });
 }
 
+$(document).ready(function() {
+    $(".btn").click(function() {
+        var data = this.innerHTML; 
+        if(data == "Left"){
+            
+        }
+        else if (data == "Right"){
+        
+        } 
+        else if (data == "Up") {
+        
+        }else if (data == "Down") {
+    
+        } 
+        console.log(data);
+    });
+});
 </script>
 
 {% endblock %}
