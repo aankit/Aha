@@ -127,8 +127,8 @@ def investigation():
                                           user_id=session['id'])
         db.session.add(investigation_obj)
         if commit_to_db("Successfully added investigation %s" % (investigation_obj.question)):
+            #make a directory for the new investigation's videos
             user = User.query.filter_by(email=session['email']).first()
-            print user.media_url
             sh.mkdir(user.media_url + '/' + str(investigation_obj.id))
         return redirect(url_for('investigation'))
     #GET
@@ -138,11 +138,14 @@ def investigation():
             investigation_id = request.args.get('investigation_id')
             investigation = Investigation.query.filter_by(id=investigation_id).first()
             recordings = db.session.query(Schedule).filter_by(investigation_id=investigation_id).all()
+            #delete the recordings in the database
             for recording in recordings:
                 db.session.delete(recording)
+            #delete the investigations in the database
             db.session.delete(investigation)
             if commit_to_db("Deleted %s" % (investigation.question)):
                 user = User.query.filter_by(email=session['email']).first()
+                #remove the media directory for the investigation
                 sh.rm('-rf', ('/').join([str(user.media_url), str(investigation_id)]))
         #return list of investigations
         investigations = Investigation.query.filter_by(user_id=session['id']).all()
@@ -239,6 +242,14 @@ def video(format, vid):
         return render_template("video_stub.html", video=video)
     else:
         return render_template("video.html", video=video)
+
+
+@app.route('/move/<direction>')
+def move(direction):
+    #we need to check the database for current position
+    #move the camera based on the current position
+    #update the database with the new position
+    return "OK"
 
 
 @app.route('/logo')
